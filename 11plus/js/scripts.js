@@ -2,7 +2,7 @@ var vgsPlayer, poster;
 vgsPlayer = videojs('vid1');
 //vgsPlayer.poster('https://img.youtube.com/vi/aqz-KE-bpKQ/maxresdefault.jpg');
 //vgsPlayer.poster('https://c0.wallpaperflare.com/preview/127/363/717/interior-tv-kangaroo-road.jpg');
-vgsPlayer.poster('http://11plus.live/videos/playerback.png');
+vgsPlayer.poster('//raw.githubusercontent.com/tvbd/stream/main/img/t20.png');
 /********* LOAD URL *********/
 $('#vidlink li a').on('click', function (e) {
 //    e.preventDefault();
