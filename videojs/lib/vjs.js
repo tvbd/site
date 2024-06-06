@@ -39,7 +39,7 @@ function _0xb109() {
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
   var infile = "in.json";
 } else {
-  var infile = "//raw.githubusercontent.com/tvbd/site/main/videojs/in.json";
+  var infile = "//raw.githack.com/tvbd/site/main/videojs/in.json";
 }
 const sectionA = document.querySelector("section");
 var mainelem = document.createElement('main');
