@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <meta charset="utf-8">
+
+        <title>Eleven Plus Stream</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+        <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+
+        <!--[if lt IE 9]>
+                <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script type="text/javascript" src="js/clappr.min.js"></script>
+        <link href="css/custom.css" rel="stylesheet">
+        <script type="text/javascript" src="js/clappr-chromecast-plugin.min.js"></script>
+        <style class="clappr-style">
+            @font-face{font-family:Roboto;font-style:normal;font-weight:400;src:local("Roboto"),local("Roboto-Regular"),url(https://cdn.jsdelivr.net/npm/clappr@latest/dist/38861cba61c66739c1452c3a71e39852.ttf) format("truetype")}
+            body {
+                background: #000 url(img/bgu.jpg) top center;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container-fluid">
+            <div class="row justify-content-center" style="margin-top: 50px;">
+
+                <div class="col-12 col-lg-8">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <div id="player" class="embed-responsive-item">
+                            <video id="vid1" class="video-js vjs-default-skin vjs-fluid" poster="http://i.imgur.com/xxqm7EE.png" width="640" height="360" controls autoplay preload="none" data-setup='{ "techOrder": ["html5", "flash", "youtube"], "sources": [{ "type": "application/x-mpegURL", "src": "https://11plus.live/live/tsports/index.m3u8"}]}'></video>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-4">
+                    <div class="channel-list">
+                        <ul class="nav nav-tabs nav-justified" style=" margin-bottom: 15px;">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" data-type="Bangla">Bangla</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"  data-type="English">English</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"  data-type="Hindi">Hindi</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"  data-type="Sports">Sports</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"  data-type="Cartoon">Cartoon</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"  data-type="Others">Others</a>
+                            </li>
+                        </ul>
+                        <ul id="vidlink" class="thumbnail-slider d-flex flex-wrap">
+
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="/live/bindass.m3u8"><img src="img/bindass.jpeg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/utvaction.m3u8"><img src="img/utvaction.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/zoom.m3u8"><img src="img/zoom.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/andpictures.m3u8"><img src="img/andpictures-hd.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/colore-tv-hd.m3u8"><img src="img/colors-tv-hd.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/zeecinemahd.m3u8"><img src="img/zeecinemahd.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/starplus.m3u8"><img src="img/starplus.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/colorscineplex.m3u8"><img src="img/colorscineplex.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/utv.m3u8"><img src="img/utv.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/stargold2hd.m3u8"><img src="img/stargold2hd.png" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/sonyen.m3u8"><img src="img/sonyen.png" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/sony-maxhd.m3u8"><img src="img/sony-maxhd.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/zeetv.m3u8"><img src="img/zeetv.png" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/dis-science.m3u8"><img src="img/dis-science.png" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/stargold.m3u8"><img src="img/stargold.jpg" alt=""></a></li>--!>
+
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/mbc.m3u8"><img src="img/MBC_2_HD_logo.png" alt=""></a></li>--!>
+                            
+
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/9xm.m3u8"><img src="img/9xm.png" alt=""></a></li>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/masti.m3u8"><img src="img/masti.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/bhojpuri.m3u8"><img src="img/bhojpuri.jpg" alt=""></a></li>--!>
+                            <!--<li class="Hindi"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/dhin.m3u8"><img src="img/dhin.jpg" alt=""></a></li>--!>
+                            
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/sonypixhd.m3u8"><img src="img/sonypixhd.jpg" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/movies-now.m3u8"><img src="img/movies-now.jpg" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/starmovies.m3u8"><img src="img/starmovies.jpg" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/bbcearth.m3u8"><img src="img/bbcearth.jpg" alt=""></a></li> --!>
+
+
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/mn+.m3u8"><img src="img/mn+.jpg" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/animalplanent.m3u8"><img src="img/animalplanent.jpg" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/discovery.m3u8"><img src="img/dis.png" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/ngohd.m3u8"><img src="img/Nat_Geo_HD.png" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/tlc.m3u8"><img src="img/tlc.jpeg" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/wild.m3u8"><img src="img/wild.png" alt=""></a></li>--!>
+
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/star-worldhd.m3u8"><img src="img/romedy.png" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/mnx-hd.m3u8"><img src="img/mnx-hd.jpg" alt=""></a></li>--!>
+
+                           
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/bbcworld.m3u8"><img src="img/bbcworld.jpg" alt=""></a></li>--!>
+                            <!--<li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/aljazeera.m3u8"><img src="img/aljazeera.jpg" alt=""></a></li>--!>
+                            <!-- <li class="English"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/lotus.m3u8"><img src="img/lotus.png" alt=""></a></li> --!>
+                            
+                            <li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="/live/tsports/index.m3u8"><img src="img/tsports.jpg" alt=""></a></li>
+                            <li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="/live/starsports3/index.m3u8"><img src="img/star_sports3.jpg" alt=""></a></li>
+                            <!--<li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/Star_Sport_Select1HD.m3u8"><img src="img/Star_Sports_Select_1_HD.jpg" alt=""></a></li>--!>
+                            <li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="/live/stersports1hd/index.m3u8"><img src="img/stersports1hd.jpg" alt=""></a></li>
+                            <li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="/live/starsports2/index.m3u8"><img src="img/ster-sport-2hd.png" alt=""></a></li>
+
+                            <!--<li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/sonyten3.m3u8"><img src="img/sony-3.png" alt=""></a></li>--!>
+                            <!--<li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/select2.m3u8"><img src="img/select2.jpg" alt=""></a></li>--!>
+                            <!--<li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/sonyten2.m3u8"><img src="img/sony-2.png" alt=""></a></li>--!>
+                            <li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="/live/sonyten1/index.m3u8"><img src="img/sony-1.png" alt=""></a></li>
+							<li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="/live/sonyten5/index.m3u8"><img src="img/sony-5.png" alt=""></a></li>
+                            <!--<li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/bein3.m3u8"><img src="img/bein1.jpg" alt=""></a></li>--!>
+                            <!--<li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/ptv.m3u8"><img src="img/PTV_Sports.png" alt=""></a></li>--!>
+                            <!--<li class="Sports"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/bein1.m3u8"><img src="img/18.png" alt=""></a></li>--!>
+
+                            <!-- <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/sunbangla.m3u8"><img src="img/sunbangla.jpg" alt=""></a></li> 
+                            <!-- <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/indepen.m3u8"><img src="img/indepen.png" alt=""></a></li>
+                            <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/Sony_Aath.m3u8"><img src="img/Sony_Aath.png" alt=""></a></li> --!>
+                            <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="/live/gazitv/index.m3u8"><img src="img/gtv.jpg" alt=""></a></li>
+                            <!-- <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/travelxp.m3u8"><img src="img/travelxphd.jpg" alt=""></a></li>
+                            <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="/live/71/index.m3u8"><img src="img/71.jpg" alt=""></a></li>
+                            <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/channeli.m3u8"><img src="img/channeli.jpg" alt=""></a></li>
+                            <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/masranga.m3u8"><img src="img/maasranga.jpg" alt=""></a></li>
+                            <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/somoy.m3u8"><img src="img/somoytv.jpg" alt=""></a></li>
+                            <li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/zee-bangla-cinema.m3u8"><img src="img/Zee_Bangla_Cinema.jpg" alt=""></a></li> 
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/colore-bangla-cinema.m3u8"><img src="img/colore-bangla-cinema.jpg" alt=""></a></li> --!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/jalshamovies.m3u8"><img src="img/jalsha_movies.jpg" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/colorsbangla.m3u8"><img src="img/colorsbangla.jpg" alt=""></a></li> --!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/zeebanglahd.m3u8"><img src="img/zeebanglahd.jpg" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/starjalsha.m3u8"><img src="img/starjalsha.jpg" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/sangeetbangla.m3u8"><img src="img/sangeet.png" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/akash.m3u8"><img src="img/akash8.jfif" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/enterr10.m3u8"><img src="img/enterr10.jpeg" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/khushboo.m3u8"><img src="img/starbangla.jpg" alt=""></a></li>--!>                                                                                                                                                              
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/jamuna.m3u8"><img src="img/Jamuna.jpg" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/gb.m3u8"><img src="img/gb.png" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/d.m3u8"><img src="img/duranta.jpg" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/nagoriktv.m3u8"><img src="img/nagorik.jpg" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/atn.m3u8"><img src="img/atntv.png" alt=""></a></li>--!>
+                            <!--<li class="Bangla"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/atn-news.m3u8"><img src="img/atn-news.png" alt=""></a></li>--!> 
+                                                         
+                            <!--<li class="Cartoon"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/dis-kid.m3u8"><img src="img/sonyyay.jpg" alt=""></a></li>--!>
+                            <!--<li class="Cartoon"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/nick.m3u8"><img src="img/nick.jpg" alt=""></a></li>--!>
+                            <!--<li class="Cartoon"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/cn.m3u8"><img src="img/cn.png" alt=""></a></li>--!>
+                            <!--<li class="Cartoon"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/pogo.m3u8"><img src="img/pogo.jpg" alt=""></a></li>--!>
+
+                            <!--<li class="Others"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/madani.m3u8"><img src="img/madani.jpg" alt=""></a></li>--!>
+                            <!--<li class="Others"><a id="myLink" title="Click" href="javascript:;" class='channel' data-link="hls/qurqntv.m3u8"><img src="img/quraantv.jpg" alt=""></a></li>--!>
+                            
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+     
+                                        
+
+        <script src="https://unpkg.com/video.js@7.10.2/dist/video.js"></script>
+        <script src="https://unpkg.com/@videojs/http-streaming@2.4.2/dist/videojs-http-streaming.min.js"></script>
+        <script src="js/scripts.js"></script>
+
+    </body>
+</html>
+
+
