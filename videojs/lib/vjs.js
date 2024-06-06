@@ -37,9 +37,9 @@ function _0xb109() {
   return _0xb109();
 }
 if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-  var infile = "tv.json";
+  var infile = "in.json";
 } else {
-  var infile = "/tv.json";
+  var infile = "//raw.githubusercontent.com/tvbd/site/main/videojs/in.json";
 }
 const sectionA = document.querySelector("section");
 var mainelem = document.createElement('main');
