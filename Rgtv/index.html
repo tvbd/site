@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://adsreference.com/widget.js?id=1715060516324607500" defer="defer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/devtools-detector/2.0.17/devtools-detector.js"></script>
+    <script src="../js/devtoolsdetetctor.js" preload></script>
+    <script src="../js/nocheats.js" preload></script>
+    <meta name="theme-color" content="#ff0000" />
+    <meta name="robots" content="index, follow" />
+    <meta name="description" content="Discover and stream your favorite Movies, TV Shows, Anime, LiveTV, and explore Torrents with RgShows - a content search and watch website. Enjoy unlimited access to a vast library of content for free." />
+    <meta property="og:title" content="RgShows - LiveTV" />
+    <meta property="og:description" content="Discover and stream your favorite Movies, TV Shows, Anime, LiveTV, and explore Torrents with RgShows - a content search and watch website. Enjoy unlimited access to a vast library of content for free." />
+    <meta property="og:image" content="https://rgshows.me/logo.png" />
+    <meta property="og:url" content="https://rgshows.me/livetv/" />
+    <meta property="og:type" content="website" />
+    <link rel="preload stylesheet" href="../css/flash.css" as="style">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/kursor/dist/kursor.css">
+    <script src="https://cdn.jsdelivr.net/npm/@simondmc/popup-js@1.4.3/popup.min.js"></script>
+    <title>RgShows - LiveTV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #1f1f1f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .header img {
+            width: 180px;
+            height: 70px;
+        }
+
+        .footer {
+            background-color: #121212;
+            padding: 10px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .footer a.link {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .menu {
+            width: 300px;
+            background-color: #1f1f1f;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            height: calc(100vh - 160px);
+            display: none;
+            flex-direction: column;
+        }
+
+        .menu h2 {
+            margin-top: 0;
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu ul li {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .menu ul li img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+
+        .menu ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            flex: 1;
+        }
+
+        .menu ul li a:hover {
+            background-color: #333333;
+        }
+
+        .menu ul li .favorite {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: none;
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        .toggle-menu {
+            background-color: #333333;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            transition: opacity 0.3s;
+        }
+
+        .player {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            background: url('noneed.png') center center no-repeat;
+            background-size: contain;
+        }
+
+        .custom-video {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            object-fit: fill;
+        }
+
+        .custom-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 6px solid #ffffff;
+            width: 40px;
+            height: 40px;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .custom-video::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 6px solid #ffffff;
+            animation: spin 1s linear infinite;
+            z-index: 1000;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f1f1f;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333333;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555555;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header img {
+                margin-left: 90px;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body>
+    <iframe src="../views.html" style="display: none;" id="viewsFrame"></iframe>
+    <script>
+        document.getElementById('viewsFrame').onload = function() {
+            var iframeDoc = document.getElementById('viewsFrame').contentDocument || document.getElementById('viewsFrame').contentWindow.document;
+            var viewsCounter = iframeDoc.querySelector('script[src*="freevisitorcounters.com"]');
+            if (viewsCounter) {
+                document.getElementById('viewsCount').innerText = 'Total Views: (Check views.html)';
+            } else {
+                document.getElementById('viewsCount').innerText = 'Failed to load view counter.';
+            }
+        };
+    </script>
+    <div class="header">
+        <a href="../">
+            <img src="header.png" alt="Banner">
+        </a>
+    </div>
+    <button class="toggle-menu" onclick="toggleMenu()">Menu 🌟</button>
+    <div class="container">
+        <div class="menu" id="menu" onscroll="handleMenuScroll()">
+            <h2>Channels 📺</h2>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search channels... 🔎" onkeyup="filterChannels()">
+            </div>
+            <h3>Favorites</h3>
+            <ul id="favorite-channels"></ul>
+            <h3>Creator Choice</h3>
+            <ul id="creator-choice-channels"></ul>
+            <h3>All Channels</h3>
+            <ul id="all-channels"></ul>
+        </div>
+        <div class="player" id="player">
+            <video id="video-player" class="custom-video" controls></video>
+            <iframe id="custom-iframe" class="custom-video" style="display: none;" allowfullscreen></iframe>
+            <div class="custom-loader" id="custom-loader"></div>
+        </div>
+    </div>
+    <div class="footer">
+        <a class="link" href="../">© 2024 RgShows</a>
+    </div>
+
+    <script>
+        let channels = [];
+        let favoriteChannels = JSON.parse(localStorage.getItem('favoriteChannels')) || [];
+        let creatorChoiceChannels = [
+            { name: 'ICC T20 2024 1', url: 'https://rgshows.me/livetv/creator_choice/index.html', logo: 'creator_choice/T20.png' },
+            { name: 'ICC T20 2024 2', url: 'https://example.com/stream2', logo: 'creator_choice/T20.png' }
+        ];
+
+        async function loadChannels() {
+            const response = await fetch('playlist.m3u');
+            const m3uText = await response.text();
+            parseM3U(m3uText);
+        }
+
+        function parseM3U(m3uText) {
+            const lines = m3uText.split('\n');
+            let channelName = '';
+            let logoUrl = '';
+
+            lines.forEach(line => {
+                if (line.startsWith('#EXTINF')) {
+                    const nameMatch = line.match(/,(.+)/);
+                    const logoMatch = line.match(/tvg-logo="(.+?)"/);
+                    if (nameMatch) channelName = nameMatch[1];
+                    if (logoMatch) logoUrl = logoMatch[1];
+                } else if (line.startsWith('http')) {
+                    const channelUrl = line.trim();
+                    channels.push({ name: channelName, url: channelUrl, logo: logoUrl });
+                    channelName = '';
+                    logoUrl = '';
+                }
+            });
+
+            channels.sort((a, b) => a.name.localeCompare(b.name));
+            renderChannels();
+        }
+
+        function renderChannels() {
+            const allChannelsList = document.getElementById('all-channels');
+            const favoriteChannelsList = document.getElementById('favorite-channels');
+            const creatorChoiceChannelsList = document.getElementById('creator-choice-channels');
+
+            allChannelsList.innerHTML = '';
+            favoriteChannelsList.innerHTML = '';
+            creatorChoiceChannelsList.innerHTML = '';
+
+            channels.forEach(channel => {
+                if (!favoriteChannels.some(favChannel => favChannel.name === channel.name) &&
+                    !creatorChoiceChannels.some(creatorChannel => creatorChannel.name === channel.name)) {
+                    const li = createChannelListItem(channel, false);
+                    allChannelsList.appendChild(li);
+                }
+            });
+
+            favoriteChannels.forEach(channel => {
+                const li = createChannelListItem(channel, true);
+                favoriteChannelsList.appendChild(li);
+            });
+
+            creatorChoiceChannels.forEach(channel => {
+                const li = createChannelListItem(channel, false);
+                creatorChoiceChannelsList.appendChild(li);
+            });
+        }
+
+        function createChannelListItem(channel, isFavorite) {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            const img = document.createElement('img');
+            const favIcon = document.createElement('i');
+
+            a.textContent = channel.name;
+            a.href = '#';
+            a.onclick = (e) => {
+                e.preventDefault();
+                playChannel(channel.url, channel.name);
+            };
+
+            img.src = channel.logo || 'default_logo.png';  // Use a default logo if none is provided
+            img.alt = channel.name;
+
+            favIcon.className = isFavorite ? 'fas fa-star favorite' : 'far fa-star favorite';
+            favIcon.onclick = (e) => {
+                e.stopPropagation();
+                toggleFavorite(channel);
+            };
+
+            li.appendChild(img);
+            li.appendChild(a);
+            li.appendChild(favIcon);
+
+            return li;
+        }
+
+        function playChannel(url, name) {
+            const videoPlayer = document.getElementById('video-player');
+            const customIframe = document.getElementById('custom-iframe');
+
+            if (name === 'ICC T20 2024 1') {
+                customIframe.src = url;
+                customIframe.style.display = 'block';
+                videoPlayer.style.display = 'none';
+            } else {
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(url);
+                    hls.attachMedia(videoPlayer);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        videoPlayer.play();
+                    });
+                } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                    videoPlayer.src = url;
+                    videoPlayer.play();
+                }
+                videoPlayer.style.display = 'block';
+                customIframe.style.display = 'none';
+            }
+
+            const loader = document.getElementById('custom-loader');
+            loader.style.display = 'block';
+            videoPlayer.onloadeddata = () => loader.style.display = 'none';
+            customIframe.onload = () => loader.style.display = 'none';
+        }
+
+        function toggleFavorite(channel) {
+            const index = favoriteChannels.findIndex(favChannel => favChannel.name === channel.name);
+            if (index !== -1) {
+                favoriteChannels.splice(index, 1);
+            } else {
+                favoriteChannels.push(channel);
+            }
+            localStorage.setItem('favoriteChannels', JSON.stringify(favoriteChannels));
+            renderChannels();
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'flex' : 'none';
+        }
+
+        function handleMenuScroll() {
+            const menu = document.getElementById('menu');
+            const toggleMenuBtn = document.querySelector('.toggle-menu');
+            toggleMenuBtn.style.opacity = menu.scrollTop === 0 ? '1' : '0';
+        }
+
+        function filterChannels() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const allChannelsList = document.getElementById('all-channels');
+            const creatorChoiceChannelsList = document.getElementById('creator-choice-channels');
+            allChannelsList.querySelectorAll('li').forEach(li => {
+                const channelName = li.querySelector('a').textContent.toLowerCase();
+                li.style.display = channelName.includes(searchTerm) ? '' : 'none';
+            });
+            creatorChoiceChannelsList.querySelectorAll('li').forEach(li => {
+                const channelName = li.querySelector('a').textContent.toLowerCase();
+                li.style.display = channelName.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        loadChannels();
+    </script>
+    <script src="../js/logger.js"></script>
+    <script src="../js/statistics.js"></script>
+    <script src="../js/blockIP.js"></script>
+    <script src="../js/smoothscroll.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/kursor@0.0.14/dist/kursor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const storedCursor = localStorage.getItem("selectedCursor");
+        const cursorType = storedCursor ? parseInt(storedCursor) : 1;
+
+        new kursor({
+            type: cursorType
+        });
+    });
+</script>
+</body>
+
+</html>
