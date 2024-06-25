@@ -5,4 +5,5 @@
 ,{"link2":"//raw.githack.com/tvbd/site/main/Rgtv/index.html","img":"","genre":"M3U","lang":"Hls","name":"RgLivetv","author":"TVBD"}
 ,{"link2":"//raw.githack.com/tvbd/site/main/M3u/index.html","img":"","genre":"M3U","lang":"Videojs","name":"M3U Playlist","author":"TVBD"}
 ,{"link2":"//raw.githack.com/tvbd/m3uplayer/main/Clappertv/index.html","img":"","genre":"M3U","lang":"Clapper","name":"Clapper Web","author":"TVBD"}
+,{"link2":"//raw.githack.com/tvbd/m3uplayer/main/Webtv/index.html","img":"","genre":"M3U","lang":"Videojs","name":"WebTV","author":"TVBD"}
 ]
