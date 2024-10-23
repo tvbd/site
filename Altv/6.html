@@ -1,0 +1,615 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JagoBD — Powered by : Ovation Bangladesh.</title>
+
+<script>
+<!--
+document.write(unescape("%3Cstyle%3E%0A%20%20%20%20%20%20%20%20/*%20Base%20styles%20*/%0A%20%20%20%20%20%20%20%20body%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-family%3A%20Arial%2C%20sans-serif%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20display%3A%20flex%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20flex-direction%3A%20column%3B%20/*%20Set%20column%20direction%20for%20body%20*/%0A%20%20%20%20%20%20%20%20%20%20%20%20justify-content%3A%20center%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20align-items%3A%20center%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20height%3A%20100vh%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20margin%3A%200%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20background-color%3A%20black%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%0A%0A%20%20%20%20%20%20%20%20.hr%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2020%25%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20.tv-container%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20display%3A%20flex%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2090%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20height%3A%2080%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20max-width%3A%201200px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20flex-direction%3A%20column%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20opacity%3A%200%3B%20/*%20Initially%20hidden%20*/%0A%20%20%20%20%20%20%20%20%20%20%20%20transition%3A%20opacity%201s%3B%20/*%20Fade-in%20effect%20*/%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%0A%0A%20%20%20%20%20%20%20%20@keyframes%20bounce%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%200%25%20%7B%20transform%3A%20translateY%280%29%3B%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20100%25%20%7B%20transform%3A%20translateY%28-20px%29%3B%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20/*%20Responsive%20channel%20list%20with%20more%20columns%20*/%0A%20%20%20%20%20%20%20%20.channel-list%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%20100%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20background%3A%20%23010101de%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20white%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%2025px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20display%3A%20grid%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20grid-gap%3A%2010px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20box-sizing%3A%20border-box%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20border-radius%3A%2050px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20overflow-y%3A%20auto%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20box-shadow%3A%20rgba%280%2C%200%2C%200%2C%200.24%29%200px%203px%208px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20/*%20Dynamic%20columns%20based%20on%20screen%20size%20*/%0A%20%20%20%20%20%20%20%20%20%20%20%20grid-template-columns%3A%20repeat%28auto-fill%2C%20minmax%28100px%2C%201fr%29%29%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20.channel-item%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20background%3A%20white%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20border-radius%3A%2012px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%2010px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20display%3A%20flex%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20flex-direction%3A%20column%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20align-items%3A%20center%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20cursor%3A%20pointer%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20transition%3A%20transform%200.2s%2C%20box-shadow%200.3s%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20box-shadow%3A%20rgba%280%2C%200%2C%200%2C%200.24%29%200px%203px%208px%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20.channel-item%20img%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2050px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20height%3A%2050px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20.channel-item%20span%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%200px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20transparent%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20text-align%3A%20center%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20.channel-item%3Ahover%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20transform%3A%20translateY%28-5px%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20border%3A%203px%20solid%20%23009671f6%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20box-shadow%3A%20rgba%280%2C%200%2C%200%2C%200.35%29%200px%205px%2015px%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20.player%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%20100%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20background%3A%20transparent%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%2010px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20display%3A%20flex%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20justify-content%3A%20center%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20align-items%3A%20center%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20box-sizing%3A%20border-box%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20flex-grow%3A%201%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20margin-bottom%3A%2020px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20box-shadow%3A%20rgba%280%2C%200%2C%200%2C%200.24%29%200px%203px%208px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20border-radius%3A%2010px%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20/*%20Clappr%20player%20will%20be%20styled%20dynamically%20*/%0A%20%20%20%20%20%20%20%20%23player%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%20100%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20height%3A%2040%25%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20/*%20Responsive%20styles%20*/%0A%20%20%20%20%20%20%20%20@media%20%28min-width%3A%20768px%29%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20.tv-container%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20flex-direction%3A%20row%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20.channel-list%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20max-width%3A%20100%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20width%3A%20100%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20border-radius%3A%2010px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20.player%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2070%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20border-radius%3A%2020px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20margin-right%3A%2020px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20@media%20%28max-width%3A%20767px%29%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20.tv-container%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20flex-direction%3A%20column%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20.player%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20border-radius%3A%2020px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20.channel-list%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20max-height%3A%2055%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20width%3A%20400px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20margin-top%3A%208px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20border-radius%3A%205px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%20%20%20%20.channel-item%20img%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20width%3A%2068px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20height%3A%2068px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%3C/style%3E%0A%20%20%20%20%0A%20%20%20%20%3Cscript%3E%0A%3C%21--%0Adocument.write%28unescape%28%22%253Cstyle%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523popup%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520position%253A%2520fixed%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520top%253A%252050%2525%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520right%253A%2520-200px%253B%2520/*%2520Start%2520off-screen%2520*/%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520width%253A%2520200px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520height%253A%2520200px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520background%253A%2520url%2528%2527https%253A//blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjCvgaskwSgwXkklHj2fErU7kdgbF7R9xhdbpERgczwzWq_9FCOJO4j162TjS1sKBx0JyZQDMtPPFiv59OxKfsexE4cYamjk7LubiSJuN5lw2H4o0EKmHTmtpWRo_CRxXLBNwyU-vNDLlSrdnRMrG4yoay5R8qWXNlOZKa-pnlqxhfPKsEEuXorjVfMSg/s1028/transparent-Lumii_20240714_165233715.png%2527%2529%2520no-repeat%2520center%2520center%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520background-size%253A%2520cover%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520transition%253A%2520right%25201s%2520ease-in-out%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%257D%250A%2520%2520%2520%2520%253C/style%253E%250A%253Cstyle%253E%250A%2520%2520%2520%2520%2520%2520%2520%2520@keyframes%2520slideIn%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520from%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520opacity%253A%25200%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520transform%253A%2520translateX%2528100%2525%2529%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%257D%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520to%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520opacity%253A%25201%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520transform%253A%2520translateX%25280%2529%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%257D%250A%2520%2520%2520%2520%2520%2520%2520%2520%257D%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523blockMessage%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520display%253A%2520none%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520width%253A%2520320px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520padding%253A%252020px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520background-color%253A%2520%2523333%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520color%253A%2520%2523fff%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520border-radius%253A%25208px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520box-shadow%253A%25200%25204px%25208px%2520rgba%25280%252C%25200%252C%25200%252C%25200.2%2529%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520position%253A%2520fixed%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520bottom%253A%252020px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520right%253A%252020px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520opacity%253A%25200%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520transform%253A%2520translateX%2528100%2525%2529%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520transition%253A%2520opacity%25200.5s%2520ease-out%252C%2520transform%25200.5s%2520ease-out%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%257D%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523blockMessage.show%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520display%253A%2520block%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520animation%253A%2520slideIn%25200.5s%2520forwards%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%257D%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520.close-btn%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520position%253A%2520absolute%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520top%253A%252010px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520right%253A%252010px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520background-color%253A%2520%2523ff5c5c%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520color%253A%2520%2523fff%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520border%253A%2520none%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520padding%253A%25205px%252010px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520cursor%253A%2520pointer%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520font-size%253A%252016px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520border-radius%253A%25204px%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520transition%253A%2520background-color%25200.3s%2520ease%252C%2520transform%25200.3s%2520ease%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%257D%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520.close-btn%253Ahover%2520%257B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520background-color%253A%2520%2523ff7878%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520transform%253A%2520scale%25281.1%2529%253B%250A%2520%2520%2520%2520%2520%2520%2520%2520%257D%250A%2520%2520%2520%2520%253C/style%253E%22%29%29%3B%0A//--%3E%0A%3C/script%3E%0A%3C/head%3E"));
+//-->
+</script><style>
+        /* Base styles */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column; /* Set column direction for body */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+            
+        }
+
+        
+
+        .hr {
+            width: 20%;
+        }
+
+        .tv-container {
+            display: flex;
+            width: 90%;
+            height: 80%;
+            max-width: 1200px;
+            flex-direction: column;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 1s; /* Fade-in effect */
+        }
+
+        
+        
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-20px); }
+        }
+
+        /* Responsive channel list with more columns */
+        .channel-list {
+            width: 100%;
+            background: #010101de;
+            color: white;
+            padding: 25px;
+            display: grid;
+            grid-gap: 10px;
+            box-sizing: border-box;
+            border-radius: 50px;
+            overflow-y: auto;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            /* Dynamic columns based on screen size */
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        }
+
+        .channel-item {
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+
+        .channel-item img {
+            width: 50px;
+            height: 50px;
+            
+        }
+
+        .channel-item span {
+            font-size: 0px;
+            color: transparent;
+            text-align: center;
+        }
+
+        .channel-item:hover {
+            transform: translateY(-5px);
+            border: 3px solid #009671f6;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+
+        .player {
+            width: 100%;
+            
+            background: transparent;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            flex-grow: 1;
+            margin-bottom: 20px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 10px;
+        }
+
+        /* Clappr player will be styled dynamically */
+        #player {
+            width: 100%;
+            height: 40%;
+        }
+
+        /* Responsive styles */
+        @media (min-width: 768px) {
+            .tv-container {
+                flex-direction: row;
+            }
+
+            .channel-list {
+                max-width: 100%;
+                width: 100%;
+                border-radius: 10px;
+            }
+
+            .player {
+                width: 70%;
+                border-radius: 20px;
+                margin-right: 20px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .tv-container {
+                flex-direction: column;
+            }
+
+            .player {
+                border-radius: 20px;
+            }
+
+            .channel-list {
+                max-height: 55%;
+                width: 400px;
+                
+                margin-top: 8px;
+                border-radius: 5px;
+            }
+
+            .channel-item img {
+                width: 68px;
+                height: 68px;
+            }
+        }
+
+    </style>
+    
+    <script>
+<!--
+document.write(unescape("%3Cstyle%3E%0A%20%20%20%20%20%20%20%20%23popup%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20position%3A%20fixed%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20top%3A%2050%25%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20right%3A%20-200px%3B%20/*%20Start%20off-screen%20*/%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%20200px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20height%3A%20200px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20background%3A%20url%28%27https%3A//blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjCvgaskwSgwXkklHj2fErU7kdgbF7R9xhdbpERgczwzWq_9FCOJO4j162TjS1sKBx0JyZQDMtPPFiv59OxKfsexE4cYamjk7LubiSJuN5lw2H4o0EKmHTmtpWRo_CRxXLBNwyU-vNDLlSrdnRMrG4yoay5R8qWXNlOZKa-pnlqxhfPKsEEuXorjVfMSg/s1028/transparent-Lumii_20240714_165233715.png%27%29%20no-repeat%20center%20center%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20background-size%3A%20cover%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20transition%3A%20right%201s%20ease-in-out%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%3C/style%3E%0A%3Cstyle%3E%0A%20%20%20%20%20%20%20%20@keyframes%20slideIn%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20from%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20opacity%3A%200%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20transform%3A%20translateX%28100%25%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%20%20%20%20to%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20opacity%3A%201%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20transform%3A%20translateX%280%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%23blockMessage%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20display%3A%20none%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20width%3A%20320px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%2020px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20background-color%3A%20%23333%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23fff%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20border-radius%3A%208px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20box-shadow%3A%200%204px%208px%20rgba%280%2C%200%2C%200%2C%200.2%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20position%3A%20fixed%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20bottom%3A%2020px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20right%3A%2020px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20opacity%3A%200%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20transform%3A%20translateX%28100%25%29%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20transition%3A%20opacity%200.5s%20ease-out%2C%20transform%200.5s%20ease-out%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20%23blockMessage.show%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20display%3A%20block%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20animation%3A%20slideIn%200.5s%20forwards%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20.close-btn%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20position%3A%20absolute%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20top%3A%2010px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20right%3A%2010px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20background-color%3A%20%23ff5c5c%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20color%3A%20%23fff%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20border%3A%20none%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20padding%3A%205px%2010px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20cursor%3A%20pointer%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20font-size%3A%2016px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20border-radius%3A%204px%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20transition%3A%20background-color%200.3s%20ease%2C%20transform%200.3s%20ease%3B%0A%20%20%20%20%20%20%20%20%7D%0A%0A%20%20%20%20%20%20%20%20.close-btn%3Ahover%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20background-color%3A%20%23ff7878%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20transform%3A%20scale%281.1%29%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%3C/style%3E"));
+//-->
+</script><style>
+        #popup {
+            position: fixed;
+            top: 50%;
+            right: -200px; /* Start off-screen */
+            width: 200px;
+            height: 200px;
+            background: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjCvgaskwSgwXkklHj2fErU7kdgbF7R9xhdbpERgczwzWq_9FCOJO4j162TjS1sKBx0JyZQDMtPPFiv59OxKfsexE4cYamjk7LubiSJuN5lw2H4o0EKmHTmtpWRo_CRxXLBNwyU-vNDLlSrdnRMrG4yoay5R8qWXNlOZKa-pnlqxhfPKsEEuXorjVfMSg/s1028/transparent-Lumii_20240714_165233715.png') no-repeat center center;
+            background-size: cover;
+            transition: right 1s ease-in-out;
+        }
+    </style>
+<style>
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        #blockMessage {
+            display: none;
+            width: 320px;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        #blockMessage.show {
+            display: block;
+            animation: slideIn 0.5s forwards;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff5c5c;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7878;
+            transform: scale(1.1);
+        }
+    </style>
+<link rel="me" href="https://www.blogger.com/profile/00594880377781565398"><meta name="google-adsense-platform-account" content="ca-host-pub-1556223355139109"><meta name="google-adsense-platform-domain" content="blogspot.com"><style type="text/css">* {user-select: auto !important; -webkit-user-select: auto !important;}</style><input type="hidden" id="inject_idm_text_selection"><style></style><style type="text/css">.container[data-container]{position:absolute;background-color:#000;height:100%;width:100%;max-width:100%}.container[data-container] .chromeless{cursor:default}[data-player]:not(.nocursor) .container[data-container]:not(.chromeless).pointer-enabled{cursor:pointer}[data-player]{-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;-webkit-transform:translateZ(0);transform:translateZ(0);position:relative;margin:0;padding:0;border:0;font-style:normal;font-weight:400;text-align:center;overflow:hidden;font-size:100%;font-family:Roboto,Open Sans,Arial,sans-serif;text-shadow:0 0 0;box-sizing:border-box}[data-player] a,[data-player] abbr,[data-player] acronym,[data-player] address,[data-player] applet,[data-player] article,[data-player] aside,[data-player] audio,[data-player] b,[data-player] big,[data-player] blockquote,[data-player] canvas,[data-player] caption,[data-player] center,[data-player] cite,[data-player] code,[data-player] dd,[data-player] del,[data-player] details,[data-player] dfn,[data-player] div,[data-player] dl,[data-player] dt,[data-player] em,[data-player] embed,[data-player] fieldset,[data-player] figcaption,[data-player] figure,[data-player] footer,[data-player] form,[data-player] h1,[data-player] h2,[data-player] h3,[data-player] h4,[data-player] h5,[data-player] h6,[data-player] header,[data-player] hgroup,[data-player] i,[data-player] iframe,[data-player] img,[data-player] ins,[data-player] kbd,[data-player] label,[data-player] legend,[data-player] li,[data-player] mark,[data-player] menu,[data-player] nav,[data-player] object,[data-player] ol,[data-player] output,[data-player] p,[data-player] pre,[data-player] q,[data-player] ruby,[data-player] s,[data-player] samp,[data-player] section,[data-player] small,[data-player] span,[data-player] strike,[data-player] strong,[data-player] sub,[data-player] summary,[data-player] sup,[data-player] table,[data-player] tbody,[data-player] td,[data-player] tfoot,[data-player] th,[data-player] thead,[data-player] time,[data-player] tr,[data-player] tt,[data-player] u,[data-player] ul,[data-player] var,[data-player] video{margin:0;padding:0;border:0;font:inherit;font-size:100%;vertical-align:baseline}[data-player] table{border-collapse:collapse;border-spacing:0}[data-player] caption,[data-player] td,[data-player] th{text-align:left;font-weight:400;vertical-align:middle}[data-player] blockquote,[data-player] q{quotes:none}[data-player] blockquote:after,[data-player] blockquote:before,[data-player] q:after,[data-player] q:before{content:"";content:none}[data-player] a img{border:none}[data-player]:focus{outline:0}[data-player] *{max-width:none;box-sizing:inherit;float:none}[data-player] div{display:block}[data-player].fullscreen{width:100%!important;height:100%!important;top:0;left:0}[data-player].nocursor{cursor:none}.clappr-style{display:none!important}[data-html5-video]{position:absolute;height:100%;width:100%;display:block}.clappr-flash-playback[data-flash-playback]{display:block;position:absolute;top:0;left:0;height:100%;width:100%;pointer-events:none}[data-html-img]{max-width:100%;max-height:100%}[data-no-op]{position:absolute;height:100%;width:100%;text-align:center}[data-no-op] p[data-no-op-msg]{position:absolute;text-align:center;font-size:25px;left:0;right:0;color:#fff;padding:10px;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);max-height:100%;overflow:auto}[data-no-op] canvas[data-no-op-canvas]{background-color:#777;height:100%;width:100%}.spinner-three-bounce[data-spinner]{position:absolute;margin:0 auto;width:70px;text-align:center;z-index:999;left:0;right:0;margin-left:auto;margin-right:auto;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.spinner-three-bounce[data-spinner]>div{width:18px;height:18px;background-color:#fff;border-radius:100%;display:inline-block;-webkit-animation:bouncedelay 1.4s infinite ease-in-out;animation:bouncedelay 1.4s infinite ease-in-out;-webkit-animation-fill-mode:both;animation-fill-mode:both}.spinner-three-bounce[data-spinner] [data-bounce1]{-webkit-animation-delay:-.32s;animation-delay:-.32s}.spinner-three-bounce[data-spinner] [data-bounce2]{-webkit-animation-delay:-.16s;animation-delay:-.16s}@-webkit-keyframes bouncedelay{0%,80%,to{-webkit-transform:scale(0);transform:scale(0)}40%{-webkit-transform:scale(1);transform:scale(1)}}@keyframes bouncedelay{0%,80%,to{-webkit-transform:scale(0);transform:scale(0)}40%{-webkit-transform:scale(1);transform:scale(1)}}.clappr-watermark[data-watermark]{position:absolute;min-width:70px;max-width:200px;width:12%;text-align:center;z-index:10}.clappr-watermark[data-watermark] a{outline:none;cursor:pointer}.clappr-watermark[data-watermark] img{max-width:100%}.clappr-watermark[data-watermark-bottom-left]{bottom:10px;left:10px}.clappr-watermark[data-watermark-bottom-right]{bottom:10px;right:42px}.clappr-watermark[data-watermark-top-left]{top:10px;left:10px}.clappr-watermark[data-watermark-top-right]{top:10px;right:37px}.player-poster[data-poster]{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;position:absolute;height:100%;width:100%;z-index:998;top:0;left:0;background-color:#000;background-size:cover;background-repeat:no-repeat;background-position:50% 50%}.player-poster[data-poster].clickable{cursor:pointer}.player-poster[data-poster]:hover .play-wrapper[data-poster]{opacity:1}.player-poster[data-poster] .play-wrapper[data-poster]{width:100%;height:25%;margin:0 auto;opacity:.75;transition:opacity .1s ease}.player-poster[data-poster] .play-wrapper[data-poster] svg{height:100%}.player-poster[data-poster] .play-wrapper[data-poster] svg path{fill:#fff}.media-control-notransition{transition:none!important}.media-control[data-media-control]{position:absolute;width:100%;height:100%;z-index:9999;pointer-events:none}.media-control[data-media-control].dragging{pointer-events:auto;cursor:-webkit-grabbing!important;cursor:grabbing!important;cursor:url(<%=baseUrl%>/a8c874b93b3d848f39a71260c57e3863.cur),move}.media-control[data-media-control].dragging *{cursor:-webkit-grabbing!important;cursor:grabbing!important;cursor:url(<%=baseUrl%>/a8c874b93b3d848f39a71260c57e3863.cur),move}.media-control[data-media-control] .media-control-background[data-background]{position:absolute;height:40%;width:100%;bottom:0;background:linear-gradient(transparent,rgba(0,0,0,.9));transition:opacity .6s ease-out}.media-control[data-media-control] .media-control-icon{line-height:0;letter-spacing:0;speak:none;color:#fff;opacity:.5;vertical-align:middle;text-align:left;transition:all .1s ease}.media-control[data-media-control] .media-control-icon:hover{color:#fff;opacity:.75;text-shadow:hsla(0,0%,100%,.8) 0 0 5px}.media-control[data-media-control].media-control-hide .media-control-background[data-background]{opacity:0}.media-control[data-media-control].media-control-hide .media-control-layer[data-controls]{bottom:-50px}.media-control[data-media-control].media-control-hide .media-control-layer[data-controls] .bar-container[data-seekbar] .bar-scrubber[data-seekbar]{opacity:0}.media-control[data-media-control] .media-control-layer[data-controls]{position:absolute;bottom:7px;width:100%;height:32px;font-size:0;vertical-align:middle;pointer-events:auto;transition:bottom .4s ease-out}.media-control[data-media-control] .media-control-layer[data-controls] .media-control-left-panel[data-media-control]{position:absolute;top:0;left:4px;height:100%}.media-control[data-media-control] .media-control-layer[data-controls] .media-control-center-panel[data-media-control]{height:100%;text-align:center;line-height:32px}.media-control[data-media-control] .media-control-layer[data-controls] .media-control-right-panel[data-media-control]{position:absolute;top:0;right:4px;height:100%}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button{background-color:transparent;border:0;margin:0 6px;padding:0;cursor:pointer;display:inline-block;width:32px;height:100%}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button svg{width:100%;height:22px}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button svg path{fill:#fff}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button:focus{outline:none}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button[data-pause],.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button[data-play],.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button[data-stop]{float:left;height:100%}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button[data-fullscreen]{float:right;background-color:transparent;border:0;height:100%}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button[data-hd-indicator]{background-color:transparent;border:0;cursor:default;display:none;float:right;height:100%}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button[data-hd-indicator].enabled{display:block;opacity:1}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button[data-hd-indicator].enabled:hover{opacity:1;text-shadow:none}.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button[data-playpause],.media-control[data-media-control] .media-control-layer[data-controls] button.media-control-button[data-playstop]{float:left}.media-control[data-media-control] .media-control-layer[data-controls] .media-control-indicator[data-duration],.media-control[data-media-control] .media-control-layer[data-controls] .media-control-indicator[data-position]{display:inline-block;font-size:10px;color:#fff;cursor:default;line-height:32px;position:relative}.media-control[data-media-control] .media-control-layer[data-controls] .media-control-indicator[data-position]{margin:0 6px 0 7px}.media-control[data-media-control] .media-control-layer[data-controls] .media-control-indicator[data-duration]{color:hsla(0,0%,100%,.5);margin-right:6px}.media-control[data-media-control] .media-control-layer[data-controls] .media-control-indicator[data-duration]:before{content:"|";margin-right:7px}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar]{position:absolute;top:-20px;left:0;display:inline-block;vertical-align:middle;width:100%;height:25px;cursor:pointer}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar] .bar-background[data-seekbar]{width:100%;height:1px;position:relative;top:12px;background-color:#666}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar] .bar-background[data-seekbar] .bar-fill-1[data-seekbar]{position:absolute;top:0;left:0;width:0;height:100%;background-color:#c2c2c2;transition:all .1s ease-out}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar] .bar-background[data-seekbar] .bar-fill-2[data-seekbar]{position:absolute;top:0;left:0;width:0;height:100%;background-color:#005aff;transition:all .1s ease-out}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar] .bar-background[data-seekbar] .bar-hover[data-seekbar]{opacity:0;position:absolute;top:-3px;width:5px;height:7px;background-color:hsla(0,0%,100%,.5);transition:opacity .1s ease}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar]:hover .bar-background[data-seekbar] .bar-hover[data-seekbar]{opacity:1}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar].seek-disabled{cursor:default}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar].seek-disabled:hover .bar-background[data-seekbar] .bar-hover[data-seekbar]{opacity:0}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar] .bar-scrubber[data-seekbar]{position:absolute;-webkit-transform:translateX(-50%);transform:translateX(-50%);top:2px;left:0;width:20px;height:20px;opacity:1;transition:all .1s ease-out}.media-control[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar] .bar-scrubber[data-seekbar] .bar-scrubber-icon[data-seekbar]{position:absolute;left:6px;top:6px;width:8px;height:8px;border-radius:10px;box-shadow:0 0 0 6px hsla(0,0%,100%,.2);background-color:#fff}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume]{float:right;display:inline-block;height:32px;cursor:pointer;margin:0 6px;box-sizing:border-box}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .drawer-icon-container[data-volume]{float:left;bottom:0}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .drawer-icon-container[data-volume] .drawer-icon[data-volume]{background-color:transparent;border:0;box-sizing:content-box;width:32px;height:32px;opacity:.5}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .drawer-icon-container[data-volume] .drawer-icon[data-volume]:hover{opacity:.75}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .drawer-icon-container[data-volume] .drawer-icon[data-volume] svg{height:24px;position:relative;top:3px}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .drawer-icon-container[data-volume] .drawer-icon[data-volume] svg path{fill:#fff}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .drawer-icon-container[data-volume] .drawer-icon[data-volume].muted svg{margin-left:2px}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume]{float:left;position:relative;overflow:hidden;top:6px;width:42px;height:18px;padding:3px 0;transition:width .2s ease-out}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .bar-background[data-volume]{height:1px;position:relative;top:7px;margin:0 3px;background-color:#666}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .bar-background[data-volume] .bar-fill-1[data-volume]{position:absolute;top:0;left:0;width:0;height:100%;background-color:#c2c2c2;transition:all .1s ease-out}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .bar-background[data-volume] .bar-fill-2[data-volume]{position:absolute;top:0;left:0;width:0;height:100%;background-color:#005aff;transition:all .1s ease-out}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .bar-background[data-volume] .bar-hover[data-volume]{opacity:0;position:absolute;top:-3px;width:5px;height:7px;background-color:hsla(0,0%,100%,.5);transition:opacity .1s ease}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .bar-scrubber[data-volume]{position:absolute;-webkit-transform:translateX(-50%);transform:translateX(-50%);top:0;left:0;width:20px;height:20px;opacity:1;transition:all .1s ease-out}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .bar-scrubber[data-volume] .bar-scrubber-icon[data-volume]{position:absolute;left:6px;top:6px;width:8px;height:8px;border-radius:10px;box-shadow:0 0 0 6px hsla(0,0%,100%,.2);background-color:#fff}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .segmented-bar-element[data-volume]{float:left;width:4px;padding-left:2px;height:12px;opacity:.5;box-shadow:inset 2px 0 0 #fff;transition:-webkit-transform .2s ease-out;transition:transform .2s ease-out;transition:transform .2s ease-out,-webkit-transform .2s ease-out}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .segmented-bar-element[data-volume].fill{box-shadow:inset 2px 0 0 #fff;opacity:1}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .segmented-bar-element[data-volume]:first-of-type{padding-left:0}.media-control[data-media-control] .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume] .segmented-bar-element[data-volume]:hover{-webkit-transform:scaleY(1.5);transform:scaleY(1.5)}.media-control[data-media-control].w320 .media-control-layer[data-controls] .drawer-container[data-volume] .bar-container[data-volume].volume-bar-hide{width:0;height:12px;top:9px;padding:0}.dvr-controls[data-dvr-controls]{display:inline-block;float:left;color:#fff;line-height:32px;font-size:10px;font-weight:700;margin-left:6px}.dvr-controls[data-dvr-controls] .live-info{cursor:default;font-family:Roboto,Open Sans,Arial,sans-serif;text-transform:uppercase}.dvr-controls[data-dvr-controls] .live-info:before{content:"";display:inline-block;position:relative;width:7px;height:7px;border-radius:3.5px;margin-right:3.5px;background-color:#ff0101}.dvr-controls[data-dvr-controls] .live-info.disabled{opacity:.3}.dvr-controls[data-dvr-controls] .live-info.disabled:before{background-color:#fff}.dvr-controls[data-dvr-controls] .live-button{cursor:pointer;outline:none;display:none;border:0;color:#fff;background-color:transparent;height:32px;padding:0;opacity:.7;font-family:Roboto,Open Sans,Arial,sans-serif;text-transform:uppercase;transition:all .1s ease}.dvr-controls[data-dvr-controls] .live-button:before{content:"";display:inline-block;position:relative;width:7px;height:7px;border-radius:3.5px;margin-right:3.5px;background-color:#fff}.dvr-controls[data-dvr-controls] .live-button:hover{opacity:1;text-shadow:hsla(0,0%,100%,.75) 0 0 5px}.dvr .dvr-controls[data-dvr-controls] .live-info{display:none}.dvr .dvr-controls[data-dvr-controls] .live-button{display:block}.dvr.media-control.live[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar] .bar-background[data-seekbar] .bar-fill-2[data-seekbar]{background-color:#005aff}.media-control.live[data-media-control] .media-control-layer[data-controls] .bar-container[data-seekbar] .bar-background[data-seekbar] .bar-fill-2[data-seekbar]{background-color:#ff0101}.cc-controls[data-cc-controls]{float:right;position:relative;display:none}.cc-controls[data-cc-controls].available{display:block}.cc-controls[data-cc-controls] .cc-button{padding:6px!important}.cc-controls[data-cc-controls] .cc-button.enabled{display:block;opacity:1}.cc-controls[data-cc-controls] .cc-button.enabled:hover{opacity:1;text-shadow:none}.cc-controls[data-cc-controls]>ul{list-style-type:none;position:absolute;bottom:25px;border:1px solid #000;display:none;background-color:#e6e6e6}.cc-controls[data-cc-controls] li{font-size:10px}.cc-controls[data-cc-controls] li[data-title]{background-color:#c3c2c2;padding:5px}.cc-controls[data-cc-controls] li a{color:#444;padding:2px 10px;display:block;text-decoration:none}.cc-controls[data-cc-controls] li a:hover{background-color:#555;color:#fff}.cc-controls[data-cc-controls] li a:hover a{color:#fff;text-decoration:none}.cc-controls[data-cc-controls] li.current a{color:red}.seek-time[data-seek-time]{position:absolute;white-space:nowrap;height:20px;line-height:20px;font-size:0;left:-100%;bottom:55px;background-color:rgba(2,2,2,.5);z-index:9999;transition:opacity .1s ease}.seek-time[data-seek-time].hidden[data-seek-time]{opacity:0}.seek-time[data-seek-time] [data-seek-time]{display:inline-block;color:#fff;font-size:10px;padding-left:7px;padding-right:7px;vertical-align:top}.seek-time[data-seek-time] [data-duration]{display:inline-block;color:hsla(0,0%,100%,.5);font-size:10px;padding-right:7px;vertical-align:top}.seek-time[data-seek-time] [data-duration]:before{content:"|";margin-right:7px}div.player-error-screen{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;color:#cccaca;position:absolute;top:0;height:100%;width:100%;background-color:rgba(0,0,0,.7);z-index:2000;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}div.player-error-screen__content[data-error-screen]{font-size:14px;color:#cccaca;margin-top:45px}div.player-error-screen__title[data-error-screen]{font-weight:700;line-height:30px;font-size:18px}div.player-error-screen__message[data-error-screen]{width:90%;margin:0 auto}div.player-error-screen__code[data-error-screen]{font-size:13px;margin-top:15px}div.player-error-screen__reload{cursor:pointer;width:30px;margin:15px auto 0}</style><style class="clappr-style">@font-face{font-family:Roboto;font-style:normal;font-weight:400;src:local("Roboto"),local("Roboto-Regular"),url(https://cdn.jsdelivr.net/npm/clappr@latest/dist/38861cba61c66739c1452c3a71e39852.ttf) format("truetype")}</style></head>
+    
+
+
+
+<body>
+  <script type="text/javascript" src="//cubicinjustice.com/98/d2/ff/98d2ff9da6ae4219aabe6fc4bd8cfef1.js"></script>
+    <script>
+
+(function(_0x12eb9a,_0x18562e){var _0x253589=_0x12eb9a();function _0x440b50(_0x531e25,_0x51493b,_0x1b27e8,_0x1a2fbe){return _0xf847(_0x1a2fbe-0x145,_0x531e25);}function _0x10a649(_0x3a641e,_0x589938,_0x1d7d49,_0x23e40f){return _0xf847(_0x3a641e-0x362,_0x23e40f);}while(!![]){try{var _0x11bf6e=-parseInt(_0x440b50(0x2f7,0x336,0x326,0x2f8))/(0x4*-0x353+-0x5e*-0x53+-0x112d)+-parseInt(_0x10a649(0x466,0x3c5,0x513,0x3ae))/(0x1a*-0x82+0xa10*-0x2+-0xfb*-0x22)+-parseInt(_0x440b50(0x38c,0x2e0,0x41e,0x365))/(-0x3e*-0x2f+-0x4*0x47f+0x69d*0x1)+-parseInt(_0x440b50(0x250,0x246,0x262,0x2f7))/(0x1fa4+0x41*0x97+-0x45f7)*(parseInt(_0x440b50(0x33a,0x27a,0x27f,0x2d1))/(-0xfea+0x134f*0x2+-0x16af))+-parseInt(_0x10a649(0x476,0x3fb,0x4d2,0x50a))/(-0x1941+-0x50*0x2b+0x385*0xb)+parseInt(_0x440b50(0x2f1,0x2bd,0x3b6,0x30e))/(0x3ff+-0x86d+0x475)+parseInt(_0x10a649(0x500,0x563,0x5c4,0x5c6))/(-0x1c81+-0x2*-0x5ad+0x112f)*(parseInt(_0x440b50(0x3ef,0x3a3,0x3a8,0x368))/(-0xf08+-0x1*-0x13ff+-0x4ee));if(_0x11bf6e===_0x18562e)break;else _0x253589['push'](_0x253589['shift']());}catch(_0x2f90b1){_0x253589['push'](_0x253589['shift']());}}}(_0x48e0,0x35099*-0x1+-0x1*-0x54bbf+0x1ca06*0x1));var _0x51dcce=(function(){function _0x48987e(_0x40b338,_0x32687c,_0x3fd371,_0xba4290){return _0xf847(_0x3fd371-0x1f4,_0x32687c);}var _0x432b2a={};_0x432b2a['ImQSH']=_0x48987e(0x3c1,0x2e3,0x30c,0x337);function _0x4dde78(_0x4356ca,_0x4a83af,_0x4f3eb4,_0x56e189){return _0xf847(_0x56e189- -0xd5,_0x4f3eb4);}_0x432b2a[_0x48987e(0x41d,0x3c3,0x3ca,0x474)]=_0x4dde78(0x117,0x1ae,0x1ab,0xf8);var _0x5ddb88=_0x432b2a,_0x2e1cb8=!![];return function(_0x3d694b,_0xec3999){var _0x46fd23=_0x2e1cb8?function(){function _0x38ddd0(_0x2f9db5,_0x527ffc,_0x3a45ce,_0x4f865c){return _0xf847(_0x2f9db5- -0x169,_0x3a45ce);}function _0x196c21(_0xe81b3a,_0x32e77e,_0xd3bd02,_0x5c4bdc){return _0xf847(_0x5c4bdc- -0x23c,_0xd3bd02);}if(_0x5ddb88['ImQSH']!==_0x5ddb88[_0x196c21(-0x60,-0xe6,-0x11f,-0x66)]){if(_0xec3999){var _0x1c3ded=_0xec3999[_0x196c21(-0x8e,-0x1a6,-0x72,-0x10a)](_0x3d694b,arguments);return _0xec3999=null,_0x1c3ded;}}else{if(_0x58a3ba){var _0x13b843=_0x211ca4[_0x38ddd0(-0x37,0x86,-0xae,0x56)](_0x2470f4,arguments);return _0x4e0f8f=null,_0x13b843;}}}:function(){};return _0x2e1cb8=![],_0x46fd23;};}()),_0x5968a6=_0x51dcce(this,function(){var _0x2b9919={};function _0x503956(_0x34b4c4,_0xc6b7d9,_0x5bdce5,_0x46e2a8){return _0xf847(_0x34b4c4- -0x2ec,_0x46e2a8);}_0x2b9919[_0x503956(-0xbb,-0x11b,-0x147,-0x12)]='(((.+)+)+)'+'+$';var _0x433859=_0x2b9919;function _0x414ce3(_0x727e2c,_0x4c5b20,_0x3063d1,_0x2c0aea){return _0xf847(_0x727e2c-0x10,_0x3063d1);}return _0x5968a6[_0x503956(-0x1dc,-0x240,-0x29b,-0x23d)]()[_0x503956(-0xdd,-0x14a,-0xce,-0x78)](_0x433859['jeoHs'])['toString']()['constructo'+'r'](_0x5968a6)[_0x414ce3(0x21f,0x1c0,0x25d,0x164)](_0x503956(-0xcd,-0x135,-0x68,-0x11)+'+$');});_0x5968a6();function _0x4cad02(_0x1417e5,_0x359d97,_0x37d4c0,_0x321e05){return _0xf847(_0x359d97-0x142,_0x1417e5);}var _0x5e84bc=(function(){var _0x5c6c5e=!![];return function(_0x11cd1a,_0x1d6f41){var _0x375890=_0x5c6c5e?function(){if(_0x1d6f41){var _0x592dc2=_0x1d6f41['apply'](_0x11cd1a,arguments);return _0x1d6f41=null,_0x592dc2;}}:function(){};return _0x5c6c5e=![],_0x375890;};}()),_0x476276=_0x5e84bc(this,function(){var _0xe82585={'yOStq':function(_0x67d7e3,_0x189fad){return _0x67d7e3+_0x189fad;},'WPOYI':_0x14a51e(-0x1bb,-0x10b,-0xa3,-0x4c)+_0x4daf5a(0x2e6,0x2f5,0x297,0x2c4),'OCFga':function(_0x2c8a6a){return _0x2c8a6a();},'mKJts':'log','bBvDl':_0x14a51e(-0x89,-0x86,-0x6e,-0xa8),'gAxSg':_0x14a51e(0x2f,-0x62,-0xdf,-0xcd),'UqOCZ':_0x14a51e(-0x19c,-0x110,-0x5a,-0x9f),'wNNMQ':_0x4daf5a(0x2d1,0x237,0x221,0x1fd),'RvmqA':function(_0x469cd7,_0x2e550e){return _0x469cd7===_0x2e550e;},'zJjyn':_0x14a51e(-0x131,-0x1be,-0x252,-0x269),'UNVTZ':_0x4daf5a(0x289,0x2c1,0x26b,0x2b4)+'1'};function _0x14a51e(_0x381ad3,_0x565d2d,_0x2d5f04,_0x8ff1ee){return _0xf847(_0x565d2d- -0x29a,_0x8ff1ee);}var _0xc4a9f0=function(){var _0x3fa054;try{_0x3fa054=Function(_0xe82585['yOStq'](_0xe82585[_0x367851(-0x2b3,-0x2f3,-0x214,-0x22d)]+(_0x1acf18(0x397,0x456,0x39d,0x452)+'ctor(\x22retu'+_0x367851(-0x1ef,-0x2eb,-0x33a,-0x29a)+'\x20)'),');'))();}catch(_0x197bd3){_0x3fa054=window;}function _0x1acf18(_0x23f342,_0x3705e0,_0x24c45d,_0xe5d9e8){return _0x14a51e(_0x23f342-0x42,_0x3705e0-0x54e,_0x24c45d-0xd9,_0x24c45d);}function _0x367851(_0x2abb71,_0x5013cb,_0x1f0214,_0x160789){return _0x14a51e(_0x2abb71-0x19b,_0x160789- -0xe0,_0x1f0214-0x1d,_0x2abb71);}return _0x3fa054;},_0x3e6fa4=_0xe82585[_0x4daf5a(0x218,0x2c4,0x32e,0x345)](_0xc4a9f0);function _0x4daf5a(_0x51bf24,_0x14029e,_0x1cc875,_0x5c376c){return _0xf847(_0x14029e-0xcb,_0x1cc875);}var _0x55c5eb=_0x3e6fa4[_0x14a51e(-0xf1,-0x15d,-0x223,-0xf8)]=_0x3e6fa4[_0x14a51e(-0x1d2,-0x15d,-0x186,-0x172)]||{},_0xe20c06=[_0xe82585[_0x4daf5a(0x1a9,0x22b,0x2f0,0x27c)],_0xe82585[_0x4daf5a(0x294,0x2d5,0x351,0x365)],_0x4daf5a(0x216,0x225,0x29a,0x1c8),_0xe82585[_0x4daf5a(0x191,0x247,0x197,0x1dc)],'exception',_0xe82585[_0x14a51e(-0x1c7,-0x14f,-0x105,-0xd1)],_0xe82585[_0x4daf5a(0x232,0x19e,0x1bc,0x1ef)]];for(var _0x25e60c=-0x1*0xfa7+-0x2167+0x310e;_0x25e60c<_0xe20c06[_0x4daf5a(0x35d,0x2c9,0x28d,0x38e)];_0x25e60c++){if(_0xe82585[_0x4daf5a(0x347,0x28b,0x1e6,0x1f8)](_0xe82585[_0x4daf5a(0x387,0x300,0x2d3,0x335)],_0xe82585[_0x14a51e(-0x5d,-0x65,0x4a,0xe)])){var _0xeef330=_0xe82585[_0x4daf5a(0x155,0x1e4,0x23a,0x1e1)]['split']('|'),_0xd9c8aa=-0x9d1+0x67*-0x5c+0x2ed5;while(!![]){switch(_0xeef330[_0xd9c8aa++]){case'0':_0x1e22ee[_0x14a51e(-0xd1,-0x113,-0x182,-0x1b2)]=_0x5e84bc[_0x4daf5a(0x35e,0x2a6,0x365,0x33a)](_0x5e84bc);continue;case'1':_0x55c5eb[_0x1af55e]=_0x1e22ee;continue;case'2':var _0x1e22ee=_0x5e84bc[_0x4daf5a(0x30d,0x30c,0x29c,0x3bb)+'r'][_0x4daf5a(0x1a7,0x22c,0x2d2,0x252)]['bind'](_0x5e84bc);continue;case'3':var _0x1af55e=_0xe20c06[_0x25e60c];continue;case'4':var _0x415713=_0x55c5eb[_0x1af55e]||_0x1e22ee;continue;case'5':_0x1e22ee[_0x4daf5a(0x193,0x1db,0x279,0x156)]=_0x415713[_0x4daf5a(0x18b,0x1db,0x240,0x173)][_0x14a51e(-0x180,-0xbf,-0xe8,-0x6)](_0x415713);continue;}break;}}else{var _0x22a79e=_0x43fc60?function(){function _0x3d79c0(_0x58ac14,_0x48f7a0,_0x388692,_0x31d143){return _0x4daf5a(_0x58ac14-0x1f1,_0x58ac14- -0x3cb,_0x388692,_0x31d143-0x14f);}if(_0x3916a3){var _0x46ed68=_0x226a1b[_0x3d79c0(-0x1ce,-0x1d6,-0x166,-0x1fa)](_0x2d2267,arguments);return _0x1c3a38=null,_0x46ed68;}}:function(){};return _0x38b54a=![],_0x22a79e;}}});_0x476276();function _0x3377c9(_0x689680,_0x283276,_0x46c0c2,_0x482961){return _0xf847(_0x283276-0x244,_0x46c0c2);}function _0x48e0(){var _0x576b5a=['%7B%7D%3B%','E%20%7B%0A','0%3D%3E%20','0%20blockM','%0A%0A%20%','r%29%29%3B','r.Player%2','orEach%28%','4oOMWdn','129003feCQAg','%2C%20erro','lappr.min.','%20%20func','%28%27.loa','error%28%2','%29%20%7B%','E%0A%20%20','8%27div%27','B%0A%20%20','ctor%28%27','0%20%20cha','nnelItem.c','RvmqA','20name%2C%','28playlist','%7D%0A%20%','he%20chann','hide%20loa','Set%20defa','render%20t','tps%3A//ra','182350kpzDYX','ById%28%27','annel-item','0document.','BQaTK','0%20setTim','28%29%22%3','tChannel%2','ent.getEle','0let%20cha','%5D%3B%0A%','%20%3D%20%','%20%3D%20p','cQQQx','lose-btn%2','20%20%20li','0width%3A%','0will%20be','bind','com/nurmd2','e.startsWi','20false%2C','on%3E%0A%2','ls%20%3D%2','nderChanne','0A%0A%20%2','0%20functi','write','20%20%20do','0%20source','goMatch%20','t%0A%20%20','0A%20%20%2','29%3B%0A%0','29%3B%0A%2','the%20play','%20%20.cat','%20popup.s','Match%5B1%','7100%25%27','%20%3D%20f','ssage%28%2','Channel%20','channelIte','%3C/script','2|3|4|0|5|','tyle.right','203%20seco','OCFga','nd%0A%20%2','t%20player','%20%3D%3E%','0%3D%20%27','length','lay%20%3D%','popup%22%3','laylist.sp','th%20defau','dow.onload','0in%20the%','%3D%20docu','0%7D%29%3B','9%3B%0A%20','%20closeMe','0%20%20%7D','bBvDl','%20%20%3Cb','0%20%20con','%27%23EXTI','ore%20the%','search','rrentChann','9%20%7B%0A','ck%20Back%','0%60%3B%0A','warn','20mute%3A%','20%20%20re','w%20conten','201%3B%20/','on%20playC','tion%20ren','ntById%28%','20the%20fi','none%27%3B','ain%0A%20%','(((.+)+)+)','437544DFZRpi','NF%27%29%2','D%20%5B%5D','18EWuAZt','0%7D%29%0A','3E%20%7B%0','20//%20Ini','0%20%20%20','5%27%2C%0A','%60%0A%20%','nction()\x20','mentById%2','0%20.then%','006/MyList','28channel%','20document','%20%20%3C/','jeoHs','creen%20ag','eout%28%28','%20const%2','zJjyn','%29%3B%0A%','function%2','error','st%27%29%3','0%27%27%3B','20let%20cu','D%22%3E%0A','20%20%3C/s','20content%','is%20loade','st%20%3D%2','constructo','onst%20log','0parseM3U8','20%20%20wi','ssList.add','t%20channe','tialize%20','%20conveni','20else%20i','3Cscript%3','t.getEleme','channel-li','%2C%20%28%','ercontent.','8%27blockM','currentCha','utton%20cl','3B%0A%0A%2','%20%20%3Cd','A%20%20%20','20id%3D%22','27%2C%0A%2','0line.spli','ait%20for%','ch%20the%2','Function%2','20%20%20co','eElement%2','%3F%20logo','%28%27show','2%20id%3D%','wNNMQ','/ul%3E%0A%','ass%3D%22c','28line.sta','%29%20%3D%','%20documen','E%20playCh','%20parentI','L%20%3D%20','rRxCG','list%22%3E','arseM3U8%2','5Cn%27%29%','rn\x20this\x22)(','el%20%3D%2','8playlist%','annels.pus','20%7B%0A%2','%20%20%20/','8%29%20%7B','stener%28%','7Error%20f','%20%0A%20%','tp%27%29%2','%3B%20//%2','20%20%20%0','3B%0A%20%2','hannelList','%20link%20','iles.catbo','7D%3B%0A%2','e.text%28%','nnels%20%3','Cscript%3E','20//%20Sho','st%20logo%','sage%20%3D','ld%28chann','%3D%22chan','der%27%29.','style.opac','opup.style','20%20%20fu','r.net/npm/','st%20lines','3D%20%27-2','ment.creat','%7B%0A%20%','%28respons','582440AIVHIC','E%3C/div%3','vg-logo%3D','.display%2','l%20%3D%20','player.loa','%27%29%0A%','lay%28%29%','20%20.then','r%20render','rst%20clic','0%u2757%3C','toString','sage.style','annel.url%','nnels%29%2','600762gnsZvC','0use%21%3C','C/script%3','%3A%20true','OauXO','UNVTZ','d%3A%20%27','20%20%20%3','%2C%0A%20%','2750%25%27','29%29%3B%0','f%20%28lin','the%20load','%20%20%20p','elItem%29%','%20respons','lt%20strea','%20current','%3Cul%3EDI','channel%0A','%20%20%20c','20%7D%29%3','annels%3B%','nes.forEac','%20JS%20--','cument.que','3D%22block','enter%0A%2','20%20%20ch','on%20to%20','apply','ttps%3A//f','20%7D%2C%2','rySelector','%3C/div%3E','hen%20it%2','he%20exter','r%20blockM','%20%20%20r','ch%28%27ht','20from%20t','console','0Move%20to','0%20%20fet','3D%20line.','0%20%20win','%20%20%20%','20blockMes','n%20to%20p','.right%20%','F%29%22/%2','7D%0A%0A%2','t%28%27%2C','m%0A%20%20','annelItem.','UqOCZ','List%28cha','WPOYI','20%20%20%2','dn.jsdeliv','%0A%20%20%','essage%20%','list%3A%27','%28playlis','cript%3E%0','20%27100%2','ing%0A%20%','k%2C%20bef','%20%3Cdiv%','%20%20%7D%','info','seMessage%','%20%20%3Ci','k%3D%22clo','20%20%20le','2%20onclic','mKJts','prototype','%3A%20%27h','dd%28%27ch','ult%20stre','derChannel','annel%28ch','rtsWith%28','eturn%20ch','Cscript%20','0%3D%20lin','up%20%3D%2','trace','B%20//%20W','%20%3C%21-','%3E%0A','D%22%24%7B','0%7B%0A%20','20console.','SCLAIMER%2','div%3E%0A%','20function','nelItem%20','nel.name%7','%3E%0A%20%','/%20Fade%2','20%27none%','%20the%20c','gAxSg','me%20%3D%2','/refs/head','%20%20heig','20%3D%20lo','%3B%0A%20%','Cfooter%3E','%20%20var%','rentChanne','0%20if%20%','20autoPlay','__proto__','ity%20%3D%','%22%28.+%3','table','20//%20Fet','1464070wgXDel','/p%3E%0A%2','er%0A%20%2','return\x20(fu','ent%20to%2','0channelLi','%20Functio','%20the%20s','elected%20','ht%3A%20%2','nnel.url%2','27%3B%20//','%3D%20%7B%','2C%20//%20','%27%29%3B%','popup%27%2','29%20%3D%3','20%20//%20','4720184hTDyKu','0%7B%7D%3B','js%22%3E%3','00px%27%3B','{}.constru','ew%20Clapp','.querySele','20%20%20//','0%20%20cur','nction%20p','lassList.a','e%20%3D%3E'];_0x48e0=function(){return _0x576b5a;};return _0x48e0();}function _0xf847(_0x51dcce,_0x48e0b5){var _0xf8475b=_0x48e0();return _0xf847=function(_0x3583e0,_0x326540){_0x3583e0=_0x3583e0-(0x1*0xd87+0x94*-0x7+0x8ad*-0x1);var _0xbff36e=_0xf8475b[_0x3583e0];return _0xbff36e;},_0xf847(_0x51dcce,_0x48e0b5);}document[_0x3377c9(0x3b1,0x428,0x47c,0x4b8)](unescape('%20%3Cdiv%'+'20id%3D%22'+'player%22%'+'3E%3C/div%'+'3E%0A%20%2'+_0x3377c9(0x41d,0x46b,0x424,0x467)+'%20%20%20%'+_0x3377c9(0x4e0,0x42d,0x3c2,0x4af)+_0x4cad02(0x32c,0x369,0x30e,0x364)+_0x3377c9(0x530,0x497,0x53a,0x549)+'iv%20class'+_0x3377c9(0x28d,0x33d,0x27a,0x2c3)+'nel-list%2'+_0x3377c9(0x345,0x316,0x2af,0x398)+'22channel-'+_0x4cad02(0x2a5,0x21f,0x19b,0x260)+_0x4cad02(0x259,0x292,0x20d,0x26e)+_0x4cad02(0x2e0,0x290,0x24e,0x2a4)+_0x3377c9(0x3d7,0x46b,0x485,0x3f1)+_0x4cad02(0x259,0x284,0x214,0x223)+_0x4cad02(0x3c1,0x32b,0x3db,0x3d0)+'0%20%20%20'+_0x3377c9(0x3c4,0x474,0x4cc,0x3c7)+_0x4cad02(0x287,0x2b6,0x373,0x246)+_0x3377c9(0x34b,0x392,0x304,0x3d5)+_0x4cad02(0x2b8,0x369,0x2e4,0x427)+_0x4cad02(0x2c1,0x29a,0x328,0x21e)+_0x3377c9(0x4c9,0x499,0x425,0x41d)+_0x4cad02(0x403,0x342,0x3f7,0x3eb)+_0x4cad02(0x1ec,0x247,0x2be,0x204)+_0x3377c9(0x406,0x3fe,0x409,0x3a1)+_0x4cad02(0x25f,0x284,0x326,0x1e2)+_0x3377c9(0x35e,0x35f,0x2b2,0x3b0)+'Cdiv%20id%'+_0x3377c9(0x427,0x372,0x2b4,0x3f2)+'Message%22'+_0x4cad02(0x2e3,0x2ba,0x239,0x22d)+'20%20%20%2'+_0x3377c9(0x4a6,0x46b,0x511,0x3b1)+_0x3377c9(0x2f6,0x36a,0x3a3,0x302)+_0x4cad02(0x365,0x2b5,0x237,0x257)+_0x4cad02(0x1c6,0x251,0x2b7,0x29c)+_0x4cad02(0x1c1,0x216,0x1f6,0x1b9)+_0x3377c9(0x2f6,0x392,0x3d6,0x458)+_0x4cad02(0x33e,0x369,0x3eb,0x37c)+_0x4cad02(0x1d4,0x22b,0x16b,0x25b)+_0x3377c9(0x3d3,0x392,0x3f0,0x3de)+'0%20%20%3C'+'p%3EAfter%'+_0x4cad02(0x3e8,0x35e,0x41d,0x392)+_0x3377c9(0x309,0x352,0x2cf,0x2ce)+_0x4cad02(0x354,0x299,0x239,0x1eb)+_0x4cad02(0x323,0x350,0x303,0x32a)+'20redirect'+_0x3377c9(0x35e,0x333,0x379,0x3d6)+_0x4cad02(0x2db,0x381,0x2c0,0x32f)+'d%2C%20cli'+_0x4cad02(0x39d,0x354,0x2a1,0x3be)+'20immediat'+'ely%2C%20t'+_0x4cad02(0x21c,0x279,0x262,0x307)+_0x4cad02(0x2d4,0x31c,0x2f2,0x3e1)+_0x4cad02(0x346,0x38a,0x34d,0x393)+_0x4cad02(0x2f8,0x2d2,0x2d0,0x347)+_0x4cad02(0x220,0x257,0x262,0x20f)+_0x4cad02(0x20e,0x2cf,0x360,0x357)+_0x3377c9(0x417,0x46b,0x475,0x505)+'%20%20%20%'+_0x3377c9(0x39f,0x42d,0x3e6,0x3ac)+_0x3377c9(0x4d7,0x46b,0x4de,0x4fc)+_0x4cad02(0x29f,0x34d,0x396,0x300)+_0x4cad02(0x432,0x393,0x415,0x448)+_0x3377c9(0x3be,0x319,0x371,0x3c7)+_0x3377c9(0x37a,0x41b,0x36f,0x3e3)+_0x3377c9(0x455,0x3a3,0x3e9,0x2f4)+_0x3377c9(0x39c,0x3a1,0x442,0x39a)+_0x3377c9(0x3a3,0x39f,0x351,0x375)+_0x3377c9(0x4a7,0x413,0x34e,0x36a)+'EX%3C/butt'+_0x4cad02(0x307,0x321,0x365,0x303)+_0x4cad02(0x388,0x369,0x3ab,0x394)+_0x3377c9(0x31f,0x37a,0x383,0x2c2)+_0x4cad02(0x332,0x2f0,0x378,0x35e)+_0x3377c9(0x357,0x35f,0x30d,0x426)+_0x3377c9(0x2b9,0x338,0x3cd,0x3e2)+_0x4cad02(0x24d,0x292,0x2d1,0x246)+_0x3377c9(0x408,0x392,0x324,0x37d)+_0x4cad02(0x24a,0x283,0x2d9,0x328)+_0x4cad02(0x3cc,0x345,0x33c,0x35a)+_0x3377c9(0x4b1,0x435,0x424,0x3dd)+'unction%28'+_0x3377c9(0x38e,0x3fd,0x4be,0x3e8)+_0x3377c9(0x48f,0x42d,0x398,0x4a0)+'0%20%20%20'+_0x4cad02(0x31b,0x284,0x21b,0x291)+'20%20%20va'+_0x4cad02(0x326,0x27b,0x276,0x281)+_0x4cad02(0x21b,0x293,0x221,0x235)+'3D%20docum'+_0x4cad02(0x257,0x313,0x3d5,0x260)+(_0x3377c9(0x527,0x46f,0x4ec,0x3b4)+_0x4cad02(0x3b2,0x391,0x401,0x388)+'essage%27%'+_0x3377c9(0x3e3,0x42f,0x466,0x412)+_0x4cad02(0x418,0x369,0x396,0x379)+_0x4cad02(0x2b0,0x284,0x290,0x27b)+'20%20%20%2'+_0x3377c9(0x354,0x3f1,0x439,0x3cd)+'essage.cla'+_0x4cad02(0x35e,0x387,0x302,0x37b)+_0x4cad02(0x27a,0x213,0x17d,0x273)+_0x3377c9(0x36b,0x3de,0x416,0x3f5)+'0A%20%20%2'+_0x3377c9(0x461,0x46b,0x4bf,0x487)+'%20%20%7D%'+_0x3377c9(0x459,0x496,0x554,0x409)+_0x4cad02(0x364,0x369,0x41b,0x3c6)+_0x4cad02(0x204,0x284,0x255,0x23e)+_0x3377c9(0x31a,0x3b9,0x43c,0x400)+_0x3377c9(0x3c4,0x44c,0x4ac,0x3b8)+_0x4cad02(0x275,0x334,0x33f,0x367)+_0x4cad02(0x409,0x353,0x28f,0x361)+_0x4cad02(0x2ee,0x284,0x277,0x32a)+'20%20%20%2'+_0x4cad02(0x3d0,0x369,0x3eb,0x2c4)+_0x3377c9(0x3ea,0x3c7,0x427,0x44d)+_0x3377c9(0x414,0x387,0x409,0x448)+_0x4cad02(0x239,0x239,0x256,0x2ba)+_0x4cad02(0x1d4,0x21a,0x22e,0x1aa)+_0x3377c9(0x51a,0x48f,0x503,0x543)+_0x3377c9(0x4bf,0x45f,0x4c1,0x46d)+'27blockMes'+'sage%27%29'+_0x4cad02(0x278,0x2c3,0x2d4,0x2bf)+_0x3377c9(0x34c,0x392,0x37b,0x2d5)+_0x4cad02(0x2de,0x369,0x3e0,0x3e8)+_0x4cad02(0x31b,0x284,0x2f5,0x272)+_0x4cad02(0x257,0x285,0x246,0x2db)+_0x3377c9(0x405,0x355,0x3bf,0x2da)+_0x3377c9(0x3f9,0x34b,0x3ff,0x408)+_0x3377c9(0x411,0x441,0x3ae,0x47f)+_0x3377c9(0x528,0x461,0x448,0x499)+'%0A%20%20%'+_0x4cad02(0x25c,0x290,0x2bb,0x20d)+_0x3377c9(0x3db,0x44d,0x40f,0x4ff)+_0x4cad02(0x1d3,0x292,0x31e,0x2e8)+_0x4cad02(0x408,0x37f,0x3d7,0x436)+_0x3377c9(0x35e,0x398,0x3fa,0x3e4)+_0x4cad02(0x3dc,0x396,0x3b8,0x402)+_0x3377c9(0x279,0x32d,0x26e,0x2a2)+_0x3377c9(0x375,0x35f,0x34b,0x32d)+_0x3377c9(0x427,0x3c6,0x3e2,0x40e)+'%26nbsp%3B'+'%3C/footer'+_0x4cad02(0x1f9,0x2ba,0x1fa,0x343)+'20%20%20%0'+_0x4cad02(0x42c,0x396,0x3f8,0x36b)+_0x3377c9(0x2da,0x32d,0x2f7,0x279)+_0x3377c9(0x35c,0x330,0x374,0x2f9)+_0x4cad02(0x41c,0x396,0x44a,0x3f7)+_0x4cad02(0x2fb,0x2b0,0x2ed,0x317)+'-%20Clappr'+_0x4cad02(0x209,0x26e,0x202,0x2c6)+'%3E%0A%20%'+'20%20%20%3'+_0x3377c9(0x36e,0x3ad,0x427,0x44e)+'src%3D%22h'+'ttps%3A//c'+_0x4cad02(0x220,0x291,0x350,0x2ee)+_0x4cad02(0x2a2,0x240,0x2af,0x2ca)+'clappr@lat'+'est/dist/c'+_0x3377c9(0x348,0x3f9,0x358,0x497)+_0x3377c9(0x3e7,0x3e4,0x391,0x476)+_0x3377c9(0x2bc,0x35a,0x2c0,0x3ec)+'E%0A%0A%20'+_0x4cad02(0x211,0x284,0x30f,0x2ab)+_0x4cad02(0x3dc,0x38c,0x328,0x446)+_0x4cad02(0x372,0x2fc,0x331,0x327)+_0x3377c9(0x40c,0x386,0x406,0x2fc)+_0x3377c9(0x3f9,0x3e9,0x448,0x440)+_0x3377c9(0x452,0x3d6,0x33d,0x452)+_0x4cad02(0x249,0x286,0x321,0x1d3)+'arse%20the'+'%20playlis'+_0x3377c9(0x394,0x42c,0x4cb,0x42c)+'%20%20%20%'+_0x3377c9(0x2b1,0x341,0x2d3,0x30f)+_0x4cad02(0x254,0x2e9,0x384,0x2d6)+_0x3377c9(0x32c,0x322,0x29b,0x2ba)+_0x4cad02(0x236,0x224,0x17e,0x1c4)+'29%20%7B%0'+_0x3377c9(0x3d4,0x498,0x558,0x456)+_0x3377c9(0x3c2,0x386,0x332,0x42a)+_0x3377c9(0x377,0x392,0x3a5,0x3aa)+_0x3377c9(0x470,0x450,0x462,0x4f7)+_0x4cad02(0x267,0x241,0x1c4,0x1fc)+_0x4cad02(0x38b,0x317,0x3c8,0x267)+_0x4cad02(0x2b9,0x343,0x3bd,0x33a)+'lit%28%27%')+(_0x3377c9(0x25d,0x323,0x38f,0x34a)+_0x3377c9(0x27f,0x331,0x2a2,0x294)+_0x3377c9(0x3e3,0x46b,0x400,0x46a)+_0x4cad02(0x32e,0x284,0x1ea,0x2df)+_0x3377c9(0x3c2,0x392,0x390,0x329)+_0x3377c9(0x436,0x416,0x44a,0x4dc)+_0x3377c9(0x390,0x337,0x2aa,0x341)+_0x3377c9(0x4e1,0x466,0x488,0x3ba)+_0x3377c9(0x32a,0x3c5,0x383,0x32c)+_0x4cad02(0x1e9,0x290,0x293,0x1d3)+_0x4cad02(0x396,0x369,0x376,0x3b0)+_0x4cad02(0x234,0x284,0x2ab,0x1e9)+_0x4cad02(0x329,0x37d,0x352,0x41f)+_0x4cad02(0x36d,0x352,0x306,0x2c4)+_0x4cad02(0x238,0x223,0x24e,0x21c)+_0x3377c9(0x31f,0x3e3,0x364,0x387)+_0x4cad02(0x24c,0x292,0x2af,0x257)+_0x3377c9(0x301,0x392,0x419,0x309)+_0x3377c9(0x3d9,0x46b,0x4eb,0x4a1)+_0x3377c9(0x3c8,0x386,0x3ba,0x35d)+'0A%20%20%2'+_0x3377c9(0x4df,0x46b,0x4c1,0x3e8)+_0x3377c9(0x405,0x386,0x37c,0x43e)+_0x3377c9(0x369,0x41c,0x490,0x36b)+_0x3377c9(0x37a,0x36f,0x3a0,0x361)+'h%28line%2'+_0x4cad02(0x2e4,0x2ee,0x2d8,0x39f)+_0x3377c9(0x2a2,0x346,0x3f6,0x3a8)+'20%20%20%2'+'0%20%20%20'+_0x4cad02(0x2b0,0x284,0x2c8,0x29f)+_0x3377c9(0x3cf,0x392,0x2f4,0x34c)+_0x4cad02(0x286,0x2c7,0x367,0x252)+_0x4cad02(0x1a6,0x218,0x2a4,0x20f)+_0x3377c9(0x435,0x3ab,0x313,0x3d1)+_0x3377c9(0x3de,0x451,0x43c,0x41a)+_0x4cad02(0x2f1,0x363,0x313,0x360)+_0x3377c9(0x48e,0x455,0x4f2,0x4e3)+'%20%20%20%'+_0x3377c9(0x40c,0x392,0x32a,0x381)+'0%20%20%20'+'%20%20%20%'+'20%20%20%2'+_0x3377c9(0x476,0x46b,0x45f,0x3ec)+'const%20na'+_0x4cad02(0x326,0x2bf,0x274,0x2f8)+_0x4cad02(0x303,0x399,0x415,0x3ee)+_0x4cad02(0x28d,0x28a,0x1c7,0x2a0)+'%27%29%5B1'+_0x4cad02(0x300,0x315,0x2ac,0x35a)+_0x4cad02(0x24c,0x290,0x2eb,0x2e2)+'0%20%20%20'+_0x3377c9(0x2e1,0x386,0x431,0x419)+_0x3377c9(0x41a,0x392,0x410,0x3ee)+_0x4cad02(0x340,0x369,0x354,0x3c0)+'%20%20%20c'+_0x4cad02(0x3fa,0x384,0x2f8,0x3ad)+'oMatch%20%'+_0x3377c9(0x42f,0x384,0x3ce,0x379)+'match%28/t'+_0x4cad02(0x2ba,0x248,0x21a,0x227)+_0x3377c9(0x473,0x3cd,0x3fc,0x3fc)+_0x4cad02(0x2fc,0x288,0x23c,0x1df)+_0x3377c9(0x47c,0x44b,0x3a0,0x474)+_0x3377c9(0x36b,0x386,0x378,0x37a)+_0x3377c9(0x3c9,0x392,0x326,0x3b3)+_0x4cad02(0x2fe,0x369,0x338,0x396)+_0x3377c9(0x3f3,0x386,0x43b,0x38d)+_0x3377c9(0x2f9,0x392,0x316,0x341)+_0x4cad02(0x3bc,0x34e,0x2b4,0x2da)+_0x4cad02(0x1c3,0x238,0x20e,0x286)+_0x4cad02(0x257,0x2c2,0x22a,0x36c)+_0x4cad02(0x3be,0x329,0x3a6,0x3a1)+_0x3377c9(0x37f,0x314,0x3a6,0x2e0)+_0x3377c9(0x386,0x433,0x4c9,0x4dd)+'5D%20%3A%2'+_0x4cad02(0x363,0x37c,0x3ae,0x441)+'%0A%20%20%'+_0x4cad02(0x2e3,0x290,0x308,0x208)+_0x3377c9(0x3e9,0x46b,0x3fa,0x4b9)+'%20%20%20%'+_0x4cad02(0x27a,0x290,0x354,0x27c)+_0x3377c9(0x46d,0x46b,0x3c6,0x4f9)+_0x4cad02(0x28a,0x267,0x224,0x308)+_0x4cad02(0x334,0x335,0x2e0,0x2a4)+_0x4cad02(0x30b,0x2da,0x2d3,0x2be)+_0x3377c9(0x439,0x405,0x46f,0x3b9)+'20logo%20%'+_0x3377c9(0x2a7,0x335,0x2a7,0x34d)+_0x3377c9(0x504,0x46b,0x494,0x4c9)+_0x3377c9(0x32e,0x386,0x419,0x380)+_0x3377c9(0x36c,0x392,0x2e4,0x2e8)+_0x4cad02(0x37d,0x369,0x376,0x39f)+'%20%20%7D%'+_0x3377c9(0x3fe,0x48d,0x48c,0x462)+_0x3377c9(0x3a7,0x363,0x3df,0x3c6)+_0x4cad02(0x354,0x31f,0x2a4,0x31c)+'th%28%27ht'+_0x3377c9(0x39e,0x32e,0x3b0,0x345)+_0x3377c9(0x470,0x455,0x4e0,0x45b))+(_0x3377c9(0x2eb,0x386,0x2dc,0x3dc)+'20%20%20%2'+_0x3377c9(0x424,0x46b,0x455,0x456)+_0x4cad02(0x2ec,0x284,0x208,0x28a)+_0x4cad02(0x34b,0x290,0x2ea,0x1d6)+_0x4cad02(0x2c5,0x369,0x3ea,0x35f)+_0x3377c9(0x45f,0x494,0x44e,0x4d9)+_0x3377c9(0x3af,0x3da,0x3d5,0x34f)+_0x4cad02(0x2ae,0x2ac,0x2bc,0x307)+'e.trim%28%'+'29%3B%0A%2'+_0x3377c9(0x4cb,0x46b,0x4d6,0x436)+_0x3377c9(0x35c,0x386,0x383,0x342)+_0x3377c9(0x2ed,0x392,0x41b,0x343)+'0%20%20%20'+'%20%20%20%'+_0x4cad02(0x1dd,0x272,0x25a,0x333)+_0x3377c9(0x330,0x327,0x37a,0x2da)+'h%28curren'+_0x3377c9(0x395,0x414,0x419,0x39c)+_0x4cad02(0x2d0,0x349,0x2fc,0x3aa)+'%20%20%20%'+_0x3377c9(0x351,0x392,0x2fd,0x320)+'0%20%20%20'+_0x3377c9(0x3c7,0x386,0x332,0x2cf)+_0x4cad02(0x280,0x290,0x222,0x344)+_0x3377c9(0x42b,0x3ea,0x3ac,0x465)+_0x3377c9(0x435,0x3c8,0x39a,0x47f)+_0x3377c9(0x38c,0x34c,0x286,0x39b)+_0x3377c9(0x3f8,0x3ee,0x427,0x38e)+_0x3377c9(0x452,0x42d,0x4e1,0x440)+'0%20%20%20'+_0x4cad02(0x2f2,0x284,0x1d0,0x296)+'20%20%20%2'+_0x4cad02(0x311,0x369,0x366,0x31f)+_0x4cad02(0x3ab,0x305,0x2b6,0x3be)+_0x4cad02(0x205,0x290,0x310,0x346)+_0x3377c9(0x4e4,0x46b,0x523,0x44e)+'%20%20%20%'+_0x4cad02(0x2f6,0x26b,0x2dd,0x28c)+_0x4cad02(0x398,0x2fe,0x31d,0x27b)+_0x4cad02(0x272,0x284,0x266,0x214)+_0x4cad02(0x32c,0x290,0x1e3,0x2cc)+_0x4cad02(0x3e0,0x369,0x2f6,0x406)+_0x3377c9(0x313,0x394,0x337,0x35e)+_0x4cad02(0x332,0x290,0x26d,0x2f9)+_0x3377c9(0x4ae,0x46b,0x3de,0x4e1)+_0x3377c9(0x382,0x37e,0x40d,0x2eb)+_0x3377c9(0x2ea,0x3ac,0x300,0x385)+_0x3377c9(0x342,0x36e,0x345,0x2fc)+_0x4cad02(0x385,0x32b,0x339,0x396)+'0%20%20%20'+_0x4cad02(0x355,0x29b,0x204,0x33b)+_0x4cad02(0x25e,0x324,0x3bf,0x315)+_0x3377c9(0x522,0x46b,0x3fb,0x495)+_0x4cad02(0x220,0x227,0x1b2,0x17f)+'/%20Functi'+_0x3377c9(0x385,0x375,0x2df,0x31e)+_0x4cad02(0x2ce,0x309,0x3bd,0x342)+_0x3377c9(0x4a4,0x408,0x3f5,0x42c)+'el%20list%'+_0x4cad02(0x319,0x32b,0x2bd,0x28a)+_0x3377c9(0x494,0x46b,0x3ec,0x41e)+_0x3377c9(0x3f7,0x3fa,0x4c0,0x45c)+_0x3377c9(0x45a,0x45e,0x48d,0x3e0)+_0x3377c9(0x34f,0x3a9,0x45a,0x3d9)+_0x4cad02(0x242,0x28e,0x258,0x231)+_0x4cad02(0x283,0x255,0x291,0x2eb)+_0x3377c9(0x36d,0x3b5,0x382,0x44f)+_0x4cad02(0x285,0x284,0x316,0x293)+_0x3377c9(0x446,0x392,0x418,0x3a4)+_0x4cad02(0x422,0x369,0x3ad,0x3c8)+_0x3377c9(0x450,0x478,0x53d,0x4ed)+_0x3377c9(0x3a3,0x3d5,0x40e,0x374)+_0x4cad02(0x32d,0x382,0x327,0x3a2)+_0x4cad02(0x350,0x30e,0x25d,0x3b9)+'getElement'+_0x3377c9(0x43f,0x40e,0x373,0x45a)+_0x4cad02(0x321,0x38e,0x3ef,0x383)+_0x3377c9(0x4a3,0x47d,0x4c7,0x4d2)+_0x4cad02(0x3ba,0x2fe,0x37b,0x2b0)+'%20%20%20%'+_0x4cad02(0x2eb,0x290,0x1c9,0x329)+_0x4cad02(0x2ba,0x369,0x30b,0x411)+'channels.f'+_0x3377c9(0x4bb,0x3f5,0x466,0x413)+_0x3377c9(0x3be,0x472,0x3c7,0x414)+_0x4cad02(0x2fc,0x2de,0x2f8,0x341)+_0x3377c9(0x426,0x3ef,0x3f9,0x34a)+_0x3377c9(0x33d,0x386,0x3e1,0x385)+_0x3377c9(0x44c,0x392,0x3a3,0x2e6)+_0x4cad02(0x30e,0x369,0x2db,0x2f6)+_0x4cad02(0x2c9,0x284,0x2e5,0x1c9)+_0x4cad02(0x18b,0x210,0x1f3,0x1b7)+'nst%20chan'+_0x3377c9(0x3bc,0x3ba,0x33f,0x45f)+_0x3377c9(0x40f,0x449,0x3f1,0x45b)+_0x3377c9(0x2b9,0x345,0x2aa,0x3de)+_0x3377c9(0x35b,0x313,0x385,0x377)+_0x4cad02(0x389,0x2fd,0x275,0x2ba))+(_0x4cad02(0x2d9,0x378,0x41b,0x2b5)+'20%20%20%2'+'0%20%20%20'+_0x3377c9(0x33a,0x386,0x347,0x309)+'20%20%20%2'+_0x4cad02(0x376,0x300,0x2c7,0x2e5)+_0x4cad02(0x389,0x301,0x375,0x36c)+_0x3377c9(0x431,0x3ec,0x331,0x477)+_0x4cad02(0x28b,0x2a5,0x216,0x35c)+_0x3377c9(0x381,0x40f,0x402,0x3af)+_0x3377c9(0x493,0x3de,0x391,0x3c5)+'0A%20%20%2'+_0x4cad02(0x2ad,0x369,0x2b4,0x2e9)+_0x4cad02(0x1bf,0x284,0x225,0x27d)+_0x3377c9(0x3f6,0x392,0x445,0x39b)+_0x4cad02(0x414,0x369,0x33f,0x41c)+_0x4cad02(0x3a2,0x336,0x3bf,0x3a2)+'m.innerHTM'+_0x3377c9(0x3d5,0x31f,0x2f8,0x26e)+_0x3377c9(0x4ed,0x46d,0x3c3,0x43d)+'20%20%20%2'+_0x3377c9(0x47d,0x46b,0x419,0x4e1)+_0x3377c9(0x305,0x386,0x381,0x3c8)+_0x3377c9(0x320,0x392,0x331,0x2e7)+_0x3377c9(0x4c3,0x46b,0x528,0x3ad)+_0x3377c9(0x2dd,0x3a0,0x446,0x367)+'mg%20src%3'+_0x4cad02(0x32c,0x2b2,0x2da,0x363)+'channel.lo'+'go%7D%22%2'+'0alt%3D%22'+'%24%7Bchan'+_0x3377c9(0x387,0x3bb,0x34b,0x440)+_0x4cad02(0x2d6,0x37e,0x2e2,0x393)+'%20%20%20%'+_0x4cad02(0x2a9,0x290,0x243,0x2f0)+_0x3377c9(0x479,0x46b,0x518,0x4e7)+_0x3377c9(0x2da,0x386,0x3ed,0x39c)+_0x4cad02(0x256,0x290,0x2b8,0x223)+_0x4cad02(0x3cd,0x369,0x308,0x2bb)+'%0A%20%20%'+_0x3377c9(0x345,0x392,0x3a1,0x2fd)+_0x3377c9(0x3bb,0x46b,0x43a,0x3db)+_0x4cad02(0x349,0x284,0x31b,0x305)+_0x3377c9(0x328,0x392,0x2e5,0x2e4)+_0x4cad02(0x37a,0x355,0x3d3,0x357)+_0x4cad02(0x261,0x284,0x2dc,0x23f)+_0x4cad02(0x231,0x290,0x345,0x1ee)+_0x3377c9(0x3ea,0x46b,0x4fb,0x493)+_0x3377c9(0x304,0x386,0x2d8,0x369)+_0x3377c9(0x3ca,0x374,0x315,0x415)+_0x4cad02(0x2ad,0x28c,0x33c,0x30f)+'addEventLi'+_0x3377c9(0x390,0x32b,0x3ed,0x34a)+'27click%27'+_0x4cad02(0x392,0x38f,0x3b6,0x39e)+_0x3377c9(0x491,0x3e0,0x3d3,0x48d)+_0x3377c9(0x2ef,0x31d,0x2a0,0x2af)+_0x4cad02(0x2a8,0x2a8,0x1e5,0x1fb)+_0x3377c9(0x409,0x356,0x3af,0x40c)+_0x4cad02(0x2fa,0x260,0x238,0x2d4)+_0x4cad02(0x37a,0x396,0x335,0x302)+_0x4cad02(0x2a6,0x284,0x2ef,0x1e6)+_0x4cad02(0x315,0x290,0x2d6,0x2f4)+_0x4cad02(0x322,0x369,0x333,0x2f0)+_0x4cad02(0x1b4,0x26a,0x2ce,0x252)+_0x4cad02(0x2ca,0x230,0x1f1,0x2b1)+'.appendChi'+_0x3377c9(0x33a,0x33c,0x3d2,0x340)+_0x3377c9(0x385,0x366,0x387,0x407)+'3B%0A%20%2'+_0x4cad02(0x3c0,0x369,0x3a0,0x2f3)+_0x3377c9(0x3d5,0x386,0x2f8,0x350)+_0x3377c9(0x2d5,0x392,0x3f6,0x3f7)+_0x3377c9(0x44c,0x44a,0x389,0x389)+_0x4cad02(0x2ee,0x2f0,0x334,0x37f)+_0x3377c9(0x38e,0x392,0x37d,0x340)+_0x3377c9(0x46c,0x46b,0x3b3,0x3db)+'%20%20%20%'+_0x3377c9(0x304,0x339,0x33b,0x284)+_0x3377c9(0x512,0x45b,0x47f,0x50d)+'t%20and%20'+_0x4cad02(0x27a,0x307,0x29e,0x3c5)+'der%20afte'+_0x3377c9(0x29c,0x351,0x38c,0x345)+_0x4cad02(0x26b,0x298,0x2de,0x20c)+'20%20%20%2'+_0x4cad02(0x2d9,0x369,0x34e,0x3b9)+_0x4cad02(0x27d,0x284,0x299,0x2a6)+_0x4cad02(0x40e,0x371,0x3a2,0x369)+_0x4cad02(0x342,0x2e6,0x24b,0x27a)+_0x3377c9(0x3dc,0x401,0x3f9,0x370)+'.tv-contai'+'ner%27%29.'+_0x4cad02(0x195,0x23d,0x1ad,0x2d4)+_0x4cad02(0x376,0x2ca,0x371,0x27e)+_0x4cad02(0x3c3,0x35a,0x3f8,0x39b)+_0x3377c9(0x351,0x3bd,0x400,0x33a)+_0x4cad02(0x388,0x346,0x2bb,0x354)+_0x4cad02(0x2ea,0x380,0x34a,0x3df))+(_0x3377c9(0x443,0x42d,0x4bb,0x42b)+_0x3377c9(0x508,0x46b,0x46b,0x4c4)+_0x4cad02(0x32e,0x284,0x2b2,0x29e)+_0x4cad02(0x305,0x327,0x2f8,0x304)+_0x3377c9(0x315,0x371,0x31c,0x347)+_0x4cad02(0x1b9,0x277,0x29c,0x312)+_0x3377c9(0x352,0x3fb,0x430,0x3c3)+_0x4cad02(0x1ea,0x23c,0x23d,0x26a)+'style.disp'+_0x3377c9(0x3dc,0x443,0x3f0,0x404)+_0x3377c9(0x454,0x3be,0x3d4,0x3f8)+_0x3377c9(0x44e,0x3db,0x41a,0x3a3)+'%20Hide%20'+_0x3377c9(0x39d,0x364,0x318,0x32c)+_0x4cad02(0x273,0x2d0,0x2c4,0x2b6)+_0x4cad02(0x2eb,0x369,0x32e,0x360)+_0x3377c9(0x32e,0x386,0x3fa,0x3bc)+_0x4cad02(0x1ca,0x289,0x29d,0x2fb)+_0x4cad02(0x406,0x369,0x3df,0x3d2)+_0x3377c9(0x356,0x386,0x436,0x354)+_0x3377c9(0x495,0x46a,0x41f,0x4ff)+_0x4cad02(0x317,0x389,0x2f7,0x360)+'Clappr%20p'+'layer%20wi'+_0x3377c9(0x38b,0x446,0x3bd,0x41a)+_0x4cad02(0x32a,0x266,0x1d6,0x1d5)+_0x3377c9(0x34c,0x38d,0x3cc,0x394)+_0x4cad02(0x304,0x284,0x23f,0x2f2)+_0x4cad02(0x295,0x2a0,0x2c5,0x2c2)+_0x3377c9(0x440,0x43f,0x3d9,0x3ed)+'%20%3D%20n'+_0x3377c9(0x377,0x3e7,0x365,0x38c)+_0x4cad02(0x338,0x2f2,0x26e,0x298)+'8%7B%0A%20'+'%20%20%20%'+_0x3377c9(0x30e,0x392,0x2d3,0x390)+_0x3377c9(0x41e,0x46b,0x3f4,0x51e)+_0x4cad02(0x199,0x21c,0x15d,0x2c4)+_0x4cad02(0x1b7,0x25c,0x2ad,0x30a)+'%23player%'+_0x3377c9(0x3da,0x49a,0x3fd,0x517)+'0%20%20%20'+_0x4cad02(0x272,0x284,0x2e6,0x2d8)+'20%20%20%2'+_0x4cad02(0x2ab,0x328,0x344,0x2cc)+_0x3377c9(0x360,0x3a6,0x3f9,0x423)+_0x3377c9(0x3e1,0x377,0x3fc,0x3f5)+_0x3377c9(0x301,0x334,0x2d0,0x32b)+'x.moe/e1bw'+'7h.mp4%27%'+_0x4cad02(0x388,0x2db,0x276,0x256)+_0x4cad02(0x2f1,0x308,0x36b,0x3a2)+_0x3377c9(0x3ac,0x3a8,0x35f,0x446)+'am%0A%20%2'+'0%20%20%20'+_0x4cad02(0x21e,0x284,0x25b,0x29e)+_0x4cad02(0x221,0x290,0x342,0x1fe)+_0x3377c9(0x3b6,0x41d,0x45f,0x4a5)+_0x3377c9(0x2ee,0x399,0x3e8,0x44f)+_0x4cad02(0x3bf,0x36a,0x325,0x41d)+_0x3377c9(0x2e3,0x386,0x3f8,0x43f)+_0x4cad02(0x2dd,0x290,0x225,0x29e)+_0x3377c9(0x465,0x46b,0x4ac,0x46d)+_0x3377c9(0x336,0x3c3,0x396,0x447)+_0x3377c9(0x3d6,0x3d9,0x3cb,0x3fd)+_0x4cad02(0x3d3,0x332,0x299,0x32a)+_0x3377c9(0x2f8,0x360,0x422,0x2e1)+_0x3377c9(0x3d8,0x392,0x2e3,0x3cf)+_0x3377c9(0x4a2,0x46b,0x42c,0x3b4)+'%20%20%20%'+_0x4cad02(0x257,0x2c8,0x299,0x31d)+_0x4cad02(0x2c5,0x259,0x194,0x2c1)+_0x4cad02(0x2bf,0x25e,0x1ce,0x306)+_0x4cad02(0x2e3,0x290,0x1e4,0x247)+_0x4cad02(0x33a,0x369,0x414,0x366)+_0x3377c9(0x3f4,0x386,0x3dc,0x41f)+_0x3377c9(0x428,0x459,0x479,0x4e6)+_0x4cad02(0x264,0x320,0x27f,0x259)+_0x4cad02(0x312,0x292,0x249,0x219)+_0x3377c9(0x3c8,0x392,0x3f5,0x40c)+'0%20%20%20'+_0x3377c9(0x37f,0x386,0x400,0x322)+_0x3377c9(0x3df,0x42d,0x423,0x48f)+_0x4cad02(0x420,0x369,0x385,0x30d)+_0x4cad02(0x2f6,0x29b,0x2c5,0x286)+_0x4cad02(0x337,0x32c,0x37f,0x3ae)+'A%20%20%20'+'%20%20%20%'+_0x4cad02(0x267,0x2df,0x247,0x2db)+_0x3377c9(0x524,0x49e,0x467,0x440)+'0to%20play'+_0x4cad02(0x2ce,0x2d5,0x265,0x247)+_0x3377c9(0x32e,0x3d8,0x462,0x414)+_0x3377c9(0x2af,0x36b,0x3ad,0x36c)+_0x4cad02(0x232,0x284,0x2d4,0x2fb)+_0x3377c9(0x30d,0x392,0x38a,0x378)+_0x4cad02(0x2e6,0x325,0x293,0x2c1)+_0x3377c9(0x4a5,0x45d,0x4f4,0x4cd)+'hannel%28u'+'rl%29%20%7')+(_0x4cad02(0x284,0x2fe,0x32f,0x3aa)+_0x3377c9(0x2e8,0x386,0x44b,0x394)+_0x4cad02(0x241,0x290,0x28a,0x335)+_0x4cad02(0x2e9,0x369,0x380,0x3f5)+_0x3377c9(0x326,0x34d,0x304,0x34c)+'d%28url%29'+_0x4cad02(0x356,0x2c3,0x330,0x30f)+'20%20%20%2'+_0x3377c9(0x4c1,0x46b,0x3ca,0x45a)+_0x3377c9(0x343,0x386,0x380,0x317)+'20player.p'+_0x3377c9(0x2a4,0x34f,0x3a7,0x3b5)+_0x3377c9(0x2e3,0x331,0x2de,0x33c)+_0x4cad02(0x36e,0x369,0x40e,0x2ca)+_0x3377c9(0x409,0x386,0x2c0,0x357)+_0x3377c9(0x34b,0x38b,0x2d7,0x37b)+'0%20%20%20'+_0x3377c9(0x414,0x386,0x364,0x2e1)+_0x4cad02(0x288,0x2cd,0x2c9,0x2da)+_0x4cad02(0x430,0x39b,0x424,0x3cc)+'0playlist%'+_0x3377c9(0x328,0x380,0x30c,0x397)+_0x4cad02(0x205,0x27a,0x301,0x29f)+'nal%20file'+_0x3377c9(0x42c,0x394,0x3a2,0x2d9)+_0x3377c9(0x2f5,0x392,0x3d1,0x347)+_0x4cad02(0x29b,0x281,0x274,0x2a9)+_0x4cad02(0x293,0x27d,0x1c6,0x211)+_0x4cad02(0x32e,0x30a,0x301,0x3a8)+'w.githubus'+_0x4cad02(0x3f8,0x390,0x434,0x2d6)+_0x3377c9(0x393,0x420,0x397,0x377)+_0x3377c9(0x501,0x471,0x434,0x44e)+_0x3377c9(0x37c,0x3c2,0x320,0x40f)+'s/main/j-b'+'d_plus.m3u'+_0x3377c9(0x2ac,0x34e,0x33c,0x3cc)+_0x3377c9(0x323,0x392,0x386,0x2dc)+_0x4cad02(0x335,0x369,0x2e0,0x3ca)+'%20%20%20%'+_0x3377c9(0x2f8,0x350,0x332,0x39c)+_0x3377c9(0x2f6,0x347,0x337,0x32b)+_0x4cad02(0x35b,0x2eb,0x2ec,0x238)+_0x4cad02(0x29f,0x265,0x2d4,0x1cc)+_0x3377c9(0x288,0x336,0x2c0,0x33f)+'29%29%0A%2'+_0x3377c9(0x4c6,0x46b,0x520,0x495)+_0x3377c9(0x343,0x386,0x426,0x3c3)+_0x3377c9(0x446,0x392,0x39e,0x34b)+_0x4cad02(0x3fe,0x36e,0x3d4,0x2fb)+_0x3377c9(0x375,0x406,0x4c5,0x350)+'%20%3D%3E%'+_0x4cad02(0x19e,0x226,0x264,0x17a)+_0x4cad02(0x2bc,0x369,0x3f9,0x3f9)+_0x4cad02(0x2c1,0x284,0x23e,0x22a)+_0x4cad02(0x244,0x290,0x352,0x1f3)+_0x3377c9(0x512,0x46b,0x516,0x456)+'%20%20cons'+_0x3377c9(0x3d3,0x48a,0x4e8,0x53e)+_0x4cad02(0x2ab,0x322,0x361,0x29d)+_0x3377c9(0x544,0x487,0x43c,0x424)+_0x4cad02(0x32f,0x295,0x28d,0x2cf)+'t%29%3B%0A'+_0x3377c9(0x396,0x386,0x30d,0x3ab)+_0x3377c9(0x3fe,0x392,0x435,0x3ef)+_0x4cad02(0x2b8,0x369,0x341,0x388)+'%20%20%20%'+_0x4cad02(0x3f0,0x358,0x408,0x32a)+_0x4cad02(0x2dc,0x323,0x3ac,0x2e1)+'lList%28ch'+'annels%29%'+_0x3377c9(0x397,0x331,0x2a3,0x2c1)+_0x4cad02(0x2bd,0x369,0x404,0x362)+_0x4cad02(0x268,0x284,0x236,0x1cb)+_0x4cad02(0x20d,0x290,0x21d,0x1d8)+_0x3377c9(0x3c7,0x468,0x3f9,0x46d)+_0x4cad02(0x327,0x284,0x24c,0x313)+_0x3377c9(0x334,0x392,0x2d6,0x41b)+'0%20%20%20'+_0x3377c9(0x4f5,0x431,0x418,0x47d)+'ch%28error'+_0x4cad02(0x3f0,0x33e,0x340,0x2ab)+_0x3377c9(0x374,0x3b6,0x3d8,0x347)+_0x3377c9(0x3df,0x3fc,0x338,0x35d)+_0x4cad02(0x1d0,0x22a,0x180,0x1b5)+'etching%20'+_0x4cad02(0x2a1,0x32e,0x3a1,0x2fb)+_0x3377c9(0x2da,0x396,0x325,0x3f0)+_0x4cad02(0x363,0x2f6,0x2aa,0x272)+_0x4cad02(0x37d,0x2f1,0x369,0x362)+'%0A%20%20%'+_0x4cad02(0x3df,0x37f,0x2c6,0x370)+_0x3377c9(0x374,0x398,0x43a,0x3e2)+_0x3377c9(0x421,0x498,0x40b,0x54d)+'%20%20%20%'+_0x3377c9(0x42f,0x48e,0x4df,0x53b)+_0x4cad02(0x2ed,0x2fc,0x37e,0x2dc)+_0x3377c9(0x36f,0x386,0x308,0x388)+_0x4cad02(0x3ef,0x386,0x41d,0x43b)+'ndow.onloa')+('d%20%3D%20'+_0x4cad02(0x41e,0x379,0x3f0,0x406)+_0x4cad02(0x259,0x228,0x215,0x2a1)+'%0A%20%20%'+_0x3377c9(0x365,0x392,0x3f6,0x445)+_0x3377c9(0x3e2,0x46b,0x3e1,0x3d2)+_0x4cad02(0x1f6,0x26a,0x1cc,0x1f5)+'onst%20pop'+_0x4cad02(0x1f0,0x2ad,0x2e5,0x284)+_0x3377c9(0x3dc,0x410,0x466,0x356)+'getElement'+'ById%28%27'+_0x4cad02(0x346,0x2dd,0x252,0x3a1)+_0x4cad02(0x40e,0x349,0x3ad,0x2f9)+_0x4cad02(0x23b,0x284,0x2c2,0x326)+_0x3377c9(0x3b9,0x392,0x434,0x317)+_0x4cad02(0x2d0,0x369,0x2eb,0x2e2)+_0x3377c9(0x4dc,0x432,0x375,0x3d5)+_0x4cad02(0x343,0x339,0x2ba,0x36e)+_0x4cad02(0x29d,0x316,0x30f,0x27e)+_0x3377c9(0x3b0,0x361,0x3c8,0x3c4)+_0x3377c9(0x287,0x32f,0x3c9,0x2e2)+_0x4cad02(0x2d9,0x280,0x2ca,0x32e)+_0x4cad02(0x2ca,0x2bd,0x26c,0x348)+_0x4cad02(0x32a,0x271,0x2fd,0x335)+_0x3377c9(0x420,0x46b,0x3be,0x524)+_0x3377c9(0x3bf,0x386,0x42e,0x33d)+_0x4cad02(0x2ce,0x290,0x2cb,0x30c)+_0x3377c9(0x4a3,0x412,0x3a2,0x4a5)+_0x3377c9(0x496,0x477,0x3ed,0x40b)+_0x3377c9(0x2d2,0x31b,0x304,0x2b8)+_0x4cad02(0x2df,0x367,0x2c4,0x3a4)+_0x4cad02(0x329,0x396,0x32a,0x360)+'%20%20%20%'+_0x4cad02(0x24f,0x290,0x2c0,0x2e6)+_0x3377c9(0x3f7,0x46b,0x46a,0x4c9)+_0x3377c9(0x3d7,0x365,0x41b,0x3cd)+_0x4cad02(0x281,0x23e,0x2c0,0x1c1)+_0x3377c9(0x314,0x389,0x3fd,0x37c)+_0x3377c9(0x29f,0x344,0x334,0x404)+_0x3377c9(0x437,0x3e5,0x398,0x430)+'%20//%20Mo'+'ve%20off-s'+_0x3377c9(0x47b,0x476,0x403,0x525)+_0x4cad02(0x34e,0x360,0x3d1,0x3b4)+_0x3377c9(0x2d8,0x392,0x2e3,0x2d4)+_0x3377c9(0x3e1,0x46b,0x52b,0x49b)+_0x4cad02(0x317,0x284,0x242,0x285)+_0x3377c9(0x2b2,0x378,0x2d0,0x411)+'03000%29%3'+_0x3377c9(0x406,0x3b1,0x40e,0x3bc)+_0x4cad02(0x416,0x39a,0x417,0x45f)+_0x3377c9(0x411,0x43c,0x486,0x3b7)+_0x3377c9(0x405,0x43e,0x4f1,0x4f3)+_0x3377c9(0x423,0x46b,0x453,0x3eb)+_0x4cad02(0x276,0x284,0x23c,0x1f5)+_0x4cad02(0x2f2,0x233,0x195,0x234)+_0x3377c9(0x51a,0x46b,0x502,0x509)+_0x3377c9(0x438,0x439,0x42a,0x3d6)+_0x4cad02(0x209,0x2b1,0x268,0x2f6))));
+
+</script> <div id="player"><div data-player="" tabindex="9999" class="" style="height: 100%; width: 100%;"><div class="container" data-container=""><div data-spinner="" class="spinner-three-bounce" style="display: none;"><div data-bounce1=""></div><div data-bounce2=""></div><div data-bounce3=""></div>
+</div><div class="player-poster" data-poster="" style="display: none;"><div class="play-wrapper" data-poster=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" data-poster="" class="poster-icon" style="display: none;"><path fill="#010101" d="M1.425.35L14.575 8l-13.15 7.65V.35z"></path></svg></div>
+</div><video data-html5-video="" preload="metadata" src="blob:https://iptv-jagobd.blogspot.com/55acc71a-9c84-42c5-aee1-027804d0ab3e"></video></div><div class="media-control live media-control-hide" data-media-control="" style=""><div class="media-control-background" data-background=""></div>
+<div class="media-control-layer" data-controls="">
+  
+  
+  
+  
+  
+  
+  
+  <div class="media-control-center-panel" data-media-control="">
+    
+      <div class="bar-container seek-disabled" data-seekbar="">
+        <div class="bar-background" data-seekbar="">
+          <div class="bar-fill-1" data-seekbar="" style="left: 100.063%; width: 66.5677%;"></div>
+          <div class="bar-fill-2" data-seekbar="" style="width: 100%;"></div>
+          <div class="bar-hover" data-seekbar=""></div>
+        </div>
+        <div class="bar-scrubber" data-seekbar="" style="left: 100%;">
+          <div class="bar-scrubber-icon" data-seekbar=""></div>
+        </div>
+      </div>
+  
+  </div>
+  
+  
+  <div class="media-control-left-panel" data-media-control="">
+    
+    <button type="button" class="media-control-button media-control-icon stopped" data-playstop="" aria-label="playstop"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" fill="#010101" d="M1.712 1.24h12.6v13.52h-12.6z"></path></svg></button>
+  
+  <div class="dvr-controls" data-dvr-controls=""><div class="live-info">live</div>
+<button type="button" class="live-button" aria-label="back to live">back to live</button>
+</div></div>
+  
+  
+  <div class="media-control-right-panel" data-media-control="">
+    
+    <button type="button" class="media-control-button media-control-icon" data-fullscreen="" aria-label="fullscreen"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="#010101" d="M7.156 8L4 11.156V8.5H3V13h4.5v-1H4.844L8 8.844 7.156 8zM8.5 3v1h2.657L8 7.157 8.846 8 12 4.844V7.5h1V3H8.5z"></path></svg></button><div class="cc-controls" data-cc-controls=""><button type="button" class="cc-button media-control-button media-control-icon" data-cc-button="" aria-label="cc-button"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 49 41.8" style="enable-background:new 0 0 49 41.8;" xml:space="preserve"><path d="M47.1,0H3.2C1.6,0,0,1.2,0,2.8v31.5C0,35.9,1.6,37,3.2,37h11.9l3.2,1.9l4.7,2.7c0.9,0.5,2-0.1,2-1.1V37h22.1 c1.6,0,1.9-1.1,1.9-2.7V2.8C49,1.2,48.7,0,47.1,0z M7.2,18.6c0-4.8,3.5-9.3,9.9-9.3c4.8,0,7.1,2.7,7.1,2.7l-2.5,4 c0,0-1.7-1.7-4.2-1.7c-2.8,0-4.3,2.1-4.3,4.3c0,2.1,1.5,4.4,4.5,4.4c2.5,0,4.9-2.1,4.9-2.1l2.2,4.2c0,0-2.7,2.9-7.6,2.9 C10.8,27.9,7.2,23.5,7.2,18.6z M36.9,27.9c-6.4,0-9.9-4.4-9.9-9.3c0-4.8,3.5-9.3,9.9-9.3C41.7,9.3,44,12,44,12l-2.5,4 c0,0-1.7-1.7-4.2-1.7c-2.8,0-4.3,2.1-4.3,4.3c0,2.1,1.5,4.4,4.5,4.4c2.5,0,4.9-2.1,4.9-2.1l2.2,4.2C44.5,25,41.9,27.9,36.9,27.9z"></path></svg></button>
+<ul style="display: none;">
+  
+  <li><a href="#" data-cc-select="-1">Disabled</a></li>
+  
+</ul>
+</div>
+  
+      <div class="drawer-container" data-volume="">
+        <div class="drawer-icon-container" data-volume="">
+          <div class="drawer-icon media-control-icon" data-volume=""><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" fill="#010101" d="M11.5 11h-.002v1.502L7.798 10H4.5V6h3.297l3.7-2.502V4.5h.003V11zM11 4.49L7.953 6.5H5v3h2.953L11 11.51V4.49z"></path></svg></div>
+          <span class="drawer-text" data-volume=""></span>
+        </div>
+        
+    <div class="bar-container volume-bar-hide" data-volume="">
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+      <div class="segmented-bar-element fill" data-volume=""></div>
+    
+    </div>
+  
+      </div>
+  
+    <button type="button" class="media-control-button media-control-icon" data-hd-indicator="" aria-label="hd-indicator"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="#010101" d="M5.375 7.062H2.637V4.26H.502v7.488h2.135V8.9h2.738v2.848h2.133V4.26H5.375v2.802zm5.97-2.81h-2.84v7.496h2.798c2.65 0 4.195-1.607 4.195-3.77v-.022c0-2.162-1.523-3.704-4.154-3.704zm2.06 3.758c0 1.21-.81 1.896-2.03 1.896h-.83V6.093h.83c1.22 0 2.03.696 2.03 1.896v.02z"></path></svg></button>
+  
+  </div>
+  
+</div>
+<div class="seek-time" data-seek-time="" style="display: none; left: -100%;"><span data-seek-time=""></span>
+<span data-duration="" style="display: none;"></span>
+</div></div></div></div>
+        
+        <div class="channel-list" id="channel-list">
+            
+        <div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/12/asiantv.jpg?x91288" alt="Asian TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/12/atn-bangla1.jpg?x91288" alt="ATN Bangla ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://i.postimg.cc/DZTg115q/Ananda-TV.png" alt="Ananda TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2016/02/atnislamictv.jpg?x91288" alt="ATN Islamic ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/12/atnmusic.jpg?x91288" alt="ATN Music ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2016/08/atn-news.jpg?x91288" alt="ATN News ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/10/bv-150x1501.jpg?x91288" alt="Banglavision ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/BIJOY_TV_Logo_BD.png/360px-BIJOY_TV_Logo_BD.png" alt="Bijoy TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/10/BoishakhiTV-150x1501.jpg?x91288" alt="Boishakhi ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/d/df/BTV_World_Logo.png" alt="BTV World ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/10/ch9-150x150.jpg?x91288" alt="Channel 9 ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2016/02/channel24.jpg?x91288" alt="CHANNEL 24 ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/10/chi-150x150.jpg?x91288" alt="Channel I ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2017/01/dbc-news.jpg?x91288" alt="DBC News ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSiG_jQRLZUIzzn_7tu7tRwc-CifzQ14hAhw&amp;s" alt="Ekattor ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhuHJR0tzeTyoc6XnWJgNddJWkmt5y0spfHw&amp;s" alt="Ekushey TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/12/gaanbangla.jpg?x91288" alt="Gaan Bangla ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4rRUPW-SvyissIGBlHtLEToOitnE-j-T1AA&amp;s" alt="My TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Desh_tv_logo.jpg/640px-Desh_tv_logo.jpg" alt="Desh TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/10/inds.png?x91288" alt="Independent ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/10/jamuna-150x150.jpg?x91288" alt="Jamuna TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2016/08/news24.jpg?x91288" alt="News 24 ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2016/02/ntveurope.jpg?x91288" alt="NTV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2017/01/rtvbd.jpg?x91288" alt="RTV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2015/12/satvs.jpg?x91288" alt="SATV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2016/02/somoynews.jpg?x91288" alt="Shomoy TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2019/09/AljazeeraTV.jpg" alt="Al Jazeera ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2020/05/MakkahLive.jpg" alt="Makkah Live ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2020/05/Medina-Live.jpg" alt="Medina Live ">
+                    
+                </div><div class="channel-item">
+                    <img src="http://www.jagobd.com/wp-content/uploads/2017/01/IQRA-BANGLA-TV.jpeg" alt="Iqra Bangla TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://play-lh.googleusercontent.com/k2pZI4ICzAXwZVzMpB232mOwKAzGBrsWQ-ctp0xZjiVAm_n7pb89afOYrrvRZRoNQqE" alt="Millennium TV USA ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://play-lh.googleusercontent.com/CCqeoZgwNAfUc9h7oGg19AsBTVlfSnNBbp4APMcuBQnHwnWkARD-oPOxLzh2fOuXh2w0" alt="Millennium TV 24 ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJCVPXXnt4LxrLpCI6sRKfYu0bZkjHUg1WkQ&amp;s" alt="Makkah TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0nbtpgwhqVc7-lIYDdjq-wD5iyUH3ndQEuQ&amp;s" alt="JonmoBhumi TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/bn/6/69/%E0%A6%AF%E0%A6%AE%E0%A7%81%E0%A6%A8%E0%A6%BE_%E0%A6%9F%E0%A7%87%E0%A6%B2%E0%A6%BF%E0%A6%AD%E0%A6%BF%E0%A6%B6%E0%A6%A8%E0%A7%87%E0%A6%B0_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.jpg?20140404111455" alt="Jamuna TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYDylO0mRVwNyxB49KNNFNHm4w2_Cc6h6rg&amp;s" alt="Jagoroni TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://cdn.jagonews24.com/media/imgAllNew/BG/2019October/jagonews24-md-20191101153408.jpg" alt="JagoNews24 TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Islam_Channel_Logo_COLOUR.png" alt="Islam TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRy_O6BahHmhNuqRl87OSKDHBIAcJWoSKstA&amp;s" alt="Iqra Bangla ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://www.jagobd.com/wp-content/uploads/2017/10/iontvuk.jpg?x67896" alt="iON TV UK ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/DW_%28TV%29_Logo_2012.png" alt="DW News ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBEkbno6_s0UWgUukz0Emqvnj4iVWlvl9yow&amp;s" alt="CHANNEL S ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_OoBST8IOU0i5yAcgEoz9tu5dJuroeMwiXg&amp;s" alt="CHANNEL S UK ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrNmGMVx_q7pm7uc7-VHAbIkfISrgD1osEnA&amp;s" alt="TIME TELEVISION ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://raw.githubusercontent.com/tvs6/livetv/refs/heads/main/img/channels/thechanneltv.png" alt="THE CHANNEL TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSB5BvpXZ2hQk4gzD7Fx_LWlEYzxXXTR2otIA&amp;s" alt="CHANNEL EUROPE ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://seeklogo.com/images/D/deepto-tv-logo-71DD610A34-seeklogo.com.png" alt="DEEPTO TV HD ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://www.jagobd.com/wp-content/uploads/2023/01/b24c-1.jpeg" alt="B24C ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://www.jagobd.com/wp-content/uploads/2016/02/bangla21tv-150x150.jpg" alt="Bangla 21 TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://www.jagobd.com/wp-content/uploads/2022/03/Logo-Still.png" alt="BiswaBangla 24 ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://www.jagobd.com/wp-content/uploads/2024/01/CB24-PP-LOGO.png" alt="CB24 TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://www.jagobd.com/wp-content/uploads/2022/10/CGTN.png" alt="CGTN ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://www.jagobd.com/wp-content/uploads/2022/10/CGTN_Doc.png" alt="CGTN Documentary ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://www.jagobd.com/wp-content/uploads/2020/05/colosaltvhd.jpg" alt="Colosal TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/d/d7/Duronto_TV_Logo.png" alt=" Duronto TV ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d4/Sony_Aath_new.png/300px-Sony_Aath_new.png" alt=" Sony Aath ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQI0o0veJjt_XWCjWTMSN7gP6XC2qqsHMp9PR9bwbk0UWXlCcKITRdF4zyQ&amp;s=10" alt=" Jalsha Moviees HD ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/1/11/T_Sports_logo.png" alt="T Sports ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://i.ibb.co.com/8jHFz4k/download.png" alt=" RTA Sports HD 🔗🏏 ">
+                    
+                </div><div class="channel-item">
+                    <img src="https://i.ibb.co/7VZqMNk/download-4.png" alt=" VTC 1 HD 🏆">
+                    
+                </div></div>
+        <div id="popup" style="right: -200px;"></div>
+        <div id="blockMessage">
+        <ul>DISCLAIMER ❗</ul>
+        
+       <p>After the first click, before the redirect link is loaded, click Back immediately, then it will be convenient to use!</p>
+       
+        <button class="close-btn" onclick="closeMessage()">X</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var blockMessage = document.getElementById('blockMessage');
+            blockMessage.classList.add('show');
+        };
+
+        function closeMessage() {
+            var blockMessage = document.getElementById('blockMessage');
+            blockMessage.style.display = 'none';
+        }
+    </script>
+    
+    <footer>&nbsp;</footer>
+    
+    
+    
+    <!-- Clappr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+
+    <script>
+        // Function to parse the playlist
+        function parseM3U8(playlist) {
+            const lines = playlist.split('\n');
+            let channels = [];
+            let currentChannel = {};
+            
+            lines.forEach(line => {
+                if (line.startsWith('#EXTINF')) {
+                    const name = line.split(',')[1];
+                    const logoMatch = line.match(/tvg-logo="(.+?)"/);
+                    const logo = logoMatch ? logoMatch[1] : '';
+                    currentChannel = { name, logo };
+                } else if (line.startsWith('http')) {
+                    currentChannel.url = line.trim();
+                    channels.push(currentChannel);
+                    currentChannel = {};
+                }
+            });
+            
+            return channels;
+        }
+
+        // Function to render the channel list
+        function renderChannelList(channels) {
+            const channelList = document.getElementById('channel-list');
+            channels.forEach((channel) => {
+                const channelItem = document.createElement('div');
+                channelItem.classList.add('channel-item');
+                channelItem.innerHTML = `
+                    <img src="${channel.logo}" alt="${channel.name}">
+                    
+                `;
+                channelItem.addEventListener('click', () => playChannel(channel.url));
+                channelList.appendChild(channelItem);
+            });
+
+            // Show content and hide loader after rendering
+            document.querySelector('.tv-container').style.opacity = 1; // Fade in the content
+            document.querySelector('.loader').style.display = 'none'; // Hide the loader
+        }
+
+        // Initialize Clappr player with default stream
+        let player = new Clappr.Player({
+            parentId: '#player',
+            source: 'https://files.catbox.moe/e1bw7h.mp4', // Set default stream
+            width: '100%',
+            height: '100%',
+            autoPlay: true,
+            mute: false,
+            
+        });
+
+        // Function to play the selected channel
+        function playChannel(url) {
+            player.load(url);
+            player.play();
+        }
+
+        // Fetch the playlist from the external file
+        fetch('https://raw.githubusercontent.com/nurmd2006/MyList/refs/heads/main/j-bd_plus.m3u')
+            .then(response => response.text())
+            .then(playlist => {
+                const channels = parseM3U8(playlist);
+                renderChannelList(channels);
+            })
+            .catch(error => console.error('Error fetching the playlist:', error));
+    </script>
+     
+
+
+
+
+
+
+    
+
+    
+
+  </body></html>

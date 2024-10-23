@@ -1,0 +1,128 @@
+#EXTM3U
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/GpjL1fCZ/20241005-165038.png", Tsports 
+https://cdn.livestreambd.com/TSports/index.m3u8 
+
+#EXTINF:-1 tvg-logo="https://yt3.googleusercontent.com/Ve4nWezHoaSvbvgaIoLVq1jsQOjx5ogIA_iFhL8fvNHyXLqFFcqi9rqvOVbHko_zsJ2oFVAkrg=s900-c-k-c0x00ffffff-no-rj", A Sports 
+http://125.209.88.166:45793/BRN/ArySports.stream/playlist.m3u8 
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/6QQd0w7P/a1430cde-3a35-494a-beb3-6c1b5405dc13.png", Euro Sports 1 HD
+http://iptv-hls.idc.md:8200/hls/260/live1.m3u8 
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbO5pcAGmhMMaqRWj6Xy2m9RsViMtGQdZ60kEiy7hGFUV3iEtsqsFnvbOA&s=10", Fifa Pulas
+https://stream-us-east-1.getpublica.com/playlist.m3u8?network_id=1545 
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvO04xorIj0V1yHmnHOdyVHZVh1Mi9oGmquKEYFHdYTTCSHB2v7KYLb0g&s=10", Mu Tv
+https://bcovlive-a.akamaihd.net/r2d2c4ca5bf57456fb1d16255c1a535c8/eu-west-1/eu-west-1/6058004203001/profile_2/chunklist.m3u8  
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSM_mSblBc-vaQzOgZyprGnb6KuHv8kWhNQ9JeuYEiOVJthdKRPP8v6xrY&s=10", Tennis Channel 
+https://tennischannel-int-samsunguk.amagi.tv/playlist.m3u8 
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/WzCmDfC0/image.jpg", GEO SUPER
+http://125.209.88.166:45793/BRN/GeoSuper.stream/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/NFxMSNvR/PTV-Sports.png", PTV SPORTS
+http://125.209.88.166:45793/BRN/PTVSports.stream/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/659TnNCc/10-Sydney-1984-2.png", TEN SPORTS
+http://125.209.88.166:45793/BRN/TenSports.stream/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/WbGN9Yw3/image.png", TYC SPORTS
+https://d1xm2jznwi5xzj.cloudfront.net/out/v1/34e0da501a8c4489b713809eb08a9bf3/index_14.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/3RXfMGSg/image.jpg", O SPORTS
+https://f77zvuxbr89.a.trbcdn.net/reserv9/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/L6XDDGpk/image.jpg", ATN NAT
+https://d10rltuy0iweup.cloudfront.net/ATNNAT/myStream/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/6q1dF5Xr/image.png", INFO SPORTS
+http://212.102.60.80/Infosport/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/ZndmPFq7/image.jpg", Bein SportsXtra ñ
+https://is.gd/7PhGkV?5e20b730f2f8d5003d739db7-66628d4a8dfc36b8c8a399c4.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/qR8VzBDS/image.jpg", More Than Sports
+https://mts1.iptv-playoutcenter.de/mts/mts-web/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/zBN22Cp2/image.jpg", ESPN 5
+http://authxplus-2.xyz:2082/live/Tourobox1-APhnnJ6sQS/7nAiGmzfNG/140.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/6QQd0w7P/a1430cde-3a35-494a-beb3-6c1b5405dc13.png", Eurosport 1
+http://185.189.225.157/EuroSport1/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/3JB4bVHQ/image.jpg", DAZN 1
+https://zjdmi53knyt.a.trbcdn.net/dazn1/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/3x7DxvxL/image.jpg", DAZN 2
+https://zjdmi53knyt.a.trbcdn.net/dazn2/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/1Xwf9mhh/image.jpg", DAZN 3
+https://zjdmi53knyt.a.trbcdn.net/dazn3/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/YqNhZCzQ/image.jpg", DAZN 4
+https://zjdmi53knyt.a.trbcdn.net/dazn4/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/FzysMT3h/image.jpg", DAZN 5
+https://zjdmi53knyt.a.trbcdn.net/dazn5/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/zGc5Ps6n/image.jpg", DAZN 6
+https://zjdmi53knyt.a.trbcdn.net/dazn6/index.m3u8
+
+#EXTINF:-1 tvg-logo="", Sport
+
+#EXTINF:-1 tvg-logo="", Sport
+
+#EXTINF:-1 tvg-logo="", Sport
+
+#EXTINF:-1 tvg-logo="", Sport
+
+#EXTINF:-1 tvg-logo="", Sport
+
+#EXTINF:-1 tvg-logo="", Sport
+
+
+
+
+
+#EXTINF:-1 tvg-logo="https://img2.sport-tv-guide.live/images/tv-station-pt-sport-tv-1-450.png" group-title="Grope Name", Sports 1 HD 
+https://8r1fp7ro6am.a.trbcdn.net/SportTV1/tracks-v3a1/mono.m3u8
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTPyj5vrlh4jnktbsyoFCuzCbeBvN47catnw&usqp=CAU", Sports 2 HD
+https://8r1fp7ro6am.a.trbcdn.net/SportTV2/index.m3u8 
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1vFQKIGbzjmhoSjHiMASKKEuysd8NKpBbhA&usqp=CAU", Sports 3 HD 
+https://8r1fp7ro6am.a.trbcdn.net/SportTV3/tracks-v2a1/mono.m3u8
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTe9CvrQlbD2idF8I__TRfgb6Qw3Ks4lLiR4g&usqp=CAU", Sports 4 HD 
+https://8r1fp7ro6am.a.trbcdn.net/SportTV4/tracks-v1a1/mono.m3u8
+
+#EXTINF:-1 tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDSZD4MxjaymuNQaNLYbDjJ2vr8sjAYyxwZw&usqp=CAU", Sports Tv 5 HD 
+https://8r1fp7ro6am.a.trbcdn.net/SportTV5/tracks-v2a1/mono.m3u8 
+
+#EXTINF:-1 tvg-logo="https://img2.sport-tv-guide.live/images/tv-station-sport-tv-6-2619.png", Sports Tv 6 HD 
+https://8r1fp7ro6am.a.trbcdn.net/SportTV6/tracks-v2a1/mono.m3u8
+ 
+
+
+
+#EXTINF:-1 group-title="LIVE NOW" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOmEtA39KGXyTJoUI9jQTvJB0M5RdlNvemKw&usqp=CAU",Bangladesh Vs Pakistan Test 
+https://evbr.short.gy/BDStreamHub_BangladeshVPakistan_Live.m3u8
+
+#EXTINF:-1 group-title="LIVE NOW" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOmEtA39KGXyTJoUI9jQTvJB0M5RdlNvemKw&usqp=CAU",Bangladesh Vs Pakistan Test 
+https://mhdtv.co.in/daddy/stream.m3u8?id=270|Referer=https://mhdtv.co.in//&key=BDStreamHub
+
+#EXTINF:-1 group-title="LIVE NOW" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOmEtA39KGXyTJoUI9jQTvJB0M5RdlNvemKw&usqp=CAU",Bangladesh Vs Pakistan Test 
+https://bdix.proximitybd.xyz/Fazla-Rabby-t-sports.php?id=live-02&e.m3u8
+
+#EXTINF:-1 group-title="LIVE NOW" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOmEtA39KGXyTJoUI9jQTvJB0M5RdlNvemKw&usqp=CAU",Bangladesh Vs Pakistan Test 
+https://vipgoodlive-tvs.creativehub.sbs/Willow_Cricket_Live_TV/index.m3u8|Referer=https://vipgoodlive-tvs.creativehub.sbs//&key=BDStreamHub
+
+#EXTINF:-1 group-title="LIVE NOW" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOmEtA39KGXyTJoUI9jQTvJB0M5RdlNvemKw&usqp=CAU",Bangladesh Vs Pakistan Test 
+https://nowmesports.com/crichd/stream.php?id=asportshd&e=.m3u8|Referer=https://nowmesports.com//&key=BDStreamHub
+
+#EXTINF:-1 group-title="LIVE NOW" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJ2bTf8BxhVWkRgjDzAuwIld45CEVbLbV7dw&usqp=CAU",England Vs SirLanka Test 
+https://dai.google.com/linear/hls/event/23bJc4DCSE2-dhd2cG1Jjw/master.m3u8|Referer=https://nowmesports.com//&key=BDStreamHub|Referer=https://dai.google.com//&key=BDStreamHub
+
+#EXTINF:-1 group-title="LIVE NOW" tvg-logo="https://fancode.com/skillup-uploads/prod-images/2024/08/106726_4386_GMY_MW_fc-web.jpg",Mysore Warriors vs Gulbarga Mystics
+https://cdn.sportsoneapp.workers.dev/fc/live.m3u8?id=106726_english_hls_2875ta-no
+

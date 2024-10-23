@@ -1,0 +1,15 @@
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:10
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:10,
+http://bd.ottbd.online:2082/live/Durjoy859/01327184859/2191.ts
+#EXTINF:10,
+http://bd.ottbd.online:2082/live/Durjoy859/01327184859/2191.ts
+#EXTINF:10,
+http://bd.ottbd.online:2082/live/Durjoy859/01327184859/2191.ts
+#EXTINF:10,
+http://bd.ottbd.online:2082/live/Durjoy859/01327184859/2191.ts
+#EXTINF:10,
+http://bd.ottbd.online:2082/live/Durjoy859/01327184859/2191.ts
+#EXT-X-ENDLIST
