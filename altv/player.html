@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3U8 Stream Player</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.6.2/dist/plyr.css" />
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.4/dist/hls.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            background: #000;
+            color: #fff;
+        }
+        #videoContainer {
+            position: relative;
+            width: 100%;
+            max-width: 100%; /* Max width for desktop */
+            margin: auto;
+        }
+        video {
+            width: 100%; /* Make video responsive */
+            height: 100%;
+        }
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px); /* Blur effect */
+            color: red; /* Text color */
+            font-size: 24px;
+            font-weight: bold;
+            background: transparent; /* Transparent background */
+            animation: flashing 2s infinite ease-in-out; /* Extended and smoother flashing animation */
+        }
+
+        @keyframes flashing {
+            0% { opacity: 1; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading">Altogether</div>
+<div id="videoContainer">
+    <video id="videoPlayer" controls autoplay crossorigin playsinline>
+        <source id="videoSource" src="" type="application/x-mpegURL">
+        Your browser does not support HTML5 video.
+    </video>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const videoPlayer = document.getElementById('videoPlayer');
+        const loadingIndicator = document.getElementById('loading');
+
+        // Function to play the stream
+        function playStream(link) {
+            loadingIndicator.style.display = 'flex'; // Show loading indicator
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(link);
+                hls.attachMedia(videoPlayer);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    const plyr = new Plyr(videoPlayer);
+                    videoPlayer.play().then(() => {
+                        loadingIndicator.style.display = 'none'; // Hide loading when video plays
+                    }).catch(() => {
+                        loadingIndicator.style.display = 'none'; // Hide loading on error
+                        console.error('Failed to play the stream.');
+                    });
+                });
+
+                hls.on(Hls.Events.ERROR, () => {
+                    loadingIndicator.style.display = 'none'; // Hide loading on error
+                    console.error('Error loading the stream.');
+                });
+            } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                videoPlayer.src = link;
+                const plyr = new Plyr(videoPlayer);
+                videoPlayer.play().then(() => {
+                    loadingIndicator.style.display = 'none'; // Hide loading when video plays
+                }).catch(() => {
+                    loadingIndicator.style.display = 'none'; // Hide loading on error
+                    console.error('Failed to play the stream.');
+                });
+            }
+        }
+
+        // Get URL from query string and play the stream if available
+        const urlParams = new URLSearchParams(window.location.search);
+        const streamUrl = urlParams.get('url');
+        if (streamUrl) {
+            playStream(streamUrl);
+        } else {
+            alert('No M3U8 link provided in the URL.');
+        }
+    });
+</script>
+
+
+
+
+<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+
+<!-- Disable CTRL+U & CTRL+C and Mouse Right Click -->
+
+ <script type='text/javascript'>  
+ var isCtrl = false;  
+ document.onkeyup=function(e)  
+ {  
+ if(e.which == 17)  
+ isCtrl=false;  
+ }  
+ document.onkeydown=function(e)  
+ {  
+ if(e.which == 17)  
+ isCtrl=true;  
+ if((e.which == 85) || (e.which == 67) && isCtrl == true)  
+ {  
+ // alert(‘Keyboard shortcuts are cool!’);  
+ return false;  
+ }  
+ }  
+ var isNS = (navigator.appName == "Netscape") ? 1 : 0;  
+ if(navigator.appName == "Netscape") document.captureEvents(Event.MOUSEDOWN||Event.MOUSEUP);  
+ function mischandler(){  
+ return false;  
+ }  
+ function mousehandler(e){  
+ var myevent = (isNS) ? e : event;  
+ var eventbutton = (isNS) ? myevent.which : myevent.button;  
+ if((eventbutton==2)||(eventbutton==3)) return false;  
+ }  
+ document.oncontextmenu = mischandler;  
+ document.onmousedown = mousehandler;  
+ document.onmouseup = mousehandler;  
+ </script>  
+
+
+
+
+    
+</body>
+</html>
