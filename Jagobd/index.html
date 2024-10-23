@@ -1,0 +1,330 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JagoBD — Powered by : Ovation Bangladesh.</title>
+
+<style>
+        /* Base styles */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column; /* Set column direction for body */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+            
+        }
+
+        
+
+        .hr {
+            width: 20%;
+        }
+
+        .tv-container {
+            display: flex;
+            width: 90%;
+            height: 80%;
+            max-width: 1200px;
+            flex-direction: column;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 1s; /* Fade-in effect */
+        }
+
+        
+        
+
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-20px); }
+        }
+
+        /* Responsive channel list with more columns */
+        .channel-list {
+            width: 100%;
+            background: #010101de;
+            color: white;
+            padding: 25px;
+            display: grid;
+            grid-gap: 10px;
+            box-sizing: border-box;
+            border-radius: 50px;
+            overflow-y: auto;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            /* Dynamic columns based on screen size */
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        }
+
+        .channel-item {
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        }
+
+        .channel-item img {
+            width: 50px;
+            height: 50px;
+            
+        }
+
+        .channel-item span {
+            font-size: 0px;
+            color: transparent;
+            text-align: center;
+        }
+
+        .channel-item:hover {
+            transform: translateY(-5px);
+            border: 3px solid #009671f6;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+
+        .player {
+            width: 100%;
+            
+            background: transparent;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            flex-grow: 1;
+            margin-bottom: 20px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 10px;
+        }
+
+        /* Clappr player will be styled dynamically */
+        #player {
+            width: 100%;
+            height: 40%;
+        }
+
+        /* Responsive styles */
+        @media (min-width: 768px) {
+            .tv-container {
+                flex-direction: row;
+            }
+
+            .channel-list {
+                max-width: 100%;
+                width: 100%;
+                border-radius: 10px;
+            }
+
+            .player {
+                width: 70%;
+                border-radius: 20px;
+                margin-right: 20px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .tv-container {
+                flex-direction: column;
+            }
+
+            .player {
+                border-radius: 20px;
+            }
+
+            .channel-list {
+                max-height: 55%;
+                width: 400px;
+                
+                margin-top: 8px;
+                border-radius: 5px;
+            }
+
+            .channel-item img {
+                width: 68px;
+                height: 68px;
+            }
+        }
+
+    </style>
+    
+
+</script><style>
+        #popup {
+            position: fixed;
+            top: 50%;
+            right: -200px; /* Start off-screen */
+            width: 200px;
+            height: 200px;
+            background: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjCvgaskwSgwXkklHj2fErU7kdgbF7R9xhdbpERgczwzWq_9FCOJO4j162TjS1sKBx0JyZQDMtPPFiv59OxKfsexE4cYamjk7LubiSJuN5lw2H4o0EKmHTmtpWRo_CRxXLBNwyU-vNDLlSrdnRMrG4yoay5R8qWXNlOZKa-pnlqxhfPKsEEuXorjVfMSg/s1028/transparent-Lumii_20240714_165233715.png') no-repeat center center;
+            background-size: cover;
+            transition: right 1s ease-in-out;
+        }
+    </style>
+<style>
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        #blockMessage {
+            display: none;
+            width: 320px;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        #blockMessage.show {
+            display: block;
+            animation: slideIn 0.5s forwards;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff5c5c;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7878;
+            transform: scale(1.1);
+        }
+    </style>
+
+
+<body>
+
+
+<div id="player"></div>
+
+      
+           
+
+    <script>
+        window.onload = function() {
+            var blockMessage = document.getElementById('blockMessage');
+            blockMessage.classList.add('show');
+        };
+
+        function closeMessage() {
+            var blockMessage = document.getElementById('blockMessage');
+            blockMessage.style.display = 'none';
+        }
+    </script>
+    
+    
+    <div class="channel-list" id="channel-list"> </div></div>
+    
+    
+    <!-- Clappr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+
+    <script>
+        // Function to parse the playlist
+        function parseM3U8(playlist) {
+            const lines = playlist.split('\n');
+            let channels = [];
+            let currentChannel = {};
+            
+            lines.forEach(line => {
+                if (line.startsWith('#EXTINF')) {
+                    const name = line.split(',')[1];
+                    const logoMatch = line.match(/tvg-logo="(.+?)"/);
+                    const logo = logoMatch ? logoMatch[1] : '';
+                    currentChannel = { name, logo };
+                } else if (line.startsWith('http')) {
+                    currentChannel.url = line.trim();
+                    channels.push(currentChannel);
+                    currentChannel = {};
+                }
+            });
+            
+            return channels;
+        }
+
+        // Function to render the channel list
+        function renderChannelList(channels) {
+            const channelList = document.getElementById('channel-list');
+            channels.forEach((channel) => {
+                const channelItem = document.createElement('div');
+                channelItem.classList.add('channel-item');
+                channelItem.innerHTML = `
+                    <img src="${channel.logo}" alt="${channel.name}">
+                    
+                `;
+                channelItem.addEventListener('click', () => playChannel(channel.url));
+                channelList.appendChild(channelItem);
+            });
+
+            // Show content and hide loader after rendering
+            document.querySelector('.tv-container').style.opacity = 1; // Fade in the content
+            document.querySelector('.loader').style.display = 'none'; // Hide the loader
+        }
+
+        // Initialize Clappr player with default stream
+        let player = new Clappr.Player({
+            parentId: '#player',
+            source: 'https://files.catbox.moe/e1bw7h.mp4', // Set default stream
+            width: '100%',
+            height: '100%',
+            autoPlay: true,
+            mute: false,
+            
+        });
+
+        // Function to play the selected channel
+        function playChannel(url) {
+            player.load(url);
+            player.play();
+        }
+
+        // Fetch the playlist from the external file
+        fetch('https://raw.githubusercontent.com/nurmd2006/MyList/refs/heads/main/j-bd_plus.m3u')
+            .then(response => response.text())
+            .then(playlist => {
+                const channels = parseM3U8(playlist);
+                renderChannelList(channels);
+            })
+            .catch(error => console.error('Error fetching the playlist:', error));
+    </script>
+      <script>
+        window.onload = function() {
+            const popup = document.getElementById('popup');
+            popup.style.right = '50%'; // Move to the center
+            setTimeout(() => {
+                popup.style.right = '-200px'; // Move off-screen again
+            }, 3000); // Wait for 3 second
+        };
+    </script>
+
+  
+
+  
+  </body></html>
