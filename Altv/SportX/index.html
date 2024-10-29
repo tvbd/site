@@ -1,21 +1,142 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="shortcut icon" type="x-icon" href="https://i.postimg.cc/63nNfFKF/Altogether.png">    
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="ENJOY FREE LIVE TV AND SPORT LIVE">
-    <meta name="keywords" content="Watch live sports streaming online, including football, basketball, baseball, hockey, and more. Stream your favorite sports teams and events in HD, with no cable subscription required.">
-    <meta name="author" content="Altogether 007">
-    
-    <title>Altogether 007</title>
-    
-    <script>
-        window.location.href = "http://altogether.unaux.com/SportX/";
-    </script>
-</head>
-<body>
-    <p>Redirecting, please wait...</p>
-</body>
-</html>
+<!DOCTYPE html> <html lang = "en" >
+            <head >
+            <meta charset = "UTF-8" >
+            <meta name = "viewport" content = "width=device-width, initial-scale=1.0" >
+            <title> SPORTX </title> 
+                <meta name = "description" content = "ENJOY FREE SPORT LIVE" >
+            <meta name = "author"
+            content = "Altogether 007" >
+            < meta http - equiv = "X-UA-Compatible"  content = "IE=edge" >
+            < link rel = "shortcut icon" type = "image/x-icon" href = "https://i.postimg.cc/63nNfFKF/Altogether.png" >
+                <link rel = "stylesheet" href = "https://cdn.jsdelivr.net/npm/plyr@3.6.2/dist/plyr.css" >
+            <link rel = "stylesheet" href = "styles.css" >
+     <script src = "https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.min.js"> </script>
+    <script src = "https://cdn.jsdelivr.net/npm/hls.js@1.1.4/dist/hls.min.js" > </script>
+                </head> <body >
+
+            <div class = "video-player">
+            <div id ="videoLoading" class = "loading">
+            <p> Video may take 5 - 10 seconds to play. < /p>
+    </div> <div id = "overlay" class = "overlay" > Altogether 007 < /div> <
+            video id = "videoPlayer"
+            controls crossorigin playsinline muted autoplay >
+            <source id = "videoSource"
+            type = "application/vnd.apple.mpegurl" src = "" >
+            </video> </div>
+
+            <div id = "channelLoading" class = "loading" ><p> Wait Channel List is Loading Now </p> </div>
+
+            <div class = "channel-container"
+            id = "channelList"
+            style = "display: none;" >
+            <div class = "channel-buttons" ><
+            !--Channels will be dynamically loaded here-- >
+            </div> < /div>
+
+            <script >
+            const video = document.getElementById('videoPlayer');
+            const videoLoading = document.getElementById('videoLoading');
+            const overlay = document.getElementById('overlay');
+            const channelList = document.querySelector('.channel-buttons');
+
+            video.addEventListener('waiting', function () {
+                videoLoading.style.display = 'block';
+                overlay.style.display = 'flex'; // Show overlay
+                overlay.style.animation = 'fadeInOut 2s infinite'; // Looping animation
+            });
+
+            video.addEventListener('playing', function () {
+                videoLoading.style.display = 'none';
+                overlay.style.display = 'none'; // Hide overlay when video plays
+            });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const demoVideoUrl = 'https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8';
+                loadVideo(demoVideoUrl);
+                loadChannels();
+            });
+
+            function loadVideo(sourceUrl) {
+                if (Hls.isSupported()) {
+                    if (window.hls) {
+                        window.hls.destroy();
+                    }
+                    var hls = new Hls();
+                    hls.loadSource(sourceUrl);
+                    hls.attachMedia(video);
+                    window.hls = hls;
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = sourceUrl;
+                }
+                video.play();
+            }
+
+            function loadChannels() {
+                setTimeout(() => {
+                    fetch('https://raw.githubusercontent.com/altogether-007/altogether-007.github.io/refs/heads/main/SportX.m3u')
+                        .then(response => response.text())
+                        .then(data => {
+                            const lines = data.split('\n');
+                            let channels = [];
+                            let currentChannel = {};
+
+                            lines.forEach(line => {
+                                if (line.startsWith('#EXTINF')) {
+                                    const logoMatch = line.match(/tvg-logo="(.*?)"/);
+                                    const nameMatch = line.match(/,(.*)/);
+                                    if (logoMatch && nameMatch) {
+                                        currentChannel.logo = logoMatch[1];
+                                        currentChannel.name = nameMatch[1];
+                                    }
+                                } else if (line.startsWith('http')) {
+                                    currentChannel.url = line.trim();
+                                    channels.push(currentChannel);
+                                    currentChannel = {};
+                                }
+                            });
+
+                            channels.forEach(channel => {
+                                const channelButton = document.createElement('a');
+                                channelButton.href = "#";
+                                channelButton.classList.add('channel-link');
+                                channelButton.setAttribute('data-link', channel.url);
+
+                                const logoImg = document.createElement('img');
+                                logoImg.src = channel.logo;
+                                logoImg.alt = channel.name + ' Logo';
+
+                                channelButton.appendChild(logoImg);
+                                channelList.appendChild(channelButton);
+                            });
+
+                            channelLoading.style.display = 'none';
+                            document.getElementById('channelList').style.display = 'flex';
+
+                            document.querySelectorAll('.channel-link').forEach(function (link) {
+                                link.addEventListener('click', function (event) {
+                                    event.preventDefault();
+                                    const newSource = this.getAttribute('data-link');
+                                    loadVideo(newSource);
+                                });
+                            });
+                        });
+                }, 1000); // Simulating a delay for demonstration
+            } </script>
+
+            <footer style = "text-align: center; margin-top: 20px;" >
+                <span style = "font-family: arial; color: #00FFFF;" > ©Altogether 007: </span> 
+                <span style = "color: yellow;" > All Rights Reserved < /span> 
+                </footer>
+<script >
+            var isCtrl = false; document.onkeyup = function (e) {
+                if (e.which == 17) isCtrl = false;
+            }; document.onkeydown = function (e) {
+                if (e.which == 17) isCtrl = true;
+                if ((e.which == 85) || (e.which == 67) && isCtrl == true) {
+                    return false;
+                }
+            }; document.oncontextmenu = function () {
+                return false;
+            }; <
+            /script> </body> 
+                </html>
