@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>𝙍𝘾𝙉 𝙈𝙀𝘿𝙄𝘼 𝙄𝙋𝙏𝙑 📺 </title>
+<link rel="icon" type="image/x-icon" href="https://iili.io/2xp1Zs1.md.jpg">
+<style>
+/* Base styles */
+body {
+font-family: Arial, sans-serif;
+display: flex;
+flex-direction: column;
+align-items: center;
+margin: 0;
+background-color: #111;
+color: white;
+overflow-x: hidden;
+}
+
+/* Navigation bar styles */
+nav {
+width: 100%;
+background-color: #222; /* Background color for the navbar */
+padding: 15px; /* Padding around the title */
+display: flex;
+justify-content: center; /* Center the title */
+position: relative; /* For positioning child elements */
+}
+
+nav h1 {
+color: #009671; /* Color of the title */
+margin: 0; /* Remove default margin */
+font-size: 24px; /* Font size for the title */
+}
+
+/* Container for player and channel list */
+.tv-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+width: 100%;
+max-width: 600px;
+margin-top: 20px;
+opacity: 0;
+transition: opacity 1s;
+}
+
+/* Player container */
+.player {
+width: 100%;
+max-width: 100%;
+height: 300px; /* Fixed height for consistent display */
+background: #111;
+box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+border-radius: 10px;
+margin-bottom: 20px;
+position: relative; /* Position relative for absolute positioning of iframe */
+}
+
+/* Iframe for match player */
+.iframe-player {
+width: 100%;
+height: 100%; /* Fill the player area */
+border: none; /* Removes border from iframe */
+border-radius: 10px;
+position: absolute; /* Position absolute to overlay on Clappr */
+top: 0; /* Align to top */
+left: 0; /* Align to left */
+display: none; /* Hidden by default */
+}
+
+/* Clappr player */
+.clappr-player {
+width: 100%;
+height: 100%; /* Fill the player area */
+border-radius: 10px;
+}
+
+/* Match card styling */
+.match-card {
+background: #333; /* Match card background */
+border-radius: 12px;
+padding: 10px; /* Padding for consistency with channel items */
+margin-bottom: 20px;
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: space-between;
+box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+cursor: pointer; /* Indicates it is clickable */
+transition: border 0.2s ease, background 0.2s ease; /* Smooth transitions */
+}
+
+/* Match card hover effect */
+.match-card:hover {
+background: #444; /* Darker background on hover */
+border: 2px solid #009671; /* Green border on hover */
+}
+
+.team-logo {
+width: 50px;
+height: 50px;
+margin-right: 10px;
+border-radius: 50%; /* Make team logos rounded */
+}
+
+.match-details {
+text-align: center;
+flex-grow: 1;
+}
+
+/* Search bar styling */
+.search-bar {
+width: 90%;
+max-width: 600px;
+padding: 10px;
+font-size: 16px;
+border-radius: 5px;
+border: none;
+box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+margin-bottom: 15px;
+}
+
+/* Channel List */
+.channel-list {
+width: 100%;
+background: #222;
+padding: 15px;
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Increase min size for items */
+grid-gap: 15px; /* Increase gap between items */
+border-radius: 10px;
+overflow-y: auto;
+max-height: 300px; /* Limit height */
+}
+
+.channel-item {
+background: #333;
+border-radius: 10px;
+padding: 16px; /* Increase padding for larger items */
+display: flex;
+flex-direction: column;
+align-items: center;
+cursor: pointer;
+box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+transition: border 0.0s ease;
+min-width: 100px; /* Set minimum width */
+}
+
+.channel-item img {
+width: 70px; /* Increase logo size */
+height: 70px; /* Increase logo size */
+border-radius: 50%; /* Make channel images rounded */
+}
+
+.channel-name {
+margin-top: 8px; /* Increase margin */
+font-size: 14px; /* Increase font size for better visibility */
+text-align: center;
+color: #fff;
+}
+
+/* Removed any movement on hover */
+.channel-item:hover {
+border: 2px solid #009671; /* Only border color changes */
+}
+</style>
+</head>
+<body>
+<nav>
+<h1> <a href="/" style="text-decoration:none; color:white;">𝙍𝘾𝙉 𝙈𝙀𝘿𝙄𝘼 𝙄𝙋𝙏𝙑 📺</h1> </a> <!-- Navigation title -->
+</nav>
+<div class="tv-container" id="tv-container">
+<!-- Player container for Clappr and Iframe -->
+<div class="player" id="player-container">
+<div id="clappr-player" class="clappr-player"></div> <!-- Clappr Player -->
+<iframe class="iframe-player" id="iframe-player" src="" allowfullscreen></iframe> <!-- Iframe for Match -->
+</div>
+<!-- Search Bar -->
+<input type="text" class="search-bar" id="search-bar" placeholder="Search channels...">
+
+ <marquee class="notice-movies" scrollamount="4" style="margin-top:3px;background:#ff0000;color:white;position:relative;padding:10px;overflow:hidden;font-family:var(--font-secondary);border-radius:7px;">
+                   ➤➤ টিভি র দুনিয়াই  RCN 400++TV..দেখবেন.. মুভি খেলাধুলা কাটুন সিরিছ.. দেশি বিদেশি টিভি চ্যানেল...  ➤➤
+                </marquee>
+
+<!-- Channel List -->
+<div class="channel-list" id="channel-list"></div>
+</div>
+
+<!-- Clappr JS -->
+<script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+
+<script>
+let a = []; // Array to store all channels
+let b; // Clappr player instance
+
+// Initialize Clappr player
+function c() {
+b = new Clappr.Player({
+parentId: '#clappr-player',
+source: 'https://iili.io/2xp1Zs1.md.jpg', // Start without a source
+width: '100%',
+height: '100%',
+autoPlay: true,
+mute: false,
+});
+}
+
+// Fetch and parse M3U8 playlist
+function d() {
+fetch('https://shz.al/~rcnmediawebtv294')
+.then(f => f.text())
+.then(g => {
+a = h(g); // Store channels for filtering
+i(a);
+})
+.catch(j => console.error('Error fetching the playlist:', j));
+}
+
+// Parse the playlist to extract channels
+function h(k) {
+const l = k.split('\n');
+let m = [];
+let n = {};
+
+l.forEach(o => {
+if (o.startsWith('#EXTINF')) {
+const p = o.split(',')[1];
+const q = o.match(/tvg-logo="(.+?)"/);
+const r = q ? q[1] : '';
+n = { name: p, logo: r };
+} else if (o.startsWith('http')) {
+n.url = o.trim();
+m.push(n);
+n = {};
+}
+});
+
+return m;
+}
+
+// Render channel list
+function i(s) {
+const t = document.getElementById('channel-list');
+t.innerHTML = ''; // Clear previous list
+s.forEach(u => {
+const v = document.createElement('div');
+v.classList.add('channel-item');
+v.innerHTML = `
+<img src="${u.logo}" alt="${u.name}">
+<div class="channel-name">${u.name}</div>
+`;
+v.addEventListener('click', () => w(u.url));
+t.appendChild(v);
+});
+
+document.getElementById('tv-container').style.opacity = 1;
+}
+
+// Function to play the match stream in the iframe
+function x(y) {
+document.getElementById('iframe-player').src = y; // Set iframe src to match stream URL
+document.getElementById('iframe-player').style.display = 'block'; // Show iframe player
+b.pause(); // Pause Clappr player
+document.getElementById('clappr-player').style.display = 'none'; // Hide Clappr player
+}
+
+// Play selected channel in Clappr player
+function w(z) {
+b.load(z); // Load the selected channel URL into Clappr player
+b.play(); // Start playing
+document.getElementById('iframe-player').style.display = 'none'; // Hide iframe player
+document.getElementById('clappr-player').style.display = 'block'; // Show Clappr player
+}
+
+// Search channel functionality
+document.getElementById('search-bar').addEventListener('input', function() {
+const aa = this.value.toLowerCase();
+const ab = a.filter(ac =>
+ac.name.toLowerCase().includes(aa)
+);
+i(ab); // Re-render channel list with filtered channels
+});
+
+// Initialize player and fetch channels on page load
+window.onload = () => {
+c(); // Initialize Clappr player
+d(); // Fetch and render channels
+document.getElementById('match-card-1').addEventListener('click', () => x('https://cdn.livestreambd.com/TSportstv/index.m3u8')); // Add event listener for match card 1 click
+document.getElementById('match-card-2').addEventListener('click', () => x('https://cdn.livestreambd.com/TSportstv/index.m3u8')); // Add event listener for match card 2 click
+document.getElementById('match-card-3').addEventListener('click', () => x('https://match3-stream-url.com')); // Add event listener for match card 3 click
+};
+</script>
+
+</body>
+</html>
