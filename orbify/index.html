@@ -55,15 +55,17 @@
 </div>
 
 <!-- JavaScript -->
- 
-            
 <script type='text/javascript'>//<![CDATA[
 let player;
 const channelGrid = document.getElementById('channelGrid');
 const currentServerDisplay = document.getElementById('currentServerDisplay');
 const searchInput = document.getElementById('searchInput');
-         
+
+let channels = [];
+let categories = new Set();
+let favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
 let currentServer = 'https://raw.githubusercontent.com/johirryhan087/iptv_playlists/refs/heads/main/https_playlist.m3u';
+
 const servers = [
   'https://raw.githubusercontent.com/manikiptv/freecatv.github.io/refs/heads/main/freecatv.m3u8', //1
     'https://raw.githubusercontent.com/johirryhan087/iptv_playlists/refs/heads/main/https_playlist.m3u', //2
@@ -79,12 +81,12 @@ const servers = [
   'https://raw.githubusercontent.com/BDSTVHUB/BDStreamHub/refs/heads/main/index.html', //12
   'https://raw.githubusercontent.com/xyz84dotcom/-/refs/heads/main/Ghoziiptv.m3u', //13
   'https://shz.al/~rcnmediawebtv294', // 14
-  'https://is.gd/ar_tv' //15 
+  'https://is.gd/ar_tv' //15
+
+ 
+  
 ];
-            
-let channels = [];
-let categories = new Set();
-let favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
+
 // Channel Card Creation
 function createChannelCard(channel) {
     const isFavorite = favorites.has(channel.url);
@@ -118,7 +120,7 @@ function playChannel(url) {
         width: '100%',
         height: '100%',
         autoPlay: true,
-      poster: "//blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEji3C6D6HZt-fLDTf1mYZQYIyeUP_VV8UT9jQS-pbEiJu2KVxUL3xdAqnXaKyO_kIICCWn-IWyuq0XevFLIGAqLmSFpdpZzfJKVOrgkmsB9rdoYmgto2wZRJuqHAkIhj9bS7rcVKen3LMLxwWa1ZD1E605gASpoo-wl628yDS0zyNvB3KxC1BfX4oEL/s1920/skviptv.png",
+poster: "//blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEji3C6D6HZt-fLDTf1mYZQYIyeUP_VV8UT9jQS-pbEiJu2KVxUL3xdAqnXaKyO_kIICCWn-IWyuq0XevFLIGAqLmSFpdpZzfJKVOrgkmsB9rdoYmgto2wZRJuqHAkIhj9bS7rcVKen3LMLxwWa1ZD1E605gASpoo-wl628yDS0zyNvB3KxC1BfX4oEL/s1920/skviptv.png",
         mute: false,
         playback: {
             playInline: true,
@@ -278,14 +280,12 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-
-
-
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     parseM3U(servers[0]);
 });
-//]]></script>
+//]]>
+</script>
 <!--script src='copy.js'></script-->
 </body>
 </html>
