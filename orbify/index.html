@@ -21,7 +21,7 @@
 <!-- External Resources -->
 <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' rel='stylesheet'/>
 <script src='https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js'></script>
-<link href='https://raw.githack.com/tvbd/site/main/orbify/style.css' rel='stylesheet'/>
+<link href='/style.css' rel='stylesheet'/>
             
 </head>
 <body>
@@ -55,14 +55,33 @@
 </div>
 
 <!-- JavaScript -->
- <script src="https://raw.githack.com/tvbd/site/main/orbify/m3u.js" ></script> 
+ 
             
 <script type='text/javascript'>//<![CDATA[
 let player;
 const channelGrid = document.getElementById('channelGrid');
 const currentServerDisplay = document.getElementById('currentServerDisplay');
 const searchInput = document.getElementById('searchInput');
-
+         
+let currentServer = 'https://raw.githubusercontent.com/johirryhan087/iptv_playlists/refs/heads/main/https_playlist.m3u';
+const servers = [
+  'https://raw.githubusercontent.com/manikiptv/freecatv.github.io/refs/heads/main/freecatv.m3u8', //1
+    'https://raw.githubusercontent.com/johirryhan087/iptv_playlists/refs/heads/main/https_playlist.m3u', //2
+    'https://m3u.ch/pl/eb7353c3bab76a0cb6f1cb26de322332_fee60ab67cca804d148f4ef3a25487a7.m3u', //3
+    'https://m3u.ch/pl/a52c2078d071bf675f72f127d0c6113c_456204d01661f9fcc506243abf05db83.m3u', //4
+    'https://raw.githubusercontent.com/johirryhan087/iptv_playlists/refs/heads/main/http_playlist.m3u', //5
+   'https//raw.githubusercontent.com/Jeshan-akand/Toffee-Channels-Link-Headers/main/toffee_OTT_Navigator.m3u', //6
+  'https://your-abbu.pages.dev/SonyLIV.m3u', //7
+  'https://s1.sadman0.workers.dev/neonflix.m3u8',  //8
+  'https://raw.githubusercontent.com/Miraz6755/Bdixtv/refs/heads/main/Miraz-tv-pro.m3u8', //9
+  'https://raw.githubusercontent.com/subirkumarpaul/Subirmaxpro/refs/heads/main/Subirmaxpro', //10
+  'https://raw.githubusercontent.com/Miraz6755/Iptv.m3u/refs/heads/main/Miraz%20tv', //11
+  'https://raw.githubusercontent.com/BDSTVHUB/BDStreamHub/refs/heads/main/index.html', //12
+  'https://raw.githubusercontent.com/xyz84dotcom/-/refs/heads/main/Ghoziiptv.m3u', //13
+  'https://shz.al/~rcnmediawebtv294', // 14
+  'https://is.gd/ar_tv' //15 
+];
+            
 let channels = [];
 let categories = new Set();
 let favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
