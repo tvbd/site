@@ -15,7 +15,7 @@
 <meta content='Live | Streaming Online' property='og:description'/>
 <!-- Required Meta Tags -->
 <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
-<meta content='Orbify Live' property='og:site_name'/>
+<meta content='VIP Live' property='og:site_name'/>
 <!-- Favicon -->
 <link href='https://i.ibb.co/80mNNgC/plus-tv.png' rel='icon' type='image/png'/>
 <!-- External Resources -->
@@ -32,7 +32,12 @@
 </div>
 <div class='channel-section'>
 <div class='channel-tabs'>
-<button class='tab-btn active' id='allChannelsTab'>
+
+<button class='tab-btn active' id='serverChangeTab'>
+<i class='fas fa-server'></i>
+<span id='currentServerDisplay'>Server</span>
+</button>
+<button class='tab-btn' id='allChannelsTab'>
 <i class='fas fa-globe'></i> All
             </button>
 <button class='tab-btn' id='categoriesTab'>
@@ -41,10 +46,6 @@
 <button class='tab-btn' id='favoritesTab'>
 <i class='fas fa-heart'></i> Favorites
             </button>
-<button class='tab-btn' id='serverChangeTab'>
-<i class='fas fa-server'></i>
-<span id='currentServerDisplay'>Server</span>
-</button>
 </div>
 <div class='search-container'>
 <input class='search-input' id='searchInput' placeholder='Search channels...' type='text'/>
