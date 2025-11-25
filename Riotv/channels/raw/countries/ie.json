@@ -1,0 +1,90 @@
+[
+  {
+    "nanoid": "BpAwuuECtBXjjx",
+    "name": "Oireachtas TV",
+    "iptv_urls": [
+      "https://d33zah5htxvoxb.cloudfront.net/el/live/oirtv/hls.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "gle",
+    "country": "ie",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "kBJPIvFNSLMLmy",
+    "name": "Oireachtas TV Committee Room 1",
+    "iptv_urls": [
+      "https://d33zah5htxvoxb.cloudfront.net/el/live/cr1/hls.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "ie",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "xbtLZ1yrCNt8sw",
+    "name": "Oireachtas TV Committee Room 2",
+    "iptv_urls": [
+      "https://d33zah5htxvoxb.cloudfront.net/el/live/cr2/hls.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "ie",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "ilLJLqtqjz93Es",
+    "name": "Oireachtas TV Committee Room 3",
+    "iptv_urls": [
+      "https://d33zah5htxvoxb.cloudfront.net/el/live/cr3/hls.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "ie",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "K0ZBldscB7coZB",
+    "name": "Oireachtas TV Committee Room 4",
+    "iptv_urls": [
+      "https://d33zah5htxvoxb.cloudfront.net/el/live/cr4/hls.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "ie",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "8KoNBnGhd3D8e1",
+    "name": "Oireachtas TV Dáil Éireann",
+    "iptv_urls": [
+      "https://d33zah5htxvoxb.cloudfront.net/el/live/dail/hls.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "ie",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "GAsLjurRgFyUUw",
+    "name": "Oireachtas TV Seanad Éireann",
+    "iptv_urls": [
+      "https://d33zah5htxvoxb.cloudfront.net/el/live/seanad/hls.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "ie",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "jE5PruME2i0V9B",
+    "name": "TG4",
+    "iptv_urls": [
+      "https://fastly.live.brightcove.com/6384196213112/eu-west-1/1555966122001/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0IjoieDl2YzlnLmVncmVzcy55ODN1ZWIiLCJhY2NvdW50X2lkIjoiMTU1NTk2NjEyMjAwMSIsImVobiI6ImZhc3RseS5saXZlLmJyaWdodGNvdmUuY29tIiwiaXNzIjoiYmxpdmUtcGxheWJhY2stc291cmNlLWFwaSIsInN1YiI6InBhdGhtYXB0b2tlbiIsImF1ZCI6WyIxNTU1OTY2MTIyMDAxIl0sImp0aSI6IjYzODQxOTYyMTMxMTIifQ.Co2xR3kmJBoxTaFTpwU0b37lJ05vNt-y32-SwfM26EA/chunklist.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "gle",
+    "country": "ie",
+    "isGeoBlocked": false
+  }
+]

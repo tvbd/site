@@ -1,0 +1,114 @@
+[
+  {
+    "nanoid": "FjKVg1Xdb8CtFR",
+    "name": "Channel 24",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/T6q74dsdRno"
+    ],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "wPKzw9xyYinfk2",
+    "name": "DBC NEWS",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/1HFIEb-kTNU"
+    ],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "w8Bp8ozrn2e1YZ",
+    "name": "Desh TV",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/UXvLQu6yuNo"
+    ],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "i5Wa7HDMyE8EFE",
+    "name": "Duronto TV",
+    "iptv_urls": [
+      "https://tvsen4.aynaott.com/durontotv/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "Lq7ZGbUz74iICx",
+    "name": "Ekattor TV",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/WU4YK-SxLhg"
+    ],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "rMsmNDEeM1gRlB",
+    "name": "Ekhon TV",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/ZZ46YI7d4lE"
+    ],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "mp7J62VtY0DqAW",
+    "name": "Independent Television",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/I_UusodwoBc"
+    ],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "B9n020aED6O0Uz",
+    "name": "Jamuna TV",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/nn2RW-7w8nQ"
+    ],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "4YEv6QH62bmCSw",
+    "name": "Madani Channel Bangla",
+    "iptv_urls": [
+      "https://streaming.madanichannel.tv/static/streaming-playlists/hls/d3e49b76-ac06-4689-a641-9200445b647f/master.m3u8"
+    ],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/fooud7QATJk"
+    ],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "VNY3CPiX9tfekV",
+    "name": "NTV Live",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/lV_SkRHLT5s"
+    ],
+    "language": "ben",
+    "country": "bd",
+    "isGeoBlocked": false
+  }
+]
