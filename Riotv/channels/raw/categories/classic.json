@@ -1,0 +1,421 @@
+[
+  {
+    "nanoid": "MsBPAtiznwuBpL",
+    "name": "3Cat Plats bruts",
+    "iptv_urls": [
+      "https://fast-tailor.3catdirectes.cat/v1/channel/ccma-channel2/hls.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "cat",
+    "country": "es",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "aPpjoxS7Oyu4bM",
+    "name": "AWTV",
+    "iptv_urls": [
+      "https://acesso.ecast.site:3070/live/awtvlive.m3u8",
+      "https://streaming.cloudecast.com/hls/awtv/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "por",
+    "country": "br",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "bZQGzeEyald0Ck",
+    "name": "Bollywood Classic",
+    "iptv_urls": [
+      "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/bollywood-classic/manifest.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "ron",
+    "country": "ro",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "3FibakB882ByKy",
+    "name": "Classic TV",
+    "iptv_urls": [
+      "https://clshls.wns.live/hls/stream.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "fas",
+    "country": "ir",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "NpgtvD38qnisOV",
+    "name": "Dubai Zaman",
+    "iptv_urls": [
+      "https://dmiffthftl.cdn.mangomolo.com/dubaizaman/smil:dubaizaman.stream.smil/chunklist.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "ara",
+    "country": "ae",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "tabafcg5kRDnTr",
+    "name": "Film Atölyesi: Şener Şen Filmleri",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/pdyq7lixkPI"
+    ],
+    "language": "tur",
+    "country": "tr",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "52cUdXgN2lEt5P",
+    "name": "FilmRise Classic TV",
+    "iptv_urls": [
+      "https://d2tv4k5moji5m7.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-lu4pzh9l4b57p/master.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "rk4CX2TtGGZ6cO",
+    "name": "Gülşah Film: Kemal Sunal Filmleri",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/VkB9S_nInbA"
+    ],
+    "language": "tur",
+    "country": "tr",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "xZTyr5HbWtd8xE",
+    "name": "Kemal Sunal Filmleri",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/-2L6D9gil8w"
+    ],
+    "language": "tur",
+    "country": "tr",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "3wl0iIzYmV2xgp",
+    "name": "Kemal Sunal: Filmleri ve Sahneleri",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/_pRHXDSK8sA"
+    ],
+    "language": "tur",
+    "country": "tr",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "odbTAV6ttz1zzI",
+    "name": "Persiana Nostalgia",
+    "iptv_urls": [
+      "https://noshls.persiana.live/hls/stream.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "fas",
+    "country": "fr",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "9WIN5KhtEj3GSs",
+    "name": "Shout! Studios: Bonanza",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/g6NoX9jcjL4"
+    ],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "i3xr0qWNj713tk",
+    "name": "Shout! Studios: Bonanza (Español)",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/XR85gpN_7D4"
+    ],
+    "language": "spa",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "ZUiCxfI2YHTlLz",
+    "name": "Shout! Studios: Elvira's Movie Macabre",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/cq7uY9g8zLY"
+    ],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "ckOe6Tf2kvWSZr",
+    "name": "Shout! Studios: Godzilla",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/ZQzfsalNcx8"
+    ],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "7DpQICMHFWq9zR",
+    "name": "Shout! Studios: Pee-wee's Playhouse",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/t3iqgxWCY7k"
+    ],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "fYdwb5ywlM6LyP",
+    "name": "Shout! Studios: The Little Rascals",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/3aZjgcVKjCQ"
+    ],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "qDdtJta6euRe24",
+    "name": "The Carol Burnett Show",
+    "iptv_urls": [
+      "https://aegis-cloudfront-1.tubi.video/e17b8de5-e8b7-415a-8377-5707a2f9a727/playlist.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "ryYTatp6aBuswR",
+    "name": "TokuSHOUTsu: Retro Godzilla Marathon",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/CYtrRP7jAgM"
+    ],
+    "language": "jpn",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "MiDzldTeOOzM8X",
+    "name": "TVN3",
+    "iptv_urls": [
+      "https://mdstrm.com/live-stream-playlist/5653641561b4eba30a7e4929.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "spa",
+    "country": "cl",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "39NeLODve9GoDp",
+    "name": "TVS Cipher Network",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-tvsmystery/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "FqDYhRQixd9c33",
+    "name": "TVS Classic Movies",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-tvsclassicmovies/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "nEw5shV0a9fMVa",
+    "name": "TVS Hollywood History",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-tvshollywoohistory/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "NZYQQqhbxqAkwb",
+    "name": "TVS Mainstreet",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-tvsmainst/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "jGl8Iiki6ICNgY",
+    "name": "TVS Nostalgia",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-nostalgia/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "6MEE09P2l9tM7t",
+    "name": "TVS Nostalgia Movies",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-tvsNostalgiaMovies/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "oceKhZro4FoYK0",
+    "name": "TVS Pet Parade Network",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-petparadenetwork/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "gVH4jwVSfSt20g",
+    "name": "TVS Quiz Show Network",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-tvsgameshow/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "XwiDGKdsH20Bju",
+    "name": "TVS Retro",
+    "iptv_urls": [
+      "https://cdn.streamhispanatv.net:3531/live/tvsretrogtlive.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "spa",
+    "country": "gt",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "1jG3sFKGqkYtkD",
+    "name": "TVS Talk Network",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-TVStalk/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "IOBb2CTWNzxcZN",
+    "name": "TVS Tally Ho",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-tvstallyho/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "QkfPuwFZRsaKgc",
+    "name": "TVS Tavern",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-tavern/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "cuX9Sttu45aItE",
+    "name": "TVS Western Movie",
+    "iptv_urls": [
+      "https://rpn.bozztv.com/gusa/gusa-tvswesternmovies/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "KveLLwWt3iDNsT",
+    "name": "Wanted: Dead or Alive",
+    "iptv_urls": [
+      "https://livetv-fa.tubi.video/wanted-dead-or-alive2/playlist.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "xae9GkiaWEJxkK",
+    "name": "Warner Bros. Rewind: Lethal Weapon Trilogy",
+    "iptv_urls": [],
+    "youtube_urls": [
+      "https://www.youtube-nocookie.com/embed/Z_XpAqpMSxU"
+    ],
+    "language": "eng",
+    "country": "us",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "5N50bnTr2ohfWL",
+    "name": "Xtrema Cine Clasico",
+    "iptv_urls": [
+      "https://stmv6.voxtvhd.com.br/cineclasico/cineclasico/playlist.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "spa",
+    "country": "ar",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "jznTuWIBt2HrkT",
+    "name": "ZB Cinema",
+    "iptv_urls": [
+      "https://server.zillarbarta.com/ZBCINEMA/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "ben",
+    "country": "in",
+    "isGeoBlocked": false
+  },
+  {
+    "nanoid": "T3FzbK83VWEyWF",
+    "name": "ZillarBarta News",
+    "iptv_urls": [
+      "https://server.zillarbarta.com/zillarbarta/index.m3u8"
+    ],
+    "youtube_urls": [],
+    "language": "ben",
+    "country": "in",
+    "isGeoBlocked": false
+  }
+]
