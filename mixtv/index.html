@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="ur">
+
+<!-- Disable Right Click and Developer Tools
+<script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if (
+    e.key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+    (e.ctrlKey && ['U', 'S', 'P'].includes(e.key.toUpperCase()))
+  ) e.preventDefault();
+});
+</script-->
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live TV Player</title>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+
+<style>
+/* --- آپ کا اصل ڈیزائن برقرار --- */
+body {
+  margin: 0;
+  background: radial-gradient(circle at center, #000 60%, #010a1c);
+  color: white;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+}
+.player-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.8);
+  border: 1px solid rgba(0,255,255,0.2);
+  box-shadow: 0 0 40px rgba(0,255,255,0.3);
+  border-radius: 15px;
+  overflow: hidden;
+}
+#playerArea { width: 100%; height: 100%; position: relative; }
+video, #clapprPlayer {
+  width: 100%; height: 100%; display: none;
+  border-radius: 15px;
+  background: #000 url('https://i.imgur.com/V9V5eGi.jpeg') center/cover no-repeat;
+  transition: opacity 0.6s ease-in-out;
+}
+.menu-btn, .gear-btn {
+  position: absolute; top: 10px;
+  background: linear-gradient(90deg, #00e0ff, #00ffff);
+  color: #000; border: none; border-radius: 8px;
+  padding: 10px 15px; font-weight: bold; cursor: pointer;
+  z-index: 10; box-shadow: 0 0 10px #00ffff; transition: 0.3s;
+}
+.menu-btn:hover, .gear-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px #00ffff; }
+.menu-btn { left: 10px; }
+.gear-btn { right: 10px; }
+
+.channel-list, .quality-menu {
+  display: none;
+  position: absolute;
+  background: rgba(0,0,0,0.95);
+  border: 1px solid #00e0ff;
+  border-radius: 12px;
+  padding: 12px;
+  z-index: 10;
+  box-shadow: 0 0 25px rgba(0,255,255,0.2);
+}
+.channel-list { top: 60px; left: 10px; width: 280px; max-height: 420px; overflow-y: auto; }
+.quality-menu { top: 50px; right: 10px; width: 70px; }
+
+.search-bar { width: 100%; padding: 8px 10px; border-radius: 6px; border: none; margin-bottom: 10px; outline: none; font-size: 14px; }
+.category-title { font-size: 15px; font-weight: bold; color: #00e0ff; margin-top: 10px; margin-bottom: 6px; border-bottom: 1px solid #00e0ff; }
+.channel, .quality-option {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  border-radius: 10px; background: rgba(0,0,0,0.6);
+  margin-bottom: 6px; cursor: pointer;
+  transition: all 0.3s ease; box-shadow: 0 0 8px rgba(0,255,255,0.1);
+}
+.channel:hover, .quality-option:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg,#00e0ff,#00ffff);
+  color: #000;
+}
+.channel img { width: 40px; height: 40px; border-radius: 6px; }
+
+.nav-buttons {
+  display: flex; gap: 6px; position: absolute;
+  bottom: 10px; left: 70px; z-index: 20;
+}
+.nav-btn {
+  background: linear-gradient(90deg, #00e0ff, #00ffff);
+  color: #000; border: none; border-radius: 6px;
+  padding: 6px 10px; cursor: pointer;
+  font-weight: bold; transition: 0.3s;
+  box-shadow: 0 0 8px #00ffff; font-size: 12px;
+}
+.nav-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px #00ffff; }
+
+#channelName {
+  position: absolute; top: 15px; left: 30%;
+  transform: translateX(-50%);
+  font-weight: bold; font-size: 22px;
+  background: linear-gradient(90deg,#00e0ff,#00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px #00ffff;
+  z-index: 20;
+}
+.stream-buttons {
+  position: absolute; top: 15px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 6px; z-index: 20;
+}
+.stream-btn {
+  padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer;
+  font-weight: bold; background: linear-gradient(90deg,#00e0ff,#00ffff);
+  color: #000; box-shadow: 0 0 8px #00ffff; transition: 0.3s;
+}
+.stream-btn.active {
+  background: linear-gradient(90deg,#ffea00,#ffd700); color: #000;
+}
+.player-select { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 20; }
+.category-block { margin-bottom: 10px; }
+.category-header { display:flex; justify-content:space-between; align-items:center; background:rgba(0,255,255,0.1); padding:8px 10px; border-radius:8px; cursor:pointer; color:#00e0ff; font-weight:bold; border:1px solid #00e0ff; }
+.category-header:hover { background:rgba(0,255,255,0.3); }
+.category-channels { display:none; margin-top:6px; }
+</style>
+</head>
+
+<body>
+<div class="player-container">
+  <div id="playerArea">
+    <video id="html5Player" controls autoplay muted></video>
+    <div id="clapprPlayer"></div>
+  </div>
+
+  <div id="channelName">Peace TV English</div>
+
+  <div class="stream-buttons">
+    <button class="stream-btn" onclick="switchStream(0)">Stream 1</button>
+    <button class="stream-btn" onclick="switchStream(1)">Stream 2</button>
+    <button class="stream-btn" onclick="switchStream(2)">Stream 3</button>
+    <button class="stream-btn" onclick="switchStream(3)">Stream 4</button>
+ 
+  </div>
+
+  <div class="nav-buttons" id="navButtons">
+    <button class="nav-btn" id="prevBtn">⏮️ Prev</button>
+    <button class="nav-btn" id="nextBtn">⏭️ Next</button>
+  </div>
+
+  <button class="menu-btn" onclick="toggleMenu()">📺 PLAYLIST</button>
+  <button class="gear-btn" onclick="toggleQualityMenu()">⚙️</button>
+
+  <div class="channel-list" id="channelMenu">
+    <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Search channel..." onkeyup="filterChannels()">
+
+    <div class="category-block">
+      <div class="category-header" onclick="toggleCategory(this)">
+        ☪️ Islamic <span>▼</span>
+      </div>
+      <div class="category-channels">
+        <div class="channel" onclick="loadChannel('Peace TV English',['https://dzkyvlfyge.erbvr.com/PeaceTvEnglish/tracks-v1a1/mono.m3u8','https://dzkyvlfyge.erbvr.com/PeaceTvEnglish/tracks-v2a1/mono.m3u8','https://dzkyvlfyge.erbvr.com/PeaceTvEnglish/tracks-v3a1/mono.m3u8'],['1080P','720P','470P'],'https://makkahlive.net/islamictv/peacelive.gif')">
+          <img src="https://makkahlive.net/islamictv/peacelive.gif"> Peace TV English
+        </div>
+
+        <div class="channel" onclick="loadChannel('Huda TV',['https://cdn.bestream.io:19360/elfaro1/elfaro1.m3u8'],['720P'],'https://makkahlive.net/islamictv/hudalive.gif')">
+          <img src="https://makkahlive.net/islamictv/hudalive.gif"> Huda TV
+        </div>
+
+        <div class="channel" onclick="loadChannel('Madani TV',['https://streaming.madanichannel.tv/static/streaming-playlists/hls/b9790f10-cb0d-4e30-82bf-84a756234e58/2.m3u8','https://streaming.madanichannel.tv/static/streaming-playlists/hls/c6a600b0-82cb-454a-8953-2bb2bb372edc/2.m3u8'],['720P'],'https://graficsea.com/wp-content/uploads/2021/12/Madni-Tv-Channel.jpg')">
+          <img src="https://graficsea.com/wp-content/uploads/2021/12/Madni-Tv-Channel.jpg"> Madani TV
+        </div>
+
+        <div class="channel" onclick="toggleSubChannels(this)">
+          <img src="https://i.imgur.com/jVQKzzk.png"> Madani Channels ▼
+        </div>
+        <div class="sub-channels" style="display:none;margin-left:20px;">
+          <div class="channel" onclick="loadChannel('Madani TV Urdu',['https://example.com/madaniurdu.m3u8'],['Auto'],'https://i.imgur.com/jVQKzzk.png')"><img src="https://i.imgur.com/jVQKzzk.png"> Madani TV Urdu</div>
+          <div class="channel" onclick="loadChannel('Madani TV English',['https://example.com/madanieng.m3u8'],['Auto'],'https://i.imgur.com/jVQKzzk.png')"><img src="https://i.imgur.com/jVQKzzk.png"> Madani TV English</div>
+          <div class="channel" onclick="loadChannel('Madani TV Bangla',['https://example.com/madanibangla.m3u8'],['Auto'],'https://i.imgur.com/jVQKzzk.png')"><img src="https://i.imgur.com/jVQKzzk.png"> Madani TV Bangla</div>
+</div>
+</div>
+        <div class="category-block">
+      <div class="category-header" onclick="toggleCategory(this)">
+        🎬🌍 Documentary
+        <span>▼</span>
+      </div>
+      <div class="category-channels">
+<div class="channel" onclick="loadChannel('Открытый мир',['http://v4.proofix.ru/0mir/tracks-v1a1/mono.m3u8'],['720P'])">
+      <img src="https://vits.tv/images/tvstation/russia/otkrytyj-mir.png" alt="Logo"> Открытый мир
+    </div>
+
+    <div class="channel" onclick="loadChannel('Перпетуум Мобиле',['https://wonder-samsung-uk.amagi.tv/720p-vtt/index.m3u8'],['720P'])">
+      <img src="https://vits.tv/images/tvstation/russia/perpetuum-mobile.png" alt="Logo"> Перпетуум Мобиле
+    </div>
+<div class="channel" onclick="loadChannel('Russian Travel', [
+      'https://vits.tv/stream/2/RTG_HD/tracks-v1a1/mono.m3u8','http://195.26.83.96:7007/play/a00n/index.m3u8'
+    ],['Stream1','Stream2'])">
+      <img src="https://vits.tv/images/tvstation/russia/russian-travel-guide.png" alt="Logo">
+      Russian Travel
+    </div>
+   <div class="channel" onclick="loadChannel('Байкал Универ ТВ', [
+      'https://stream01.bgu.ru/1/1/chunks.m3u8?'
+    ],['720P'])">
+      <img src="https://vits.tv/images/tvstation/russia/baykal-univer-tv.png" alt="Logo">
+      Байкал Универ ТВ
+    </div>
+    
+<div class="channel" onclick="loadChannel('Wonder TV', [
+      'https://wonder-samsung-uk.amagi.tv/720p-vtt/index.m3u8'
+    ],['720P'])">
+      <img src="https://vits.tv/images/tvstation/russia/perpetuum-mobile.png" alt="Logo">
+      Wonder TV
+    </div>
+<div class="channel" onclick="loadChannel('AWE Plus', ['https://a-cdn.klowdtv.com/live1/awe_720p/chunks.m3u8'
+    ],['720P'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/2548-320x180-000000.jpg" alt="Logo">
+      AWE Plus
+    </div>
+<div class="channel" onclick="loadChannel('Animaux', [
+      'https://viamotionhsi.netplus.ch/live/eds/animaux/browser-HLS8/animaux.m3u8'
+    ],['720P'])">
+      <img src="https://i.imgur.com/FM9FVAG.png" alt="Logo">
+      Animaux
+    </div>
+<div class="channel" onclick="loadChannel('Aragon TV', [
+      'https://viamotionhsi.netplus.ch/live/eds/aragontv/browser-HLS8/aragontv.m3u8'
+    ],['720P'])">
+      <img src="https://i.imgur.com/6YSi1zW.png" alt="Logo">
+      Aragon TV
+    </div>
+<div class="channel" onclick="loadChannel('ARD-alpha HD', [
+      'https://viamotionhsi.netplus.ch/live/eds/bralpha/browser-HLS8/bralpha.m3u8'
+    ],['720P'])">
+      <img src="https://images.seeklogo.com/logo-png/49/1/alpha-hd-logo-png_seeklogo-495103.png" alt="Logo">
+      ARD-alpha HD
+    </div>
+<div class="channel" onclick="loadChannel('test', [
+      'http://66.102.120.18:8000/play/a03n/index.m3u8?'
+    ],['720P'])">
+      <img src="https://images.seeklogo.com/logo-png/49/t1/alpha-hd-logo-png_seeklogo-495103.png" alt="Logo">
+      test
+    </div>
+        
+    <div class="channel" onclick="loadChannel('arte HD', [
+      'https://viamotionhsi.netplus.ch/live/eds/artehd/browser-HLS8/artehd.m3u8'
+    ],['720P'])">
+      <img src="https://i.imgur.com/ecXMjNl.png" alt="Logo">
+      arte HD
+    </div>
+</div>
+</div>
+       <div class="category-block">
+       <div class="category-header" onclick="toggleCategory(this)">
+        📰 News
+        <span>▼</span>
+      </div>
+      <div class="category-channels">
+<div class="channel" onclick="loadChannel('92 News WORLD HD',['http://92news.vdn.dstreamone.net/92newshd/92hd/playlist.m3u8','https://streamer12.vdn.dstreamone.net/92newshd/92hd/chunks.m3u8?'],['720P','480P'])">
+      <img src="https://i.imgur.com/gp1Ao4s.jpeg" alt="Logo"> 92 News WORLD HD
+    </div>
+<div class="channel" onclick="loadChannel('Samaa TV HD',['https://cdn5.mjunoon.tv:8087/web/SAMAA-173/live/173H/chunks.m3u8','https://cdn21lhr.tamashaweb.com:8087/jazzauth/samaaTV-abr/live/vsat-123H/chunks.m3u8?','https://cdn5.mjunoon.tv:8087/web/SAMAA-173/live/173M/chunks.m3u8?'],['720P','stream2','480P'])">
+      <img src="https://images.mjunoon.tv:8181/logo/samaa-tv-mjunoon.webp" alt="Logo"> Samaa TV 
+    </div>
+                  
+                 <div class="channel" onclick="toggleSubChannels(this)">
+                 <img src="https://c7.alamy.com/comp/PR1RFW/news-logo-illustration-PR1RFW.jpg"> ENGLISH NEWS ▼
+                 </div>
+                 <div class="sub-channels" style="display:none;margin-left:20px;">
+<div class="channel" onclick="loadChannel('BBC NEWS ',['https://d1kvlt93j1bc49.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6vpx7bvwjm7ao/c97645f6-7468-46f3-96d1-a79f1eb24acb/5.m3u8','https://d1kvlt93j1bc49.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6vpx7bvwjm7ao/c97645f6-7468-46f3-96d1-a79f1eb24acb/4.m3u8','https://d1kvlt93j1bc49.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-6vpx7bvwjm7ao/0e3e1369-3555-4dd8-b7c1-0ac087094b1d/3.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/700801.webp" alt="Logo">
+      BBC NEWS
+    </div>
+<div class="channel" onclick="loadChannel('BBC News Asia Pacific',['https://viamotionhsi.netplus.ch/live/eds/bbcworld/browser-HLS8/bbcworld.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/vSz2WEp.png" alt="Logo"> BBC News Asia Pacific
+    </div>
+<div class="channel" onclick="loadChannel('BBC Two',['https://viamotionhsi.netplus.ch/live/eds/bbc2/browser-HLS8/bbc2.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/BBC_Two_logo_2021.svg/512px-BBC_Two_logo_2021.svg.png" alt="Logo">BBC Two
+    </div>
+<div class="channel" onclick="loadChannel('BBC Earth ',['https://livetv-fa.tubi.video/bbc-earth2/playlist1080p.m3u8','https://livetv-fa.tubi.video/bbc-earth2/playlist540p.m3u8'],['720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/901480.webp" alt="Logo">
+      BBC Earth
+    </div>
+<div class="channel" onclick="loadChannel('SKY News ',['https://amg00663-skynews-skynewsau-samsungau-r7n40.amagi.tv/ts-eu-w1-n2/playlist/amg00663-skynews-skynewsau-samsungau/cb573f17657666909bc93a78d1f04882bb7b3dcb0e6c886470af4a9765d97800dbe8ae84ae5b910c4c9e1fc061017d360439cd1dd56c49c1da71b813727616709e86b262c9ee475ae98710282ab27a1e50fe0f05a67c1177dfe60247d469e1375551ac59360463dbbe5fa56b00c1d15b967e28ddadc0333e7d0f429c080eb3a459a5ace8094dd90ee68b3e7066b632cdb022b2c624dbd18f02dd07d728d32ba7a081e8f38b564ba3499d26f13d08225215687d5ee1a36fb7cd9b6529957f2c4f5c258e1d51d93c5eb665393ac8eac5b564fd59a9e340d33363ee51ca0cecb8ed1a7a6a200d060d8d9ba6b7f550ac867f5307ea898199f2347c9667e9a3ead57a4669977e486ac677d12e2739dfa88544c48b229fb8278aa37a5d16f4d114cbd3e2d8af878444ca719187ecce69190e711258d709f6d43d9269fa7dabc51c6e0e1d15fdca0494d7997839704a808f469b424fed95dbf1aa6451fd69155ee777ca1b543cbe534248a57ca9d46c16cc4c6da83a27f2543981388d9e25e7a2ddea1e7bf89ef04bf16be0a219909126ac7e374d0da3f84e0713ac1c5a3381a556ffe68b4ce311e257078bc7d31d211b41/86/1920x1080_7004800/index.m3u8','https://amg00663-skynews-skynewsau-samsungau-r7n40.amagi.tv/ts-eu-w1-n2/playlist/amg00663-skynews-skynewsau-samsungau/cb573f17657666909bc93a78d1f04882bb7b3dcb0e6c886470af4a9765d97800dbe8ae84ae5b910c4c9e1fc061017d360439cd1dd56c49c1da71b813727616709e86b262c9ee475ae98710282ab27a1e50fe0f05a67c1177dfe60247d469e1375551ac59360463dbbe5fa56b00c1d15b967e28ddadc0333e7d0f429c080eb3a459a5ace8094dd90ee68b3e7066b632cdb022b2c624dbd18f02dd07d728d32ba7a081e8f38b564ba3499d26f13d08225215687d5ee1a36fb7cd9b6529957f2c4f5c258e1d51d93c5eb665393ac8eac5b564fd59a9e340d33363ee51ca0cecb8ed1a7a6a200d060d8d9ba6b7f550ac867f5307ea898199f2347c9667e9a3ead57a4669977e486ac677d12e2739dfa88544c48b229fb8278aa37a5d16f4d114cbd3e2d8af878444ca719187ecce69190e711258d709f6d43d9269fa7dabc51c6e0e1d15fdca0494d7997839704a808f469b424fed95dbf1aa6451fd69155ee777ca1b543cbe534248a57ca9d46c16cc4c6da83a27f2543981388d9e25e7a2ddea1e7bf89ef04bf16be0a219909126ac7e374d0da3f84e0713ac1c5a3381a556ffe68b4ce311e257078bc7d31d211b41/86/1280x720_4144800/index.m3u8','https://amg00663-skynews-skynewsau-samsungau-r7n40.amagi.tv/ts-eu-w1-n2/playlist/amg00663-skynews-skynewsau-samsungau/cb573f17657666909bc93a78d1f04882bb7b3dcb0e6c886470af4a9765d97800dbe8ae84ae5b910c4c9e1fc061017d360439cd1dd56c49c1da71b813727616709e86b262c9ee475ae98710282ab27a1e50fe0f05a67c1177dfe60247d469e1375551ac59360463dbbe5fa56b00c1d15b967e28ddadc0333e7d0f429c080eb3a459a5ace8094dd90ee68b3e7066b632cdb022b2c624dbd18f02dd07d728d32ba7a081e8f38b564ba3499d26f13d08225215687d5ee1a36fb7cd9b6529957f2c4f5c258e1d51d93c5eb665393ac8eac5b564fd59a9e340d33363ee51ca0cecb8ed1a7a6a200d060d8d9ba6b7f550ac867f5307ea898199f2347c9667e9a3ead57a4669977e486ac677d12e2739dfa88544c48b229fb8278aa37a5d16f4d114cbd3e2d8af878444ca719187ecce69190e711258d709f6d43d9269fa7dabc51c6e0e1d15fdca0494d7997839704a808f469b424fed95dbf1aa6451fd69155ee777ca1b543cbe534248a57ca9d46c16cc4c6da83a27f2543981388d9e25e7a2ddea1e7bf89ef04bf16be0a219909126ac7e374d0da3f84e0713ac1c5a3381a556ffe68b4ce311e257078bc7d31d211b41/86/960x540_3000800/index.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/900150.jpg" alt="Logo">
+      SKY News
+    </div>
+<div class="channel" onclick="loadChannel('CNN NEWS ',['https://d3bp6dwmpbdajl.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-ury0meh5m4nzm/9caec5b3-0885-47e7-9a23-270152aecfcb/0.m3u8','https://d3bp6dwmpbdajl.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-ury0meh5m4nzm/9caec5b3-0885-47e7-9a23-270152aecfcb/1.m3u8','https://d3bp6dwmpbdajl.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-ury0meh5m4nzm/9caec5b3-0885-47e7-9a23-270152aecfcb/2.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/901258.webp" alt="Logo">
+      CNN NEWS
+    </div>
+<div class="channel" onclick="loadChannel('Fox-Business ',['https://fl31.moveonjoy.com/FOX_Business_Network/tracks-v1a1/mono.ts.m3u8'],['720p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/901316.webp" alt="Logo">
+      Fox-Business
+    </div>
+<div class="channel" onclick="loadChannel('ABC NEWS ',['https://content-aapm1.uplynk.com/channel/3324f2467c414329b3b0cc5cd987b6be/e.m3u8?pbs=89e97c0f49784d37b35c09bcd04d250e','https://content-aapm1.uplynk.com/channel/3324f2467c414329b3b0cc5cd987b6be/d.m3u8?pbs=89e97c0f49784d37b35c09bcd04d250e'],['1080p','720p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/901256.webp" alt="Logo">
+      ABC NEWS
+    </div>
+</div>
+
+                            <div class="channel" onclick="toggleSubChannels(this)">
+                 <img src="https://www.newscaststudio.com/wp-content/uploads/2023/12/cnbc-new-logo.jpg"> CNBC NEWS ▼
+                 </div>
+                 <div class="sub-channels" style="display:none;margin-left:20px;">
+<div class="channel" onclick="loadChannel('NBC NEWS ',['https://d2ujxo1akrn26l.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-rm6mbj1qgu3wm/b40d7530-9db5-4b30-9677-f05fb5c11a6a/4.m3u8','https://d2ujxo1akrn26l.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-rm6mbj1qgu3wm/b40d7530-9db5-4b30-9677-f05fb5c11a6a/3.m3u8','https://d2ujxo1akrn26l.cloudfront.net/v1/manifest/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-rm6mbj1qgu3wm/b40d7530-9db5-4b30-9677-f05fb5c11a6a/0.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/original/901257.webp" alt="Logo">
+      NBC NEWS
+    </div>
+<div class="channel" onclick="loadChannel('CNBC Europe HD ', [
+      'https://viamotionhsi.netplus.ch/live/eds/cnbc/browser-HLS8/cnbc.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/B6sfpDa.png" alt="Logo">
+      CNBC Europe HD
+    </div>
+<div class="channel" onclick="loadChannel('CNBC Arabiya ', [
+      'https://cnbc-live.akamaized.net/cnbc/master.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/opBXx1K.png" alt="Logo">
+      CNBC Arabiya
+    </div>
+</div>
+                     <div class="channel" onclick="toggleSubChannels(this)">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Russia-today-logo.svg/300px-Russia-today-logo.svg.png"> RT NEWS ▼
+                    </div>
+        <div class="sub-channels" style="display:none;margin-left:20px;">
+<div class="channel" onclick="loadChannel('RT News ',['https://1a-1791.com/live/hr6yv36f/slot-4/mxtm-wdfe/chunklist.m3u8','https://1a-1791.com/live/hr6yv36f/slot-4/mxtm-wdfe_720p/chunklist.m3u8','https://1a-1791.com/live/hr6yv36f/slot-4/mxtm-wdfe_360p/chunklist.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/original/300235.jpg" alt="Logo">
+      RT News
+    </div>
+<div class="channel" onclick="loadChannel('RT Arabic ',['https://rt-arb.rttv.com/live/rtarab/playlist_4500Kb.m3u8','https://rt-arb.rttv.com/live/rtarab/playlist_2500Kb.m3u8','https://rt-arb.rttv.com/live/rtarab/playlist_1600Kb.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/original/300235.jpg" alt="Logo">
+      RT Arabic
+    </div>
+<div class="channel" onclick="loadChannel('RT News Espanol ',['https://rt-esp.rttv.com/dvr/rtesp/playlist_4500Kb.m3u8','https://rt-esp.rttv.com/dvr/rtesp/playlist_2500Kb.m3u8','https://rt-esp.rttv.com/dvr/rtesp/playlist_1600Kb.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/900927.jpg" alt="Logo">
+      RT News Espanol
+    </div>
+<div class="channel" onclick="loadChannel('RT News France ',['https://cloud.odysee.live/content/a6a125c99ba2a6c068a8b502fb08dda603f6f03a/1080.m3u8','https://cloud.odysee.live/content/a6a125c99ba2a6c068a8b502fb08dda603f6f03a/720.m3u8','https://cloud.odysee.live/content/a6a125c99ba2a6c068a8b502fb08dda603f6f03a/480.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/original/900763.jpg" alt="Logo">
+      RT News France
+    </div>
+<div class="channel" onclick="loadChannel('RT DE',['https://rt-arb.rttv.com/live/rtarab/playlist_4500Kb.m3u8'],['720P'])">
+      <img src="https://ritsatv.ru/files/poster/medium/901027.jpg" alt="Logo"> RT DE
+    </div>
+</div>
+        <div class="channel" onclick="toggleSubChannels(this)">
+          <img src="https://i.ibb.co/XrXTBPgL/Chat-GPT-Image-Oct-31-2025-05-23-35-PM.png"> Mix News ▼
+                    </div>
+        <div class="sub-channels" style="display:none;margin-left:20px;">     
+<div class="channel" onclick="loadChannel('i24 NEWS ',['https://bcovlive-a.akamaihd.net/ecf224f43f3b43e69471a7b626481af0/eu-central-1/5377161796001/profile_0/chunklist_dvr.m3u8','https://bcovlive-a.akamaihd.net/ecf224f43f3b43e69471a7b626481af0/eu-central-1/5377161796001/profile_1/chunklist_dvr.m3u8'],['720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/original/901025.jpg" alt="Logo">
+      i24 NEWS
+    </div>
+<div class="channel" onclick="loadChannel('7news-boston ',['https://content-aapm1.uplynk.com/channel/b657cac5158e405faad7c2cc27860ef1/e.m3u8?pbs=c180d7d09f974371adf03e97dede947e','https://content-aapm1.uplynk.com/channel/b657cac5158e405faad7c2cc27860ef1/d.m3u8?pbs=c180d7d09f974371adf03e97dede947e'],['720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/900151.jpg" alt="Logo">
+      7news-boston
+    </div>
+<div class="channel" onclick="loadChannel('euro NEWS ',['https://a-cdn.klowdtv.com/live3/euronews_720p/chunks.m3u8'],['720p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/901360.webp" alt="Logo">
+      euro NEWS
+    </div>
+<div class="channel" onclick="loadChannel('AlArabyTV', [
+      'https://stream.ads.ottera.tv/playlist.m3u8?network_id=5616'],['720p'])">
+      <img src="https://www.fadaatmedia.com/sites/default/files/2025-09/A1%20TV%20LOGO.jpg" alt="Logo">
+      AlArabyTV
+    </div>
+<div class="channel" onclick="loadChannel('Syria TV', [
+      'https://stream.ads.ottera.tv/playlist.m3u8?network_id=6017','https://live.kwikmotion.com/syriatvlive/syriatv.smil/playlist_dvr.m3u8','https://svs.itworkscdn.net/syriatvlive/syriatv.smil/playlist_dvr.m3u8'
+    ])">
+      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/Syria_TV_logo.svg/1200px-Syria_TV_logo.svg.png" alt="Logo">
+      Syria TV
+    </div>
+<div class="channel" onclick="loadChannel('Aljazeera ',['https://live-hls-web-aja.getaj.net/AJA/02.m3u8'],['720p'])">
+      <img src="https://ritsatv.ru/files/poster/original/901029.jpg" alt="Logo">
+      Aljazeera
+    </div>
+<div class="channel" onclick="loadChannel('BNT 4 ', [
+      'https://viamotionhsi.netplus.ch/live/eds/bntworld/browser-HLS8/bntworld.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/Lw8b3yu.png" alt="Logo">
+      BNT 4
+    </div>
+<div class="channel" onclick="loadChannel('Palestine tv  ',['https://pbc.furrera.ps/palestinelivehd/tracks-v1a1/mono.m3u8','https://pbc.furrera.ps/palestinelivehd/tracks-v2a1/mono.m3u8','https://pbc.furrera.ps/palestinelivehd/tracks-v3a1/mono.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/901026.jpg" alt="Logo">
+      Palestine tv 
+    </div>
+<div class="channel" onclick="loadChannel('DW NEWS ',['https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/stream05/streamPlaylist.m3u8','https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/stream04/streamPlaylist.m3u8','https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/stream03/streamPlaylist.m3u8'],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/medium/900144.jpg" alt="Logo">
+      DW NEWS
+    </div>
+<div class="channel" onclick="loadChannel('BR Fernsehen Sud ', [
+      'https://viamotionhsi.netplus.ch/live/eds/brhdsud/browser-HLS8/brhdsud.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Logo_Bayerischer_Rundfunk_2024.svg/512px-Logo_Bayerischer_Rundfunk_2024.svg.png" alt="Logo">
+      BR Fernsehen Sud
+    </div>
+<div class="channel" onclick="loadChannel('BVN ', [
+      'https://viamotionhsi.netplus.ch/live/eds/bvn/browser-HLS8/bvn.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/BVN_logo.svg/512px-BVN_logo.svg.png" alt="Logo">
+      BVN
+    </div>
+    </div>
+
+<div class="channel" onclick="loadChannel('Al Maghribia ', ['https://viamotionhsi.netplus.ch/live/eds/almaghribia/browser-HLS8/almaghribia.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/7GaahYh.png" alt="Logo">
+      Al Maghribia
+    </div>
+
+</div>
+</div>
+       <div class="category-block">
+      <div class="category-header" onclick="toggleCategory(this)">
+        💃🍿 Entertainment
+        <span>▼</span>
+      </div>
+      <div class="category-channels">
+    <div class="channel" onclick="loadChannel('AB3 HD', ['https://viamotionhsi.netplus.ch/live/eds/ab3/browser-HLS8/ab3.m3u8'
+    ],['720P'])">
+      <img src="https://i.postimg.cc/RZ2N611D/ab3.png" alt="Logo">
+      AB3 HD
+    </div>
+<div class="channel" onclick="loadChannel('AB1 ', [
+      'https://viamotionhsi.netplus.ch/live/eds/ab1/browser-HLS8/ab1.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/9C7UsOe.png" alt="Logo">
+      AB1
+    </div>
+
+<div class="channel" onclick="loadChannel('detkinoint-tviksel', [
+      'https://v2.catcast.tv/content/38720/index.m3u8'
+    ],['720P'])">
+      <img src="https://i.ibb.co/fbPNyX8/Untitledeeee.jpg" alt="Logo">
+      Китай ТВ
+    </div>
+<div class="channel" onclick="loadChannel('Китай ТВ', [
+      'https://cdn.nexttvnet.ru/hlsl/provide/61394/ChinaTV2/china-tv_1920x1080/index.m3u8'
+    ],['720P'])">
+      <img src="https://vits.tv/images/tvstation/russia/kitay-tv.png" alt="Logo">
+      Китай ТВ
+    </div>
+<div class="channel" onclick="loadChannel('8TV', [
+      'http://cdn6.163189.xyz/163189/8tv'
+    ],['720P'])">
+      <img src="https://i.imgur.com/Jkx9W88.png" alt="Logo">
+      8TV
+    </div>
+<div class="channel" onclick="loadChannel('Duna ', [
+      'https://viamotionhsi.netplus.ch/live/eds/duna/browser-HLS8/duna.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/oPbsSlp.png" alt="Logo">
+      Duna
+    </div>
+
+<div class="channel" onclick="loadChannel('Китай ТВ', [
+      'https://cdn.nexttvnet.ru/hlsl/provide/61394/ChinaTV2/china-tv_1920x1080/index.m3u8'
+    ],['720P'])">
+      <img src="https://vits.tv/images/tvstation/russia/kitay-tv.png" alt="Logo">
+      Китай ТВ
+    </div>
+<div class="channel" onclick="loadChannel('ATV2 HD', [
+      'https://viamotionhsi.netplus.ch/live/eds/atv/browser-HLS8/atv.m3u8'
+    ],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Logo_ATV2.svg/512px-Logo_ATV2.svg.png" alt="Logo">
+      ATV2 HD
+    </div>
+<div class="channel" onclick="loadChannel('C Star ', [
+      'https://viamotionhsi.netplus.ch/live/eds/d17/browser-HLS8/d17.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/w4kAX1V.png" alt="Logo">
+      C Star
+    </div>
+    
+<div class="channel" onclick="loadChannel('Canal+ ', [
+      'https://viamotionhsi.netplus.ch/live/eds/canalplusclair/browser-HLS8/canalplusclair.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/5HcyMnW.png" alt="Logo">
+      Canal+
+    </div>
+<div class="channel" onclick="loadChannel('Canale 5 HD ', [
+      'https://viamotionhsi.netplus.ch/live/eds/canale5/browser-HLS8/canale5.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Canale_5_-_2018_logo.svg/512px-Canale_5_-_2018_logo.svg.png" alt="Logo">
+      Canale 5 HD
+    </div>
+<div class="channel" onclick="loadChannel('Yazd HD ', [
+      'https://lenz.splus.ir/PLTV/88888888/224/3221227023/index.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Yazd_taban.svg/382px-Yazd_taban.svg.png" alt="Logo">
+      Yazd HD
+    </div>
+<div class="channel" onclick="loadChannel('Сочи 24 ', [
+      'https://serv30.vintera.tv/sochi/sochi24_tv/chunks.m3u8?'],['720P'])">
+      <img src="https://vits.tv/images/tvstation/russia/sochi-24.png" alt="Logo">
+      Сочи 24
+    </div>
+<div class="channel" onclick="loadChannel('France 3 HD ', ['https://viamotionhsi.netplus.ch/live/eds/france3hd/browser-HLS8/france3hd.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/France_3_2018.svg/512px-France_3_2018.svg.png" alt="Logo">
+      France 3 HD
+    </div>
+<div class="channel" onclick="loadChannel('France 2 HD ', ['https://viamotionhsi.netplus.ch/live/eds/france2hd/browser-HLS8/france2hd.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/France_2_2018.svg/512px-France_2_2018.svg.png" alt="Logo">
+      France 2 HD
+    </div>
+<div class="channel" onclick="loadChannel('France 5 HD ', ['https://viamotionhsi.netplus.ch/live/eds/france5hd/browser-HLS8/france5hd.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/France_5_2018.svg/512px-France_5_2018.svg.png" alt="Logo">
+      France 5 HD
+    </div>
+<div class="channel" onclick="loadChannel('France 4 HD ', ['https://viamotionhsi.netplus.ch/live/eds/france4hd/browser-HLS8/france4hd.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/France_4_2018.svg/512px-France_4_2018.svg.png" alt="Logo">
+      France 4 HD
+    </div>
+<div class="channel" onclick="loadChannel('France info ', ['https://viamotionhsi.netplus.ch/live/eds/franceinfo/browser-HLS8/franceinfo.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/eITXz6A.png" alt="Logo">
+      France info
+    </div>
+<div class="channel" onclick="loadChannel('Italia 1 HD ', ['https://viamotionhsi.netplus.ch/live/eds/italia1/browser-HLS8/italia1.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Italia_1_logo.svg/512px-Italia_1_logo.svg.png" alt="Logo">
+      Italia 1 HD
+    </div>
+<div class="channel" onclick="loadChannel('Italia 2 HD ', ['https://59d7d6f47d7fc.streamlock.net/italia2/italia2/playlist.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Logo_Italia2.svg/512px-Logo_Italia2.svg.png" alt="Logo">
+      Italia 2 HD
+    </div>
+<div class="channel" onclick="loadChannel('ITV2 HD ', ['https://viamotionhsi.netplus.ch/live/eds/itv2/browser-HLS8/itv2.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/2BpUK0W.png" alt="Logo">
+      ITV2 2 HD
+    </div>
+<div class="channel" onclick="loadChannel('ITV3 HD ', ['https://viamotionhsi.netplus.ch/live/eds/itv3/browser-HLS8/itv3.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/JuyM2z5.png" alt="Logo">
+      ITV3 HD
+    </div>
+<div class="channel" onclick="loadChannel('ITV4 HD ', ['https://viamotionhsi.netplus.ch/live/eds/itv4/browser-HLS8/itv4.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/DYI4IA2.png" alt="Logo">
+      ITV4 HD
+    </div>
+<div class="channel" onclick="loadChannel('NDR Fernsehen ', ['https://viamotionhsi.netplus.ch/live/eds/ndr/browser-HLS8/ndr.m3u8','https://ndrint.akamaized.net/hls/live/2020766/ndr_int/index.m3u8','https://mcdn.ndr.de/ndr/hls/ndr_fs/ndr_nds/master.m3u8','https://mcdn.ndr.de/ndr/hls/ndr_fs/ndr_sh/master.m3u8'],['stream1','stream2','stream3','stream4'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Logo_NDR_Fernsehen_2017.svg/512px-Logo_NDR_Fernsehen_2017.svg.png" alt="Logo">
+      NDR Fernsehen
+    </div>
+<div class="channel" onclick="loadChannel('M6 HD ', ['https://viamotionhsi.netplus.ch/live/eds/m6hd/browser-HLS8/m6hd.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/7GVp3fW.png" alt="Logo">
+      M6 HD
+    </div>
+<div class="channel" onclick="loadChannel(
+  'Bahar TV', 
+  ['https://59d39900ebfb8.streamlock.net/bahartv/bahartv/playlist.m3u8'],
+  ['720P'],
+  'https://i.ibb.co/g2Gh24G/Untitlfed.jpg'
+)">
+  <img src="https://i.ibb.co/g2Gh24G/Untitlfed.jpg" alt="Logo"> Bahar TV 🇦🇫
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'Kayhan TV', 
+  ['http://playout395.livestreamingcdn.com:1935/live/Stream1/playlist.m3u8'],
+  ['720P'],
+  'https://i.imgur.com/XpR1VvZ.png'
+)">
+  <img src="https://i.imgur.com/XpR1VvZ.png" alt="Logo"> Kayhan TV 🇦🇫
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'Afghanistan International TV', 
+  ['https://afintlbak.livetvstream.co.uk/aitv/chunklist_b1196000.m3u8','https://hls.afintl.com/hls/stream.m3u8'],
+  ['720P','480P'],
+  'https://www.afintl.com/images/ai/ai-logo-en.svg'
+)">
+  <img src="https://www.afintl.com/images/ai/ai-logo-en.svg" alt="Logo"> Afghanistan International TV 🇦🇫
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'Pamir TV', 
+  ['https://tgn.bozztv.com/eshgtv-trn09/eshgh-pamirtv/tracks-v1a1/mono.m3u8?','https://live.pamirtv.com/stream/ptv.m3u8','http://live.stream.cdn.pamirtv.com/ptv/d0dbe915091d400bd8ee7f27f0791303.sdp/chunks.m3u8'],
+  ['1080p','720P','480P'],'https://eshgh.tv/channels/logo/ce0d03b3d34a7cdf2ede6132729dde12.jpg')">
+  <img src="https://eshgh.tv/channels/logo/ce0d03b3d34a7cdf2ede6132729dde12.jpg" alt="Logo"> Pamir TV 🇦🇫
+</div>
+<div class="channel" onclick="loadChannel(
+'Shant TV', ['http://5.188.172.179/Shant/index.m3u8'],['720P'],
+  'https://i.ibb.co/Y7Rxs9J/SGN-03-22-2022-1647976102720.png')">
+  <img src="https://i.ibb.co/Y7Rxs9J/SGN-03-22-2022-1647976102720.png" alt="Logo"> Shant TV 🇦🇫
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'Tezaur TV', 
+  ['http://tezaur.mlbfan.org/tezaur/index.m3u8'],
+  ['1080p'],
+  'https://i.imgur.com/eAagwLW.png'
+)">
+  <img src="https://i.imgur.com/eAagwLW.png" alt="Logo"> Tezaur TV (1080p)
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'МТВ Волгоград', 
+  ['http://hls.volgograd1vtv.cdnvideo.ru/volgograd1vtv/volgograd1vtv.sdp/playlist.m3u8'],
+  ['HD'],
+  'http://xn--b1ats.xn--80asehdb/img/logo.png'
+)">
+  <img src="http://xn--b1ats.xn--80asehdb/img/logo.png" alt="Logo"> МТВ Волгоград
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'ТНТ Exclusiv TV', 
+  ['http://89.28.25.122/hls/tnt_md.m3u8'],
+  ['HD'],
+  'https://i.ibb.co/6dY3DCN/326506023-563226215434241-4194012645362358101-n.png'
+)">
+  <img src="https://i.ibb.co/6dY3DCN/326506023-563226215434241-4194012645362358101-n.png" alt="Logo"> ТНТ Exclusiv TV
+</div>
+
+
+
+</div>
+</div>
+                 <div class="category-block">
+                <div class="category-header" onclick="toggleCategory(this)">
+                       💰🛍️👩‍🎤 FASHION
+                    <span>▼</span>
+                        </div>
+                  <div class="category-channels">
+        <div class="channel" onclick="loadChannel('Открытый мир', [
+      'https://v4.proofix.ru/0mir/tracks-v1a1/mono.ts.m3u8'
+    ],['720P'])">
+      <img src="https://vits.tv/images/tvstation/russia/otkrytyj-mir.png" alt="Logo">
+      Открытый мир
+    </div>
+
+<div class="channel" onclick="loadChannel('World Fashion ',['https://cdn.wfc.tv/cdn/stream-eng-1080p.m3u8','https://cdn.wfc.tv/cdn/stream-eng-720p.m3u8'],['720p'])">
+      <img src="https://ritsatv.ru/files/poster/original/900603.jpg" alt="Logo">
+      World Fashion
+    </div>
+<div class="channel" onclick="loadChannel('World Fashion Rusian ',['https://cdn.wfc.tv/cdn/stream-rus-1080p.m3u8','https://cdn.wfc.tv/cdn/stream-rus-720p.m3u8'],['720p'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/World_Fashion_logo.jpg/960px-World_Fashion_logo.jpg" alt="Logo">
+      World Fashion Rusian
+    </div>
+<div class="channel" onclick="loadChannel('FashionTV Europe HD ', [
+      'https://viamotionhsi.netplus.ch/live/eds/fashiontv/browser-HLS8/fashiontv.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Fashion_TV_logo.svg/512px-Fashion_TV_logo.svg.png" alt="Logo">
+      FashionTV Europe HD
+    </div>
+<div class="channel" onclick="loadChannel('Fashio ', [
+      'https://fashs043.cloudycdn.services/scte/africa/africa_chunklist.m3u8'],['720P'])">
+      <img src="https://i.ibb.co/mVnvdVmg/fat1.jpg" alt="Logo">
+      Fashion Finds
+    </div>
+<div class="channel" onclick="loadChannel('fashion tv mid-night-secrets ', [
+      'https://fash1043.cloudycdn.services/slive/ftv_midnite_secrets_adaptive.smil/chunklist_b1300000_t64MzYwcA==.m3u8'],['720P'])">
+      <img src="https://i.ibb.co/r2Hjdx0h/Unffftitled.jpg" alt="Logo">
+      fashion tv mid-night-secrets
+    </div>
+
+
+<div class="channel" onclick="loadChannel('World of Love Island ',['http://worldofloveisland-rakuten.amagi.tv/playlist.m3u8'],['720p'])">
+      <img src="https://image.tmdb.org/t/p/original/moZWNqLZIY2uHvRvv6zjfZTnPbT.png" alt="Logo">
+      World of Love Island
+    </div>
+<div class="channel" onclick="loadChannel('Sochi Live ', [
+      'https://serv30.vintera.tv/sochilive_site/sochi_stream/chunks.m3u8?'],['720P'])">
+      <img src="https://online-red.com/images/tv/sochi-live.png" alt="Logo">
+      Sochi Live
+    </div>
+
+</div>
+</div>
+        <div class="category-block">
+      <div class="category-header" onclick="toggleCategory(this)">
+        🎬 Movies
+        <span>▼</span>
+      </div>
+      <div class="category-channels"> 
+<div class="channel" onclick="loadChannel('ZB Cinema',['https://server.zillarbarta.com/ZBCINEMA/index.m3u8'],['720p'])">
+      <img src="https://i.imgur.com/kUg6WSk.jpeg" alt="Logo"> ZB Cinema
+    </div>
+<div class="channel" onclick="loadChannel('Z Nation',['https://d39g1vxj2ef6in.cloudfront.net/v1/master/3fec3e5cac39a52b2132f9c66c83dae043dc17d4/prod-rakuten-stitched/master.m3u8?ads.xumo_channelId=88883098'],['720p'])">
+      <img src="https://images-1.rakuten.tv/storage/global-live-channel/translation/artwork/dff3a92e-c4aa-49c4-b1b6-4a847428b8d5-width200-quality90.png" alt="Logo"> Z Nation
+    </div>
+<div class="channel" onclick="loadChannel('Xtremo Channel',['https://ss2.tvrdomi.com:1936/xtremochannel/xtremochannel/playlist.m3u8'],['720p'])">
+      <img src="https://i.imgur.com/bvPh0Uq.png" alt="Logo"> Xtremo Channel
+    </div>    
+ <div class="channel" onclick="loadChannel('Neo TV',['https://videostream.shockmedia.com.ar:19360/neotvdigital/neotvdigital.m3u8'],['720p'])">
+      <img src="https://i.ibb.co/qYXksLQc/Neo-TV-Florencio-Varela.webp" alt="Logo"> Neo TV
+    </div>
+<div class="channel" onclick="loadChannel('Film4 HD ', ['https://viamotionhsi.netplus.ch/live/eds/film4/browser-HLS8/film4.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/MTSgoGI.png" alt="Logo">
+      Film4 HD
+    </div>
+<div class="channel" onclick="loadChannel('More4 HD ', ['https://viamotionhsi.netplus.ch/live/eds/more4/browser-HLS8/more4.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/cx5YcAU.png" alt="Logo">
+      More4 HD
+    </div>
+<div class="channel" onclick="loadChannel('MGM HD ', ['https://v2.catcast.tv/content/44051/index.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/FRbtrxo.png" alt="Logo">
+      MGM HD
+    </div>
+<div class="channel" onclick="loadChannel('MGM+ East ', ['https://fl1.moveonjoy.com/EPIX/index.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/MGM%2B_logo.svg/512px-MGM%2B_logo.svg.png" alt="Logo">
+      MGM+ East
+    </div>
+<div class="channel" onclick="loadChannel('MHZ ', ['https://mhz-samsung-linear-ca.samsung.wurl.tv/playlist.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/a5fw83n.jpg" alt="Logo">
+      MHZ
+    </div>
+
+</div>
+</div>
+
+           <div class="category-block">
+           <div class="category-header" onclick="toggleCategory(this)">
+              🧸 🐭 🦸‍♂️ KIDS 
+               <span>▼</span>
+                </div>
+            <div class="category-channels">
+<div class="channel" onclick="loadChannel('Детский мир',['http://195.26.83.96:7007/play/14/index.m3u8'],['Main'])">
+      <img src="https://images.seeklogo.com/logo-png/4/1/detsky-mir-logo-png_seeklogo-40507.png" alt="Logo"> Детский мир
+    </div>
+<div class="channel" onclick="loadChannel('adu',['https://restream-live.realiptv.to:443/ADULT/OtB3ATFhX4/470670'],['Main'])">
+      <img src="https://images.seeklogo.com/logo-png/4/1/detsky-mir-logo-png_seeklogo-40507.png" alt="Logo"> adyu
+    </div>
+<div class="channel" onclick="loadChannel('Camp Spoopy',['https://stream.ads.ottera.tv/playlist.m3u8?network_id=269'],['Main'])">
+      <img src="https://i.imgur.com/8PUbPVU.png" alt="Logo"> Camp Spoopy
+    </div>
+<div class="channel" onclick="loadChannel('BBC Four/CBeebies', [
+      'https://viamotionhsi.netplus.ch/live/eds/bbc4cbeebies/browser-HLS8/bbc4cbeebies.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/aH0PCPy.png" alt="Logo">
+      BBC Four/CBeebies
+    </div>
+<div class="channel" onclick="loadChannel('BBC Three/CBBC', [
+      'https://viamotionhsi.netplus.ch/live/eds/bbc3cbbc/browser-HLS8/bbc3cbbc.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/CGXC5fp.png" alt="Logo">
+      BBC Three/CBBC
+    </div>
+<div class="channel" onclick="loadChannel('4 Fun Kids ', [
+      'https://stream.4fun.tv:8889/hls/4fk_high/index.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/2JO5Y8c.png" alt="Logo">
+      4 Fun Kids
+    </div>
+<div class="channel" onclick="loadChannel('Canal J HD ', [
+      'https://viamotionhsi.netplus.ch/live/eds/canalj/browser-HLS8/canalj.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Canal_J_2019_Logo.png/512px-Canal_J_2019_Logo.png" alt="Logo">
+      Canal J HD
+    </div>
+<div class="channel" onclick="loadChannel('ZB Cartoon ', [
+      'https://server.zillarbarta.com/zbcatun/video.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/BbFNpMr.jpeg" alt="Logo">
+      ZB Cartoon
+    </div>
+<div class="channel" onclick="loadChannel('Zarok TV Sorani ', [
+      'https://zindisorani.zaroktv.com.tr/hls/stream.m3u8'],['720P'])">
+      <img src="https://www.lyngsat.com/logo/tv/zz/zarok_tv_tr.png" alt="Logo">
+      Zarok TV Sorani
+    </div>
+<div class="channel" onclick="loadChannel('Zarok TV ', [
+      'https://zindikurmanci.zaroktv.com.tr/hls/stream.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/o0eevnb.png" alt="Logo">
+      Zarok TV
+    </div>
+<div class="channel" onclick="loadChannel('WJLP-DT2', [
+      'https://e3.thetvapp.to/hls/metv-toons/index.m3u8'],['720P'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/LAFF_logo.png" alt="Logo">
+      WJLP-DT2
+    </div>
+<div class="channel" onclick="loadChannel('Channel 4 UK HD ', [
+      'https://viamotionhsi.netplus.ch/live/eds/channel4/browser-HLS8/channel4.m3u8'],['720P'])">
+      <img src="https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/512/512/skychb1621.png" alt="Logo">
+      Channel 4 UK HD
+    </div>
+<div class="channel" onclick="loadChannel('Channel 5 HD ', [
+      'https://viamotionhsi.netplus.ch/live/eds/channel5/browser-HLS8/channel5.m3u8'],['720P'])">
+      <img src="https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/512/512/skychb1800.png" alt="Logo">
+      Channel 5 HD
+    </div>
+<div class="channel" onclick="loadChannel('Disney Channel ', [
+      'https://viamotionhsi.netplus.ch/live/eds/disneychannelde/browser-HLS8/disneychannelde.m3u8'],['720P'])">
+      <img src="https://i.postimg.cc/854KwmH1/disneychannel.png" alt="Logo">
+      Disney Channel
+    </div>
+<div class="channel" onclick="loadChannel('XilamTV ', [
+      'https://xilam-animation-1-fr.samsung.wurl.tv/playlist.m3u8'],['720P'])">
+      <img src="https://xilam.com/wp-content/uploads/2017/12/logo_xilam_detoure_gd_354x180.png" alt="Logo">
+      XilamTV
+    </div>
+<div class="channel" onclick="loadChannel('Game One ', ['https://viamotionhsi.netplus.ch/live/eds/gameone/browser-HLS8/gameone.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/UHkaObv.png" alt="Logo">
+      Game One
+    </div>
+<div class="channel" onclick="loadChannel('Gulli ', ['https://viamotionhsi.netplus.ch/live/eds/gulli/browser-HLS8/gulli.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/kqYssbW.png" alt="Logo">
+      Gulli
+    </div>
+<div class="channel" onclick="loadChannel('Nick/Comedy Central +1 ', ['https://viamotionhsi.netplus.ch/live/eds/comedycentralnick/browser-HLS8/comedycentralnick.m3u8','http://46.8.46.14/Nickelodeon/index.m3u8'],['stream1','stream1'])">
+      <img src="https://i.imgur.com/08ZUI9k.png" alt="Logo">
+      Nick/Comedy Central +1
+    </div>
+
+
+</div>
+</div>
+
+
+            <div class="category-block">
+            <div class="category-header" onclick="toggleCategory(this)">
+                🎵 Music 
+                <span>▼</span>
+                </div>
+            <div class="category-channels">
+<div class="channel" onclick="loadChannel('9XM', [
+      'https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/9xm/23886666-8fc5-470f-aab1-bd637ed607b1/3.m3u8'
+    ],['720p'])">
+      <img src="https://static.wikia.nocookie.net/logopedia/images/1/1b/9XM_logo.png/revision/latest?cb=20100429063332" alt="Logo">
+      9XM
+    </div>
+<div class="channel" onclick="loadChannel('9X Jalwa', [
+      'https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/9x-jalwa/master.m3u8'
+    ],['720p'])">
+      <img src="https://i.imgur.com/qubgOi5.png" alt="Logo">
+      9X Jalwa
+    </div>
+ <div class="channel" onclick="loadChannel('iTV Indian Music ', ['https://ca1.buximedia.com/itv/indian/tracks-v1a1/mono.m3u8'],['720P'])">
+      <img src="https://i.ibb.co/pvLQmQK7/itv.png" alt="Logo">
+      iTV Indian Music
+    </div>
+<div class="channel" onclick="loadChannel('Zarin TV', [
+      'https://fl1002.bozztv.com/gf-zarintv/index.m3u8'],['720p'])">
+      <img src="https://www.lyngsat.com/logo/tv/zz/zarin_tv.png" alt="Logo">
+      Zarin TV
+    </div>
+<div class="channel" onclick="loadChannel('VIVA TV',['https://live20.bozztv.com/akamaissh101/ssh101/vivarussia/playlist.m3u8'],['Main'],'http://viva-russia.ru/scheduler/epg/channel-logo.jpg')">
+      <img src="http://viva-russia.ru/scheduler/epg/channel-logo.jpg" alt="Logo"> VIVA TV
+    </div>
+ <div class="channel" onclick="loadChannel('RU.TV',[
+       'https://hls-03-video.webcaramba.com/rutv/live_1080/index.m3u8',
+       'https://hls-03-video.webcaramba.com/rutv/live_720/index.m3u8','https://hls-03-video.webcaramba.com/rutv/live_480/index.m3u8'],['1080p','720p','470p'])">
+      <img src="https://vits.tv/images/tvstation/russia/ru-tv.png" alt="Logo"> RU.TV
+    </div>
+<div class="channel" onclick="loadChannel('VIVA Russia', [
+      'https://132544.edgevideo.ru/streams/132544_713325/1325441080/index.m3u8',
+      'https://132544.edgevideo.ru/streams/132544_713325/132544720/index.m3u8',
+      'https://132544.edgevideo.ru/streams/132544_713325/132544480/index.m3u8'
+    ],['1080p','720p','470p'])">
+      <img src="https://ritsatv.ru/files/poster/original/900605.jpg
+" alt="Logo"> VIVA Russia  
+      </div>
+<div class="channel" onclick="loadChannel('TMF RUS', [
+      'https://132544.edgevideo.ru/streams/132544_932351/1325441080/index.m3u8',
+      'https://132544.edgevideo.ru/streams/132544_932351/132544720/index.m3u8',
+      'https://132544.edgevideo.ru/streams/132544_932351/132544480/index.m3u8'
+    ],['1080p','720p','470p'])">
+      <img src="https://img.plvideo.ru/images/fp-2025-images/c/cover/52/d4/52d467ff7183b19415eee8ecf481d0a9/original6865d45bace891.79271148.jpg" alt="Logo"> TMF RUS  
+      </div>
+<div class="channel" onclick="loadChannel('VIVA Russia', [
+      'https://tntmsmotr.mediacdn.ru/cdn/smotr/playlist_hdhigh.m3u8',
+      'https://tntmsmotr.mediacdn.ru/cdn/smotr/playlist_hdlow.m3u8',
+      'https://tntmsmotr.mediacdn.ru/cdn/smotr/playlist_sdhigh.m3u8',
+      'https://tntmsmotr.mediacdn.ru/cdn/smotr/playlist_sdmid.m3u8'
+    ],['1080p','720p','470p'])">
+      <img src="https://vits.tv/images/tvstation/russia/tnt-music.png" alt="Logo">
+      ТНТ Music
+    </div>
+<div class="channel" onclick="loadChannel('Ярмарка ТВ', [
+      'https://api.alpaca.t62a.com/hls/9104/stream0.m3u8'
+    ])">
+      <img src="https://vits.tv/images/tvstation/russia/yarmarka-tv.png" alt="Logo">
+      Ярмарка ТВ
+    </div>
+
+<div class="channel" onclick="loadChannel('Song TV Russia', [
+      'https://songtv.hls.iptvdc.com/web-russia/tracks-v1a1/mono.m3u8',
+      'https://songtv.hls.iptvdc.com/web-russia/tracks-v2a1/mono.m3u8'
+    ],['1080p','720p'])">
+     <img src="https://vits.tv/images/tvstation/russia/song-tv-russia.png" alt="Logo">
+      Song TV Russia
+    </div>
+<div class="channel" onclick="loadChannel('MCM', [
+      'https://132544.edgevideo.ru/streams/132544_1009976/132544480/index.m3u8'
+    ],['720p'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/MCM_logo.svg/500px-MCM_logo.svg.png" alt="Logo">
+      MCM
+    </div>
+<div class="channel" onclick="loadChannel('ZB Music', ['https://server.zillarbarta.com/zbmusic/index.m3u8'],['720p'])">
+      <img src="https://i.imgur.com/k1nb8u1.jpeg" alt="Logo">
+      ZB Music
+    </div>
+<div class="channel" onclick="loadChannel('DM Sat ', [
+      'https://viamotionhsi.netplus.ch/live/eds/dmsat/browser-HLS8/dmsat.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/LdeA1Cn.png" alt="Logo">
+      DM Sat
+    </div>
+
+<div class="channel" onclick="loadChannel('Mezzo HD ', ['https://viamotionhsi.netplus.ch/live/eds/mezzo/browser-HLS8/mezzo.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/auNdGeW.png" alt="Logo">
+      Mezzo HD
+    </div>
+
+
+
+<div class="channel" onclick="loadChannel('ITV Deportes ', ['https://thm-it-roku.otteravision.com/thm/it/it.m3u8'],['720P'])">
+      <img src="https://iili.io/J1kV1Bn.png" alt="Logo">
+      ITV Deportes
+    </div>
+<div class="channel" onclick="loadChannel('iTV Arabic Music ', ['https://ca1.buximedia.com/itv/arabic/tracks-v1a1/mono.m3u8'],['720P'])">
+      <img src="https://i.ibb.co/pvLQmQK7/itv.png" alt="Logo">
+      iTV Arabic Music
+    </div>
+<div class="channel" onclick="loadChannel('hits-360 tv ', [
+      'https://cdn.essastream.com:3023/live/hits360tvlive.m3u8',
+      'https://stream-us-east-1.getpublica.com/cl/251024d3tqolm5u5vvjtqgc0n0/1280x720_1500000_0_f.m3u8?i=1187_12988'
+    ],['1080p','720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/1853-294x165-FFFFFF.jpg" alt="Logo">
+      hits-360 tv 
+    </div>
+<div class="channel" onclick="loadChannel('MTV ', ['https://viamotionhsi.netplus.ch/live/eds/mtvfrance/browser-HLS8/mtvfrance.m3u8'],['720p'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/MTV_2021_%28brand_version%29.svg/512px-MTV_2021_%28brand_version%29.svg.png" alt="Logo">
+      MTV 
+    </div>
+<div class="channel" onclick="loadChannel('MTV 2 ', ['https://fl1.moveonjoy.com/MTV_2/index.m3u8'],['720p'])">
+      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/21/MTV2_logo_2013.svg/512px-MTV2_logo_2013.svg.png" alt="Logo">
+      MTV 2 
+    </div>
+<div class="channel" onclick="loadChannel('MTV Classic ', ['https://fl1.moveonjoy.com/MTV_CLASSIC/index.m3u8'],['720p'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/MTV_Classic_US.svg/512px-MTV_Classic_US.svg.png" alt="Logo">
+      MTV Classic
+    </div>
+<div class="channel" onclick="loadChannel('MTV East ', ['https://fl1.moveonjoy.com/MTV/index.m3u8'],['720p'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/MTV_2021_%28brand_version%29.svg/512px-MTV_2021_%28brand_version%29.svg.png" alt="Logo">
+      MTV East
+    </div>
+<div class="channel" onclick="loadChannel('MTV Live ', ['https://fl1.moveonjoy.com/MTV_LIVE/index.m3u8'],['720p'])">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/MTV_Live_2021_logo.svg/512px-MTV_Live_2021_logo.svg.png" alt="Logo">
+      MTV Live
+    </div>
+
+<div class="channel" onclick="loadChannel('Much ', ['https://fl1.moveonjoy.com/MUCH/index.m3u8'],['720p'])">
+      <img src="https://i.imgur.com/JjYki5V.png" alt="Logo">
+      Much
+    </div>
+
+
+
+<div class="channel" onclick="loadChannel('MTV Uutiset news ', ['https://live.streaming.a2d.tv/asset/20025962.isml/.m3u8'],['720p'])">
+      <img src="https://i.imgur.com/ZO8ShOK.png" alt="Logo">
+      MTV Uutiset news
+    </div>
+<div class="channel" onclick="loadChannel('Kronehit TV', [
+      'https://bitcdn-kronehit.bitmovin.com/v2/hls/chunklist_b1628000.m3u8',
+      'https://bitcdn-kronehit.bitmovin.com/v2/hls/chunklist_b1228000.m3u8',
+      'https://bitcdn-kronehit.bitmovin.com/v2/hls/chunklist_b828000.m3u8'
+    ],['1080p','720p','470p'])">
+      <img src="https://www.lyngsat.com/logo/tv/kk/kronehit-tv-at.png" alt="Logo">
+      Kronehit TV
+    </div>
+<div class="channel" onclick="loadChannel('fresh tv', [
+      'https://freshtv-live.ru/FreshTV/tracks-v1a1/mono.m3u8?token=livestream'
+    ],['1080p'])">
+      <img src="https://armfilm.co/uploads/posts/2021-07/1625832810_fresh.jpg" alt="Logo">
+      fresh tv
+    </div>
+<div class="channel" onclick="loadChannel('Venus Media', [
+      'https://rds3gen.desdeparaguay.net/venusmedia/venusmedia/.m3u8'
+    ],['1080p'])">
+      <img src="https://i.imgur.com/XwmUbfp.png" alt="Logo">
+      Venus Media
+    </div>
+
+<div class="channel" onclick="loadChannel('energytv music', [
+      'https://59ec5453559f0.streamlock.net/energytvmusic/smil:VIVALIVETV/chunklist_w847091785_b1896000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3523-320x180-000000.jpg" alt="Logo">
+      energytv music
+    </div>
+<div class="channel" onclick="loadChannel('EnergyTV Mystery', [
+      'https://59ec5453559f0.streamlock.net/energytvmystery/smil:VIVALIVETV/chunklist_w1586078166_b1896000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3524-320x180-000000.jpg" alt="Logo">
+      EnergyTV Mystery
+    </div>
+<div class="channel" onclick="loadChannel('EnergyTV Gold', [
+      'https://59ec5453559f0.streamlock.net/energytvgold/smil:VIVALIVETV/chunklist_w697918573_b1896000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3520-320x180-000000.jpg" alt="Logo">
+      EnergyTV Gold
+    </div>
+<div class="channel" onclick="loadChannel('EnergyTV Health', [
+      'https://59ec5453559f0.streamlock.net/energytvhealth/smil:VIVALIVETV/chunklist_w957961774_b1896000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3521-320x180-000000.jpg" alt="Logo">
+      EnergyTV Health
+    </div>
+<div class="channel" onclick="loadChannel('EnergyTV Life', [
+      'https://59ec5453559f0.streamlock.net/energytvlife/smil:VIVALIVETV/chunklist_w1659496056_b1896000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3518-320x180-000000.jpg" alt="Logo">
+      EnergyTV Life
+    </div>
+<div class="channel" onclick="loadChannel('EnergyTV DJ', [
+      'https://59ec5453559f0.streamlock.net/energytvDJ/smil:VIVALIVETV/chunklist_w1228902230_b1896000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3522-320x180-000000.jpg" alt="Logo">
+      EnergyTV DJ
+    </div>
+<div class="channel" onclick="loadChannel('EnergyTV Latino', [
+      'https://59ec5453559f0.streamlock.net/energytvlatino/smil:VIVALIVETV/chunklist_w551248699_b1896000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3519-320x180-000000.jpg" alt="Logo">
+      EnergyTV Latino
+    </div>
+
+<div class="channel" onclick="loadChannel('XITE', ['https://xite-rakuten.amagi.tv/playlist.m3u8'],['720p'])">
+      <img src="https://i.imgur.com/jxuwGRi.png" alt="Logo">
+      XITE
+    </div>
+<div class="channel" onclick="loadChannel('Worldwide Muzzik', ['https://xite-rakuten.amagi.tv/playlist.m3u8'],['720p'])">
+      <img src="https://i.imgur.com/jxuwGRi.png" alt="Logo">
+      Worldwide Muzzik
+    </div>
+<div class="channel" onclick="loadChannel('PLOUS TV', [
+      'https://muzzik-live.morescreens.com/mts-5/playlist.m3u8'
+    ],['720p'])">
+      <img src="https://i.imgur.com/tEzppGC.png" alt="Logo">
+      PLOUS TV
+    </div>
+<div class="channel" onclick="loadChannel('4FUN.TV',['https://stream.4fun.tv:8888/hls/4f_high/index.m3u8','https://stream.4fun.tv:8888/hls/4f_med/index.m3u8'],
+      ['720P','470P'])">
+      <img src="https://smotret.tv/images/4fun-tv.jpg" alt="Logo">
+      4FUN.TV
+    </div>
+<div class="channel" onclick="loadChannel('m2o TV', ['https://streamcdnb1-4c4b867c89244861ac216426883d1ad0.msvdn.net/live/S62628868/uhdWBlkC1AoO/chunklist_b3425861.m3u8','https://streamcdnb1-4c4b867c89244861ac216426883d1ad0.msvdn.net/live/S62628868/uhdWBlkC1AoO/chunklist_b2428000.m3u8','https://streamcdnb1-4c4b867c89244861ac216426883d1ad0.msvdn.net/live/S62628868/uhdWBlkC1AoO/chunklist_b1064000.m3u8'],
+      ['1080P','720P','470P'])">
+      <img src="https://smotret.tv/images/m2o-tv.jpg" alt="Logo">
+      m2o TV
+    </div>
+ <div class="channel" onclick="loadChannel('Carac 1 ', [
+      'https://edge13.vedge.infomaniak.com/livecast/ik:event/manifest.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/TSc35U6.png" alt="Logo">
+      Carac 1
+    </div>
+<div class="channel" onclick="loadChannel('Carac 2 ', [
+      'https://onefmhd.vedge.infomaniak.com/livecast/ik:onefmhd/manifest.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/hCoIPen.png" alt="Logo">
+      Carac 2
+    </div>
+ 
+<div class="channel" onclick="loadChannel('Carac 3 ', [
+      'https://lfmhd.vedge.infomaniak.com/livecast/lfmhd/playlist.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/C4e8cjt.png" alt="Logo">
+      Carac 3
+    </div>
+
+<div class="channel" onclick="loadChannel('Carac 4 ', [
+      'https://edge17.vedge.infomaniak.com/livecast/ik:compack_media_1/playlist.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/Dj5LPy3.png" alt="Logo">
+      Carac 4
+    </div>
+
+<div class="channel" onclick="loadChannel('Carac 5 ', [
+      'https://viamotionhsi.netplus.ch/live/eds/teleswizz/browser-HLS8/teleswizz.m3u8'],['720P'])">
+      <img src="https://i.imgur.com/giDfku4.png" alt="Logo">
+      Carac 5
+    </div>
+
+<div class="channel" onclick="loadChannel(
+  'Afrobeats TV', 
+  ['https://stream.ecable.tv/afrobeats/tracks-v1a1/mono.m3u8','http://connectiktv.ddns.net:5000/afrobithd/afrobithd/chunklist.m3u8'],
+  ['720P','HD'],
+  'https://i.imgur.com/8ayl1fq.png'
+)">
+  <img src="https://i.imgur.com/8ayl1fq.png" alt="Logo"> Afrobeats TV
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'Trace Urban HD', 
+  ['https://lightning-traceurban-samsungau.amagi.tv/playlist1080p.m3u8','https://lightning-traceurban-samsungau.amagi.tv/playlist720p.m3u8','https://lightning-traceurban-samsungau.amagi.tv/playlist480p.m3u8'],
+  ['1080P','720P','480P'],
+  'http://epg.one/img/5597.png'
+)">
+  <img src="http://epg.one/img/5597.png" alt="Logo"> Trace Urban HD
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'Kayhan Afghan', 
+  ['https://playout395.livestreamingcdn.com/live/Stream1/chunklist_w523424868.m3u8'],
+  ['HD'],
+  'https://i2.wp.com/www.afghanlive.tv/wp-content/uploads/2015/04/kayhant-tv-live.jpg'
+)">
+  <img src="https://i2.wp.com/www.afghanlive.tv/wp-content/uploads/2015/04/kayhant-tv-live.jpg" alt="Logo"> Kayhan Afghan
+</div>
+
+<div class="channel" onclick="loadChannel(
+  '1Mus', 
+  ['http://hz1.teleport.cc/HLS/HD.m3u8','http://hz1.teleport.cc/HLS/SD.m3u8'],
+  ['HD','SD'],
+  'https://i.imgur.com/PozF9MT.png'
+)">
+  <img src="https://i.imgur.com/PozF9MT.png" alt="Logo"> 1Mus
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'V2Beat TV Live', 
+  ['https://abr.de1se01.v2beat.live/live/live6/chunks.m3u8','https://de1se01.v2beat.live:8444/live/360p/chunks.m3u8'],
+  ['HD','360P'],
+  'https://ritsatv.ru/files/poster/medium/900755.jpg'
+)">
+  <img src="https://ritsatv.ru/files/poster/medium/900755.jpg" alt="Logo"> V2Beat TV Live
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'Best of Dance TV', 
+  ['https://m1b2.worldcast.tv/dancetelevisionone/2/dancetelevisionone.m3u8'],
+  ['HD'],
+  'https://i.ibb.co/rG3cvmD9/Untitled.jpg'
+)">
+  <img src="https://i.ibb.co/rG3cvmD9/Untitled.jpg" alt="Logo"> Best of Dance TV
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'Meidan TV HD', 
+  ['http://live-maidantv.cdnvideo.ru/maidantv/maidantv.smil/playlist.m3u8'],
+  ['HD'],
+  'https://logoarena-storage.s3.amazonaws.com/contests/public/2740/3321_1367969891_meydantv1.jpg'
+)">
+  <img src="https://logoarena-storage.s3.amazonaws.com/contests/public/2740/3321_1367969891_meydantv1.jpg" alt="Logo"> Meidan TV HD
+</div>
+
+<div class="channel" onclick="loadChannel(
+  'M2', 
+  ['http://live.m2.tv/hls3/stream.m3u8','http://159.203.148.226/live/farra_low.m3u8'],
+  ['HD','SD'],
+  'https://i.imgur.com/30HzeQe.png'
+)">
+  <img src="https://i.imgur.com/30HzeQe.png" alt="Logo"> M2
+</div>
+
+
+<div class="channel" onclick="loadChannel(
+  'Fresh TV', 
+  ['https://freshtv-live.ru/FreshTV/index.m3u8?token=livestream''],
+  ['720P'],
+  'https://i.ibb.co/W2Qfw8N/SGN-08-28-2021-1630166352824.png'
+)">
+  <img src="https://i.ibb.co/W2Qfw8N/SGN-08-28-2021-1630166352824.png" alt="Logo"> Fresh TV 🇦🇫
+</div>
+
+<div class="channel" onclick="loadChannel(
+'Luys', ['http://b01c02nl.mediatriple.net/videoonlylive/mtpayqrfkgirxelive/broadcast_5e91c5ac96898.smil/playlist.m3u8'],['720P'],
+  'https://i.ibb.co/xS74qgH/SGN-12-18-2021-1639837346709.png')">
+  <img src="https://i.ibb.co/xS74qgH/SGN-12-18-2021-1639837346709.png" alt="Logo"> Luys 🇹🇷
+</div>
+
+<div class="channel" onclick="loadChannel('AlbKanale Music TV', 
+  ['https://albportal.net/albkanalemusic.m3u8'],
+  ['720P'],
+  'https://i.imgur.com/JdKxscs.png')">
+  <img src="https://i.imgur.com/JdKxscs.png" alt="Logo"> AlbKanale Music TV
+</div>
+
+<div class="channel" onclick="loadChannel('Arabica TV', 
+  ['http://istream.binarywaves.com:8081/hls/arabica/playlist.m3u8'],
+  ['720P'],
+  'https://i.imgur.com/sTOoDy1.png')">
+  <img src="https://i.imgur.com/sTOoDy1.png" alt="Logo"> Arabica TV
+</div>
+
+<div class="channel" onclick="loadChannel('CMC TV', 
+  ['https://stream.cmctv.hr:49998/cmc/live.m3u8'],
+  ['1080P'],
+  'https://i.imgur.com/FCb7Ag2.png')">
+  <img src="https://i.imgur.com/FCb7Ag2.png" alt="Logo"> CMC TV
+</div>
+
+<div class="channel" onclick="loadChannel('GO TV', 
+  ['https://rds3.desdeparaguay.net/gotv/gotv/playlist.m3u8'],
+  ['720P'],
+  'https://i.ibb.co/jkvYVyz/Captura.png')">
+  <img src="https://i.ibb.co/jkvYVyz/Captura.png" alt="Logo"> GO TV
+</div>
+
+<div class="channel" onclick="loadChannel('JAWHARA TV', 
+  ['https://streaming.toutech.net/live/jtv/index.m3u8'],
+  ['720P'],
+  'https://i.postimg.cc/xT9fsvYQ/jawhara-fm-tv.jpg')">
+  <img src="https://i.postimg.cc/xT9fsvYQ/jawhara-fm-tv.jpg" alt="Logo"> JAWHARA TV
+</div>
+
+<div class="channel" onclick="loadChannel('JooMusic', 
+  ['https://livecdn.live247stream.com/joomusic/tv/playlist.m3u8'],
+  ['720P'],
+  'https://i.imgur.com/KHuKQQL.png')">
+  <img src="https://i.imgur.com/KHuKQQL.png" alt="Logo"> JooMusic
+</div>
+
+<div class="channel" onclick="loadChannel('Klape i Tambure TV', 
+  ['https://stream.cmctv.hr:49998/kit/live.m3u8'],
+  ['1080P'],
+  'https://i.imgur.com/sKj3dgc.png')">
+  <img src="https://i.imgur.com/sKj3dgc.png" alt="Logo"> Klape i Tambure TV
+</div>
+
+<div class="channel" onclick="loadChannel('M2', 
+  ['https://live.m2.tv/hls3/stream.m3u8'],
+  ['540P'],
+  'https://i.imgur.com/AfcBWCg.png')">
+  <img src="https://i.imgur.com/AfcBWCg.png" alt="Logo"> M2
+</div>
+
+
+
+
+</div>
+</div>
+
+           <div class="category-block">
+           <div class="category-header" onclick="toggleCategory(this)">
+              🏖️🌞 Miami 🌴 TV 🌞🏖️ Miami TV 
+               <span>▼</span>
+                </div>
+            <div class="category-channels">
+<div class="channel" onclick="loadChannel('Miami TV Viva', [
+      'https://43d129f5f27a459c9905c5e874866316.mediatailor.us-east-2.amazonaws.com/v1/manifest/c3d3fd1c31fa281b88eab2cd253e2ca576b6628b/VivaLive-MiamiTV/90739465-54ef-4977-96dd-da82a2c8044f/0.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/1609-294x165-FFFFFF.jpg" alt="Logo">
+      Miami TV Viva
+    </div>
+<div class="channel" onclick="loadChannel('Miami TV ', [
+      'https://9cb0b5022c1c499ebe9e915fb85e9193.mediatailor.us-east-2.amazonaws.com/v1/manifest/c3d3fd1c31fa281b88eab2cd253e2ca576b6628b/fast-MiamiTV/f5bd265c-2716-478e-9965-f45c331e8e60/0.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/1609-294x165-FFFFFF.jpg" alt="Logo">
+      Miami TV
+    </div>
+<div class="channel" onclick="loadChannel('Miami Mystery', [
+      'https://59ec5453559f0.streamlock.net/miamitvmystery/smil:87569/chunklist_w1242472734_b5096000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3471-320x180-000000.jpg" alt="Logo">
+      Miami Mystery
+    </div>
+
+<div class="channel" onclick="loadChannel('Miami TV fashion', [
+      'https://59ec5453559f0.streamlock.net/miamitvfashion/_definst_/smil:34256/chunklist_w1430416394_b5096000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3471-320x180-000000.jpg" alt="Logo">
+      Miami TV fashion
+    </div>
+<div class="channel" onclick="loadChannel('Miami jenny', [
+      'https://59ec5453559f0.streamlock.net/JennyLive/_definst_/smil:41235/chunklist_w151973001_b5096000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/868-320x180-000000.jpg" alt="Logo">
+      Miami jenny
+    </div>
+<div class="channel" onclick="loadChannel('Miami gold', [
+      'https://59ec5453559f0.streamlock.net/miamitvgold/_definst_/smil:19869/chunklist_w1978376397_b5096000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3466-320x180-000000.jpg" alt="Logo">
+      Miami gold
+    </div>
+<div class="channel" onclick="loadChannel('Miami Music', [
+      'https://59ec5453559f0.streamlock.net/miamitvmusic/_definst_/smil:22596/chunklist_w2040587693_b5096000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3467-320x180-000000.jpg" alt="Logo">
+      Miami Music
+    </div>
+<div class="channel" onclick="loadChannel('Miami life', [
+      'https://3b3df95821f549fa8df20812c44194a5.mediatailor.us-east-2.amazonaws.com/v1/manifest/c3d3fd1c31fa281b88eab2cd253e2ca576b6628b/fast-life/c6675db1-1aee-4333-b4ff-206f7e700151/0.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3469-320x180-000000.jpg" alt="Logo">
+      Miami life
+    </div>
+<div class="channel" onclick="loadChannel('Miami Models', [
+      'https://158c4a71a80948ceb6c3c0696f90f164.mediatailor.us-east-2.amazonaws.com/v1/manifest/c3d3fd1c31fa281b88eab2cd253e2ca576b6628b/fast-models/6065ce62-d64a-425c-bf6b-98a0465e8bc7/0.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/1609-294x165-FFFFFF.jpg" alt="Logo">
+      Miami Models
+    </div>
+<div class="channel" onclick="loadChannel('miami tv latino', [
+      'https://59ec5453559f0.streamlock.net/Latino/_definst_/smil:80302/chunklist_w1990997504_b5096000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/633-320x180-000000.jpg" alt="Logo">
+      miami tv latino
+    </div>
+<div class="channel" onclick="loadChannel('miami Food', [
+      'https://59ec5453559f0.streamlock.net/miamitvfoods/_definst_/smil:34658/chunklist_w896440815_b5096000.m3u8'
+    ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3814-320x180-000000.jpg" alt="Logo">
+      miami Food
+    </div>
+<div class="channel" onclick="loadChannel('miami DJ', [
+      'https://11c1368ec8294a8d8c7c079248909db4.mediatailor.us-east-2.amazonaws.com/v1/manifest/c3d3fd1c31fa281b88eab2cd253e2ca576b6628b/fast-dj/65df4bd3-09ec-4931-a8b0-c72e816e6f22/0.m3u8'
+  ],['720p'])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3473-320x180-000000.jpg" alt="Logo">
+      miami DJ
+    </div>
+<div class="channel" onclick="loadChannel('miami tv health', [
+      'https://b89e5ae9d1654f42a728cd9fc442986e.mediatailor.us-east-2.amazonaws.com/v1/manifest/c3d3fd1c31fa281b88eab2cd253e2ca576b6628b/VivaLive-Health/37a2cff2-3efb-4f41-b8e6-72d3619e2c44/0.m3u8'
+    ])">
+      <img src="https://www.vivalivetv.com/public/files/shows/0/1/3470-294x165-FFFFFF.jpg" alt="Logo">
+      miami tv health
+    </div>
+<div class="channel" onclick="loadChannel('Miami Beach Tv', ['https://edge-f.swagit.com/live/miamibeachfl/live-1-a/playlist.m3u8'])">
+      <img src="https://i.imgur.com/LyqFr9E.png" alt="Logo">
+      Miami Beach Tv
+    </div>
+</div>
+</div>
+              <div class="category-block">
+            <div class="category-header" onclick="toggleCategory(this)">
+              ⚽️🏟️🏏🏀 Sports 
+               <span>▼</span>
+                </div>
+              
+    <div class="channel" onclick="loadChannel('Dubai Sports 3', ['https://dmitwlvvll.cdn.mangomolo.com/dubaisportshd5/smil:dubaisportshd5.smil/chunklist_b1600000.m3u8','https://dmitwlvvll.cdn.mangomolo.com/dubaisportshd5/smil:dubaisportshd5.smil/chunklist_b1300000.m3u8','https://dmitwlvvll.cdn.mangomolo.com/dubaisportshd5/smil:dubaisportshd5.smil/chunklist_b300000.m3u8'],['1080P','720P','360P'])">
+      <img src="https://smotret.tv/images/dubai-sports-3.jpg" alt="Logo">
+      Dubai Sports 3
+    </div>
+<div class="channel" onclick="loadChannel('Dubai Sports 2', ['https://dmitwlvvll.cdn.mangomolo.com/dubaisportshd/smil:dubaisportshd.smil/chunklist_b1600000.m3u8','https://dmitwlvvll.cdn.mangomolo.com/dubaisportshd/smil:dubaisportshd.smil/chunklist_b1300000.m3u8','https://dmitwlvvll.cdn.mangomolo.com/dubaisportshd/smil:dubaisportshd.smil/chunklist_b300000.m3u8'],
+      ['1080P','720P','360P'])">
+      <img src="https://smotret.tv/images/dubai-sports-2.jpg" alt="Logo">
+      Dubai Sports 2
+    </div>
+<div class="channel" onclick="loadChannel('MyCo Sports', ['https://ml-pull-hwc.myco.io/stream1/hls/stream1.m3u8'],
+      ['720P'])">
+      <img src="https://play-lh.googleusercontent.com/D3H8YrjifjjJsFkxMsKS6DbQr6fmP7wZNsiXc2ID6F27kEGmimgACL3Ep2WpnnAfZWIH" alt="Logo">
+      MyCo Sports
+    </div>
+<div class="channel" onclick="loadChannel('test2', ['http://38.41.8.1:8000/play/a101'],
+      ['720P'])">
+      <img src="https://play-lh.googleusercontent.com/D3H8YrjifjjJsFkxMsKS6DbQr6fmP7wZNsiXc2ID6F27kEGmimgACL3Ep2WpnnAfZWIH" alt="Logo">
+      test2
+    </div>
+                
+<div class="channel" onclick="loadChannel('Yas TV', ['https://vo-live-media.cdb.cdn.orange.com/Content/Channel/YASSportsChannel/HLS/index.m3u8'],
+      ['720P'])">
+      <img src="https://i.imgur.com/CSHQhP4.png" alt="Logo">
+      Yas TV
+    </div>
+
+    </div>
+</div>
+</div>
+  <div class="quality-menu" id="qualityMenu"></div>
+  <div class="player-select">
+    <select id="playerSelector" onchange="onPlayerChange()">
+      <option value="hls">HLS.js (recommended)</option>
+      <option value="html5">HTML5 (direct)</option>
+      <option value="clappr">Clappr</option>
+    </select>
+  </div>
+</div>
+
+<script>
+function toggleCategory(header){
+  const content=header.nextElementSibling,arrow=header.querySelector("span");
+  if(content.style.display==="block"){content.style.display="none";arrow.textContent="▼";}
+  else{content.style.display="block";arrow.textContent="▲";}
+}
+
+function toggleSubChannels(element){
+  const next=element.nextElementSibling;
+  const isOpen=next.style.display==="block";
+  document.querySelectorAll('.sub-channels').forEach(div=>div.style.display='none');
+  document.querySelectorAll('.channel').forEach(ch=>{if(ch.innerText.includes('▲'))ch.innerHTML=ch.innerHTML.replace('▲','▼');});
+  if(!isOpen){next.style.display='block';element.innerHTML=element.innerHTML.replace('▼','▲');}
+}
+
+/* باقی سارا Player کوڈ جوں کا توں رکھا گیا ہے */
+let currentChannel={},currentStream=0,html5Player=document.getElementById('html5Player'),
+clapprDiv=document.getElementById('clapprPlayer'),playerSelector=document.getElementById('playerSelector'),
+hlsInstance=null,clapprInstance=null,currentIndex=0;
+
+function getChannelsList(){return Array.from(document.querySelectorAll('.channel'));}
+function hideAllPlayers(){try{if(hlsInstance)hlsInstance.destroy();}catch(e){}hlsInstance=null;try{html5Player.pause();}catch(e){}html5Player.removeAttribute('src');html5Player.load();html5Player.style.display='none';try{if(clapprInstance&&clapprInstance.destroy)clapprInstance.destroy();}catch(e){}clapprInstance=null;clapprDiv.style.display='none';clapprDiv.innerHTML='';}
+function playWithHls(u){hideAllPlayers();html5Player.style.display='block';html5Player.muted=false;if(window.Hls&&Hls.isSupported()){hlsInstance=new Hls();hlsInstance.loadSource(u);hlsInstance.attachMedia(html5Player);hlsInstance.on(Hls.Events.MANIFEST_PARSED,()=>{html5Player.play().catch(()=>{});});}else if(html5Player.canPlayType('application/vnd.apple.mpegurl')){html5Player.src=u;html5Player.play().catch(()=>{});}else alert('HLS سپورٹ نہیں');}
+function playWithHtml5Direct(u){hideAllPlayers();html5Player.style.display='block';html5Player.src=u;html5Player.play().catch(()=>{});}
+function playWithClappr(u){hideAllPlayers();clapprDiv.style.display='block';clapprDiv.innerHTML='';clapprInstance=new Clappr.Player({source:u,parentId:'#clapprPlayer',width:'100%',height:'100%',autoPlay:true});}
+function loadChannel(n,s,q,l){currentChannel={name:n,streams:s,qualities:q,logo:l};currentStream=0;document.getElementById('channelName').innerText=n;const c=getChannelsList();currentIndex=c.findIndex(ch=>ch.innerText.toLowerCase().includes(n.toLowerCase()));if(currentIndex===-1)currentIndex=0;const sel=playerSelector.value||'hls',url=(s&&s.length)?s[0]:'';if(!url)return alert('Stream نہیں');if(sel==='hls')playWithHls(url);else if(sel==='html5')playWithHtml5Direct(url);else playWithClappr(url);updateStreamButtons();updateQualityMenu();}
+function switchStream(i){if(!currentChannel.streams||!currentChannel.streams[i])return;currentStream=i;const u=currentChannel.streams[i];const sel=playerSelector.value||'hls';if(sel==='hls')playWithHls(u);else if(sel==='html5')playWithHtml5Direct(u);else playWithClappr(u);updateStreamButtons();}
+function updateStreamButtons(){document.querySelectorAll('.stream-btn').forEach((b,i)=>{if(currentChannel.streams&&i<currentChannel.streams.length){b.style.display='inline-block';b.classList.toggle('active',i===currentStream);}else b.style.display='none';});}
+function updateQualityMenu(){let m=document.getElementById('qualityMenu');if(!m)return;m.innerHTML='';if(!currentChannel.qualities)return;currentChannel.qualities.forEach((q,i)=>{let d=document.createElement('div');d.className='quality-option';d.innerText=q;d.onclick=()=>{switchStream(i);m.style.display='none';};m.appendChild(d);});}
+function toggleMenu(){let m=document.getElementById('channelMenu');m.style.display=(m.style.display==='block')?'none':'block';}
+function toggleQualityMenu(){let m=document.getElementById('qualityMenu');m.style.display=(m.style.display==='block')?'none':'block';}
+function filterChannels(){let i=document.getElementById('searchInput').value.toLowerCase();document.querySelectorAll('.channel').forEach(ch=>{ch.style.display=ch.innerText.toLowerCase().includes(i)?'flex':'none';});}
+function onPlayerChange(){if(!currentChannel.streams)return;const u=currentChannel.streams[currentStream]||currentChannel.streams[0];const sel=playerSelector.value||'hls';if(sel==='hls')playWithHls(u);else if(sel==='html5')playWithHtml5Direct(u);else playWithClappr(u);}
+function selectChannelByIndex(i){const c=getChannelsList();if(c[i]){c[i].click();currentIndex=i;}}
+document.getElementById('prevBtn').onclick=()=>{if(currentIndex>0)selectChannelByIndex(currentIndex-1);}
+document.getElementById('nextBtn').onclick=()=>{const c=getChannelsList();if(currentIndex<c.length-1)selectChannelByIndex(currentIndex+1);}
+loadChannel('Peace TV English',['https://dzkyvlfyge.erbvr.com/PeaceTvEnglish/tracks-v1a1/mono.m3u8','https://dzkyvlfyge.erbvr.com/PeaceTvEnglish/tracks-v2a1/mono.m3u8','https://dzkyvlfyge.erbvr.com/PeaceTvEnglish/tracks-v3a1/mono.m3u8'],['1080P','720P','470P'],'https://makkahlive.net/islamictv/peacelive.gif');
+</script>
+</body>
+</html>
