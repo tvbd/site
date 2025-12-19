@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="ENJOY FREE LIVE IPTV">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Circle TV: Watch Modern LiveTV for free</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./img/logo.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.6.2/dist/plyr.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.4/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
+    <link rel="stylesheet" href="./css/styles.css">
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+</head>
+<body>
+    <div id="login-panel">
+        <div class="login-box">
+            <div class="checkbox-container">
+                <input type="checkbox" id="use-default" />
+                <label for="use-default">Use Default Playlist</label>
+            </div>
+            <select id="default-playlist">
+                <option value="">Select Default Playlist</option>
+                <option value="https://iptv-org.github.io/iptv/countries/us.m3u">US Channels (IPTV-Org)</option>
+                <option value="https://raw.githubusercontent.com/bugsfreeweb/LiveTVCollector/main/BugsfreeStreams/Output/StreamLinks-MXD.m3u">Custom TV (Mixed)</option>     
+            </select>
+            <input type="file" id="file-upload" accept=".m3u,.json,.txt" />
+            <input type="url" id="url-upload" placeholder="Enter playlist URL" />
+            <button onclick="login()">Enter Player</button>
+            <div id="login-loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+    <div id="app" style="display: none;">
+        <div id="loading" class="loading">
+            <div class="loading-text">
+                <span class="loading-text-words">Powered By-Bugsfree Studio</span>
+            </div>
+        </div>
+        <div id="notification"></div>
+        <div id="main-content">
+            <div id="video-container">
+                <div class="time-display" id="time-display"></div>
+                <video id="player" autoplay controls crossorigin="anonymous" playsinline poster="https://bugsfreecdn.netlify.app/BugsfreeDefault/default-poster.webp">
+                    <source type="application/vnd.apple.mpegurl" src="https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8">
+                </video>
+            </div>
+        </div>
+        <button class="sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div id="sidebar">
+            <div class="upload-panel">
+                <select id="sidebar-default-playlist" onchange="loadDefaultPlaylist()">
+                    <option value="">Select Default Playlist</option>
+                    <option value="https://iptv-org.github.io/iptv/countries/us.m3u">US Channels (IPTV-Org)</option>
+                    <option value="https://raw.githubusercontent.com/bugsfreeweb/LiveTVCollector/main/BugsfreeStreams/Output/StreamLinks-MXD.m3u">Custom TV (Mixed)</option>
+                </select>
+                <input type="file" id="sidebar-file-upload" accept=".m3u,.json,.txt" />
+                <input type="url" id="sidebar-url-upload" placeholder="Enter playlist URL" />
+                <button onclick="uploadPlaylist()">Upload</button>
+            </div>
+            <div class="search-panel">
+                <input type="text" id="channel-search" placeholder="Search channels..." oninput="searchChannels()" />
+            </div>
+            <div class="playlist-panel">
+                <div id="playlist-items"></div>
+                <div class="channel-status">
+                    <div class="status-buttons">
+                        <button class="status-btn active" onclick="filterChannels('all')">Total: <span id="total-channels">0</span></button>
+                        <button class="status-btn" onclick="filterChannels('online')">Online: <span id="online-channels">0</span></button>
+                        <button class="status-btn" onclick="filterChannels('offline')">Offline: <span id="offline-channels">0</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="favorite-toggle" onclick="toggleFavorites()">
+            <i class="fas fa-heart"></i>
+        </button>
+        <button class="history-toggle" onclick="toggleHistory()">
+            <i class="fas fa-history"></i>
+        </button>
+        <button class="fullscreen-toggle" onclick="toggleFullscreen()">
+            <i class="fas fa-expand"></i>
+        </button>
+        <button class="settings-toggle" onclick="toggleSettings()">
+            <i class="fas fa-cog"></i>
+        </button>
+        <button class="app-info-toggle" onclick="toggleAppInfo()">
+            <i class="fas fa-info-circle"></i>
+        </button>
+        <div id="settings-panel">
+            <button class="settings-btn resync-btn" onclick="resyncOfflineChannels(false)"><i class="fas fa-redo"></i> Resync Offline</button>
+            <button class="settings-btn delete-all-history-btn" onclick="deleteAllHistory()"><i class="fas fa-trash"></i> Delete History</button>
+            <button class="settings-btn shortcuts-btn" onclick="showShortcuts()"><i class="fas fa-keyboard"></i> Keyboard Shortcuts</button>
+        </div>
+        <div id="app-info-panel">
+            <button class="settings-btn" onclick="showPopupPage('about')">About App</button>
+            <button class="settings-btn" onclick="showPopupPage('uses')">Uses & Disclaimer</button>
+            <button class="settings-btn" onclick="showPopupPage('donate')">Donate Us</button>
+        </div>
+        <div id="about-page" class="popup-page"></div>
+        <div id="uses-page" class="popup-page"></div>
+        <div id="donate-page" class="popup-page"></div>
+    </div>
+    <script src="./js/circletv.js"></script>
+</body>
+</html>

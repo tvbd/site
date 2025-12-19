@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="ENJOY FREE LIVE IPTV">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Circle TV: Watch Modern LiveTV for free</title>
+    <link rel="shortcut icon" type="image/x-icon" href="./img/logo.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.6.2/dist/plyr.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.4/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+    <style>
+        :root {
+            --bg-color: #000;
+            --text-color: #fff;
+            --panel-bg: #1a1a1a;
+            --accent-color: #00aaff;
+            --border-color: #333;
+        }
+        [data-theme="light"] {
+            --bg-color: #f4f4f4;
+            --text-color: #000;
+            --panel-bg: #fff;
+            --accent-color: #007bff;
+            --border-color: #ccc;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        #app {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+        /* Spinner for loading inside app */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #fff;
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        #main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        #video-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            position: relative;
+            touch-action: none;
+            z-index: 1000;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .plyr__poster {
+            background-size: cover !important;
+            background-position: center !important;
+        }
+        #sidebar {
+            width: 300px;
+            background: var(--panel-bg);
+            border-left: 1px solid var(--border-color);
+            height: 100%;
+            position: absolute;
+            right: -300px;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            z-index: 1001;
+        }
+        #sidebar.open {
+            right: 0;
+        }
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1002;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: visible;
+        }
+        @media (max-width: 768px) {
+            .sidebar-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+        .upload-panel {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: var(--panel-bg);
+            z-index: 10;
+        }
+        .search-panel {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 72px;
+            background: var(--panel-bg);
+            z-index: 10;
+        }
+        .playlist-panel {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
+            scrollbar-width: none;
+            min-height: calc(100% - 60px);
+        }
+        .upload-panel select, .upload-panel input, .search-panel input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+        .upload-panel button {
+            width: 100%;
+            padding: 10px;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .upload-panel button:hover {
+            background: #0088cc;
+        }
+        .playlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: var(--bg-color);
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            min-height: 50px;
+            visibility: visible;
+        }
+        .playlist-item:hover {
+            background: #333;
+        }
+        .playlist-item.playing {
+            background: var(--accent-color);
+        }
+        .playlist-item img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .playlist-item span {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 40px;
+        }
+        .favorite-btn, .delete-btn, .reload-btn {
+            position: absolute;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .favorite-btn {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .favorite-btn.active {
+            color: #ff4444;
+        }
+        .delete-btn {
+            right: 35px;
+        }
+        .reload-btn {
+            right: 10px;
+        }
+        .theme-toggle, .fullscreen-toggle, .favorite-toggle, .history-toggle, .settings-toggle, .app-info-toggle {
+            position: fixed;
+            bottom: 40px;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            margin-right: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .theme-toggle.visible,
+        .fullscreen-toggle.visible,
+        .favorite-toggle.visible,
+        .history-toggle.visible,
+        .settings-toggle.visible,
+        .app-info-toggle.visible {
+            opacity: 1;
+        }
+        .theme-toggle { left: 20px; }
+        .favorite-toggle { left: 65px; }
+        .history-toggle { left: 110px; }
+        .fullscreen-toggle { left: 155px; }
+        .settings-toggle { left: 200px; }
+        .app-info-toggle { left: 245px; }
+
+        @media (max-width: 768px) {
+            .theme-toggle, .favorite-toggle, .history-toggle, .fullscreen-toggle, .settings-toggle, .app-info-toggle {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+        #settings-panel, #app-info-panel {
+            position: fixed;
+            bottom: 80px;
+            left: 200px;
+            width: 150px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 10px;
+            display: none;
+            z-index: 1001;
+        }
+        #app-info-panel {
+            left: 245px;
+        }
+        .settings-btn {
+            display: block;
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            text-align: left;
+            padding: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .settings-btn:hover {
+            color: #ff5200;
+        }
+        .time-display {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            display: none;
+            z-index: 1000;
+        }
+        .channel-status {
+            padding: 5px;
+            background: var(--panel-bg);
+            border-top: 1px solid var(--border-color);
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 1;
+        }
+        .status-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: nowrap;
+        }
+        .status-btn {
+            padding: 6px 10px;
+            background: var(--accent-color);
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease;
+        }
+        .status-btn:hover {
+            background: #0088cc;
+        }
+        .status-btn.active {
+            background: #ff5200;
+        }
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex; /* Changed to flex to center content */
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-text {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            text-align: center;
+            width: 100%;
+            height: 100px;
+            line-height: 100px;
+        }
+        .loading-text span {
+            display: inline-block;
+            margin: 0 5px;
+            color: #fff;
+            font-family: 'Quattrocento Sans', sans-serif;
+        }
+        .loading-text span:nth-child(1) { animation: blur-text 1.5s 0s infinite linear alternate; }
+        .loading-text span:nth-child(2) { animation: blur-text 1.5s 0.2s infinite linear alternate; }
+        .loading-text span:nth-child(3) { animation: blur-text 1.5s 0.4s infinite linear alternate; }
+        .loading-text span:nth-child(4) { animation: blur-text 1.5s 0.6s infinite linear alternate; }
+        .loading-text span:nth-child(5) { animation: blur-text 1.5s 0.8s infinite linear alternate; }
+        .loading-text span:nth-child(6) { animation: blur-text 1.5s 1s infinite linear alternate; }
+        .loading-text span:nth-child(7) { animation: blur-text 1.5s 1.2s infinite linear alternate; }
+        .loading-text span:nth-child(8) { animation: blur-text 1.5s 1.4s infinite linear alternate; }
+        .loading-text span:nth-child(9) { animation: blur-text 1.5s 1.6s infinite linear alternate; }
+
+        @keyframes blur-text {
+            0% { filter: blur(0px); }
+            100% { filter: blur(4px); }
+        }
+        #notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            z-index: 1001;
+            display: none;
+            text-align: center;
+            max-width: 80%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #notification.show {
+            display: block;
+            opacity: 1;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .plyr__video-wrapper::after {
+            position: absolute;
+            top: 30px;
+            left: 50px;
+            z-index: 10;
+            content: 'Bugsfree Studio';
+            font-size: 20px;
+            color: white;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .popup-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1003;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .popup-page.active {
+            display: flex;
+        }
+        .popup-content {
+            background: var(--panel-bg);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            font-size: 16px;
+            line-height: 1.6;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        #donate-page select, #donate-page input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+        #qr-code {
+            margin: 20px 0;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #qr-code img {
+            max-width: 200px;
+            max-height: 200px;
+        }
+        
+        /* Spinner for global loading operations (replacing login-loading) */
+        #global-loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10002;
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #global-loading.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="global-loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div id="app">
+        <div id="loading" class="loading">
+            <div class="loading-text">
+                <span class="loading-text-words">Powered By-Bugsfree Studio</span>
+            </div>
+        </div>
+        <div id="notification"></div>
+        <div id="main-content">
+            <div id="video-container">
+                <div class="time-display" id="time-display"></div>
+                <video id="player" autoplay controls crossorigin="anonymous" playsinline poster="https://bugsfreecdn.netlify.app/BugsfreeDefault/default-poster.webp">
+                    <source type="application/vnd.apple.mpegurl" src="https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8">
+                </video>
+            </div>
+        </div>
+        <button class="sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div id="sidebar">
+            <div class="upload-panel">
+                <select id="sidebar-default-playlist" onchange="loadDefaultPlaylist()">
+                    <option value="">Select Default Playlist</option>
+                    <option value="https://iptv-org.github.io/iptv/countries/us.m3u">US Channels (IPTV-Org)</option>
+                    <option value="https://raw.githubusercontent.com/bugsfreeweb/LiveTVCollector/main/BugsfreeStreams/Output/StreamLinks-MXD.m3u">Custom TV (Mixed)</option>
+                </select>
+                <input type="file" id="sidebar-file-upload" accept=".m3u,.json,.txt" />
+                <input type="url" id="sidebar-url-upload" placeholder="Enter playlist URL" />
+                <button onclick="uploadPlaylist()">Upload</button>
+            </div>
+            <div class="search-panel">
+                <input type="text" id="channel-search" placeholder="Search channels..." oninput="searchChannels()" />
+            </div>
+            <div class="playlist-panel">
+                <div id="playlist-items"></div>
+                <div class="channel-status">
+                    <div class="status-buttons">
+                        <button class="status-btn active" onclick="filterChannels('all')">Total: <span id="total-channels">0</span></button>
+                        <button class="status-btn" onclick="filterChannels('online')">Online: <span id="online-channels">0</span></button>
+                        <button class="status-btn" onclick="filterChannels('offline')">Offline: <span id="offline-channels">0</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()">
+            <i class="fas fa-moon"></i>
+        </button>
+        <button class="favorite-toggle" onclick="toggleFavorites()">
+            <i class="fas fa-heart"></i>
+        </button>
+        <button class="history-toggle" onclick="toggleHistory()">
+            <i class="fas fa-history"></i>
+        </button>
+        <button class="fullscreen-toggle" onclick="toggleFullscreen()">
+            <i class="fas fa-expand"></i>
+        </button>
+        <button class="settings-toggle" onclick="toggleSettings()">
+            <i class="fas fa-cog"></i>
+        </button>
+        <button class="app-info-toggle" onclick="toggleAppInfo()">
+            <i class="fas fa-info-circle"></i>
+        </button>
+        <div id="settings-panel">
+            <button class="settings-btn resync-btn" onclick="resyncOfflineChannels(false)"><i class="fas fa-redo"></i> Resync Offline</button>
+            <button class="settings-btn delete-all-history-btn" onclick="deleteAllHistory()"><i class="fas fa-trash"></i> Delete History</button>
+            <button class="settings-btn shortcuts-btn" onclick="showShortcuts()"><i class="fas fa-keyboard"></i> Keyboard Shortcuts</button>
+        </div>
+        <div id="app-info-panel">
+            <button class="settings-btn" onclick="showPopupPage('about')">About App</button>
+            <button class="settings-btn" onclick="showPopupPage('uses')">Uses & Disclaimer</button>
+            <button class="settings-btn" onclick="showPopupPage('donate')">Donate Us</button>
+        </div>
+        <div id="about-page" class="popup-page"></div>
+        <div id="uses-page" class="popup-page"></div>
+        <div id="donate-page" class="popup-page"></div>
+    </div>
+    <script>
+        let playlistItems = [];
+        let currentPlayingUrl = '';
+        let currentView = 'playlist';
+        let currentFilter = 'all';
+        let resyncInterval = null;
+        let hideIconsTimeout = null;
+        let isStreamPlaying = false;
+
+        // Note: Login Background image logic removed as login panel is gone.
+
+        function videovisible() {
+            console.log('Hiding loading screen and showing app...');
+            const loading = document.getElementById('loading');
+            loading.style.display = 'none';
+            // app is already flex by default in CSS for this version
+        }
+
+        function showNotification(message, duration = 3000) {
+            console.log('Showing notification:', message);
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            notification.style.animation = `fadeIn 0.3s`;
+            setTimeout(() => {
+                notification.style.animation = `fadeOut 0.3s`;
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    notification.style.animation = '';
+                }, 300);
+            }, duration);
+        }
+
+        function clearNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+            notification.style.animation = '';
+        }
+
+        function showBottomIcons() {
+            const icons = document.querySelectorAll('.theme-toggle, .favorite-toggle, .history-toggle, .fullscreen-toggle, .settings-toggle, .app-info-toggle');
+            icons.forEach(icon => icon.classList.add('visible'));
+            clearTimeout(hideIconsTimeout);
+            hideIconsTimeout = setTimeout(hideBottomIcons, 3000);
+        }
+
+        function hideBottomIcons() {
+            const icons = document.querySelectorAll('.theme-toggle, .favorite-toggle, .history-toggle, .fullscreen-toggle, .settings-toggle, .app-info-toggle');
+            icons.forEach(icon => icon.classList.remove('visible'));
+        }
+
+        function toggleSidebar() {
+            console.log('Toggle sidebar clicked');
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function toggleAppInfo() {
+            const panel = document.getElementById('app-info-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function generateQRCode(address) {
+            const qrCodeContainer = document.getElementById('qr-code');
+            qrCodeContainer.innerHTML = '';
+            try {
+                console.log('Generating QR code for address:', address);
+                QRCode.toDataURL(address, { width: 200, errorCorrectionLevel: 'H' }, (err, url) => {
+                    if (err) {
+                        console.error('QR code generation error:', err);
+                        qrCodeContainer.innerHTML = `<p style="color: #ff4444;">Failed to generate QR code. Please copy the address manually: ${address}</p>`;
+                    } else {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        qrCodeContainer.appendChild(img);
+                        console.log('QR code successfully generated for address:', address);
+                    }
+                });
+            } catch (error) {
+                console.error('QR code generation error:', error);
+                qrCodeContainer.innerHTML = `<p style="color: #ff4444;">Failed to generate QR code. Please copy the address manually: ${address}</p>`;
+            }
+        }
+
+        function showPopupPage(page) {
+            document.querySelectorAll('.popup-page').forEach(p => p.classList.remove('active'));
+            const popupPage = document.getElementById(`${page}-page`);
+            popupPage.classList.add('active');
+            document.getElementById('app-info-panel').style.display = 'none';
+        }
+
+        function closePopup() {
+            document.querySelectorAll('.popup-page').forEach(p => p.classList.remove('active'));
+        }
+
+        const cryptoData = {
+            'BTC': 'Knock_to_github',
+            'ETH': 'Knock_to_github',
+            'USDT': 'Knock_to_github',
+            'BNB': 'Knock_to_github',
+            'SOL': 'Knock_to_github',
+            'XRP': 'Knock_to_github',
+            'ADA': 'Knock_to_github',
+            'DOGE': 'Knock_to_github',
+            'TRX': 'Knock_to_github',
+            'PI': 'Knock_to_github'
+        };
+
+        async function loadLastPlaylist() {
+            console.log('Starting loadLastPlaylist...');
+            // Don't toggle spinner here immediately, wait for logic
+            const lastPlaylist = JSON.parse(localStorage.getItem('lastPlaylist') || '{}');
+            console.log('lastPlaylist from localStorage:', lastPlaylist);
+
+            if (lastPlaylist && lastPlaylist.source) {
+                console.log('Found lastPlaylist, attempting to load...');
+                try {
+                    showNotification('Loading last playlist...');
+                    const success = await fetchPlaylist(lastPlaylist.source, true, lastPlaylist.name);
+                    if (success && playlistItems.length > 0) {
+                        console.log('Playlist loaded successfully:', playlistItems);
+                        showNotification(`Playlist loaded: ${lastPlaylist.name}`);
+                        videovisible();
+                        initializePlayer();
+                        displayPlaylist(playlistItems);
+                    } else {
+                        throw new Error('No valid channels loaded');
+                    }
+                } catch (error) {
+                    console.error('Load last playlist error:', error);
+                    showNotification(`Load failed: ${error.message}`);
+                    loadDefaultFallback();
+                }
+            } else {
+                console.log('No lastPlaylist found, loading default fallback');
+                loadDefaultFallback();
+            }
+        }
+
+        // Function to load a default playlist if no history exists (Since login is removed)
+        async function loadDefaultFallback() {
+            const defaultUrl = "https://raw.githubusercontent.com/bugsfreeweb/LiveTVCollector/main/BugsfreeStreams/Output/StreamLinks-MXD.m3u";
+            console.log('Loading default fallback playlist:', defaultUrl);
+            const success = await fetchPlaylist(defaultUrl, false, "Default Playlist");
+            if (success && playlistItems.length > 0) {
+                setTimeout(() => {
+                    videovisible();
+                    initializePlayer();
+                    displayPlaylist(playlistItems);
+                }, 1000);
+            } else {
+                // If even fallback fails, just show the UI empty
+                videovisible();
+                initializePlayer();
+            }
+        }
+
+        // Login function removed as it is no longer needed
+
+        async function fetchPlaylist(url, isUserUploaded = false, sourceName = '') {
+            console.log('Fetching playlist:', url);
+            toggleSpinner(true);
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const text = await response.text();
+                console.log('Playlist text:', text.slice(0, 100));
+                const success = await parsePlaylist(text, url.split('.').pop().toLowerCase(), url, isUserUploaded, sourceName);
+                if (!success) {
+                    throw new Error('Failed to parse playlist');
+                }
+                return true;
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showNotification(`Upload failed: ${error.message}`);
+                return false;
+            } finally {
+                toggleSpinner(false);
+            }
+        }
+
+        async function parsePlaylist(text, extension, source, isUserUploaded = false, sourceName = '') {
+            console.log('Parsing playlist, extension:', extension);
+            toggleSpinner(true);
+            try {
+                playlistItems = [];
+                if (extension === 'm3u') {
+                    const lines = text.split('\n');
+                    let currentItem = null;
+                    for (const line of lines) {
+                        if (line.startsWith('#EXTINF')) {
+                            const nameMatch = line.match(/,(.+)/);
+                            const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+                            currentItem = {
+                                name: nameMatch ? nameMatch[1].trim() : 'Unknown',
+                                logo: logoMatch ? logoMatch[1] : 'https://bugsfreecdn.netlify.app/BugsfreeDefault/default-logo.webp',
+                                url: '',
+                                source: source,
+                                isOnline: false
+                            };
+                        } else if (line && !line.startsWith('#') && currentItem) {
+                            currentItem.url = line.trim();
+                            playlistItems.push(currentItem);
+                            currentItem = null;
+                        }
+                    }
+                } else if (extension === 'json') {
+                    const data = JSON.parse(text);
+                    data.forEach(item => {
+                        playlistItems.push({
+                            name: item.name || 'Unknown',
+                            logo: item.logo || 'https://bugsfreecdn.netlify.app/BugsfreeDefault/default-logo.webp',
+                            url: item.url || '',
+                            source: source,
+                            isOnline: false
+                        });
+                    });
+                } else if (extension === 'txt') {
+                    const lines = text.split('\n');
+                    lines.forEach(line => {
+                        if (line.trim()) {
+                            playlistItems.push({
+                                name: line.trim(),
+                                logo: 'https://bugsfreecdn.netlify.app/BugsfreeDefault/default-logo.webp',
+                                url: line.trim(),
+                                source: source,
+                                isOnline: false
+                            });
+                        }
+                    });
+                }
+
+                console.log('Parsed items:', playlistItems);
+                // Background check for online status
+                const statusChecks = playlistItems.map(async item => {
+                    item.isOnline = await checkLinkStatus(item.url);
+                    return item;
+                });
+                await Promise.all(statusChecks);
+
+                if (isUserUploaded) {
+                    addToHistory(source, sourceName);
+                }
+                currentView = 'playlist';
+                currentFilter = 'all';
+                updateChannelStatus();
+                if (playlistItems.length > 0) {
+                    showNotification(`Playlist uploaded: ${sourceName}`);
+                    playChannel(playlistItems[0].url);
+                    if (resyncInterval) {
+                        clearInterval(resyncInterval);
+                    }
+                    startBackgroundResync();
+                    resyncInterval = setInterval(startBackgroundResync, 5 * 60 * 1000);
+                    return true;
+                }
+                showNotification('No valid channels loaded');
+                return false;
+            } catch (error) {
+                console.error('Parse error:', error);
+                showNotification(`Upload failed: ${error.message}`);
+                return false;
+            } finally {
+                toggleSpinner(false);
+            }
+        }
+
+        function toggleSpinner(show) {
+            const spinner = document.getElementById('global-loading');
+            console.log('Toggling spinner:', show);
+            if (show) {
+                spinner.classList.add('active');
+                setTimeout(() => {
+                    spinner.classList.remove('active');
+                }, 5000);
+            } else {
+                spinner.classList.remove('active');
+            }
+        }
+
+        async function checkLinkStatus(url) {
+            try {
+                // Simplified status check to prevent freezing on large lists
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000); // reduced timeout
+                const response = await fetch(url, {
+                    method: 'HEAD', // Changed to HEAD for speed
+                    signal: controller.signal
+                }).catch(() => null);
+                
+                clearTimeout(timeoutId);
+
+                if (!response || !response.ok) {
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        async function startBackgroundResync() {
+            if (playlistItems.length > 0 && playlistItems.filter(item => !item.isOnline).length > 0) {
+                await resyncOfflineChannels(true);
+            }
+        }
+
+        async function resyncOfflineChannels(background = false) {
+            if (!background) {
+                toggleSpinner(true);
+            }
+            try {
+                const offlineItems = playlistItems.filter(item => !item.isOnline);
+                const statusChecks = offlineItems.map(async item => {
+                    item.isOnline = await checkLinkStatus(item.url);
+                    return item;
+                });
+                await Promise.all(statusChecks);
+                displayPlaylist(playlistItems);
+                updateChannelStatus();
+                if (!background) showNotification('Resync completed');
+            } finally {
+                if (!background) {
+                    toggleSpinner(false);
+                }
+            }
+        }
+
+        function updateChannelStatus() {
+            const total = playlistItems.length;
+            const online = playlistItems.filter(item => item.isOnline).length;
+            const offline = total - online;
+            document.getElementById('total-channels').textContent = total;
+            document.getElementById('online-channels').textContent = online;
+            document.getElementById('offline-channels').textContent = offline;
+        }
+
+        function filterChannels(filter) {
+            currentFilter = filter;
+            const buttons = document.querySelectorAll('.status-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.status-btn[onclick="filterChannels('${filter}')"]`).classList.add('active');
+            displayPlaylist(playlistItems);
+        }
+
+        function addToHistory(source, sourceName) {
+            let history = JSON.parse(localStorage.getItem('playlistHistory') || '[]');
+            if (!history.some(h => h.source === source)) {
+                history.push({
+                    name: sourceName || 'unknown.m3u',
+                    source: source,
+                    date: new Date().toLocaleString('en-GB', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true
+                    })
+                });
+                localStorage.setItem('playlistHistory', JSON.stringify(history));
+            }
+            console.log('Saving lastPlaylist to localStorage:', { source, name: sourceName || 'unknown.m3u' });
+            localStorage.setItem('lastPlaylist', JSON.stringify({ source, name: sourceName || 'unknown.m3u' }));
+        }
+
+        function toggleFavorites() {
+            if (currentView === 'favorites') {
+                currentView = 'playlist';
+                loadPlaylist();
+            } else {
+                currentView = 'favorites';
+                loadFavorites();
+            }
+        }
+
+        function toggleHistory() {
+            if (currentView === 'history') {
+                currentView = 'playlist';
+                loadPlaylist();
+            } else {
+                currentView = 'history';
+                loadHistory();
+            }
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('playlistHistory') || '[]');
+            displayHistory(history);
+        }
+
+        function deleteAllHistory() {
+            localStorage.setItem('playlistHistory', '[]');
+            localStorage.removeItem('lastPlaylist');
+            if (resyncInterval) {
+                clearInterval(resyncInterval);
+                resyncInterval = null;
+            }
+            if (currentView === 'history') {
+                loadHistory();
+            }
+            showNotification('History deleted');
+        }
+
+        function displayHistory(items) {
+            const playlistContainer = document.getElementById('playlist-items');
+            playlistContainer.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'playlist-item';
+                div.innerHTML = `
+                    <span>${item.name} (${item.date})</span>
+                    <button class="delete-btn" data-source="${item.source}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="reload-btn" data-source="${item.source}">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                `;
+                div.querySelector('.reload-btn').onclick = () => {
+                    fetchPlaylist(item.source, true, item.name).then(success => {
+                        if (success) {
+                            currentView = 'playlist';
+                            displayPlaylist(playlistItems);
+                        }
+                    });
+                };
+                div.querySelector('.delete-btn').onclick = () => deleteFromHistory(item.source);
+                playlistContainer.appendChild(div);
+            });
+        }
+
+        function deleteFromHistory(source) {
+            let history = JSON.parse(localStorage.getItem('playlistHistory') || '[]');
+            history = history.filter(h => h.source !== source);
+            localStorage.setItem('playlistHistory', JSON.stringify(history));
+            const lastPlaylist = JSON.parse(localStorage.getItem('lastPlaylist') || '{}');
+            if (lastPlaylist.source === source) {
+                localStorage.removeItem('lastPlaylist');
+                if (resyncInterval) {
+                    clearInterval(resyncInterval);
+                    resyncInterval = null;
+                }
+            }
+            loadHistory();
+            showNotification('History entry deleted');
+        }
+
+        function addToFavorites(item) {
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            if (!favorites.some(f => f.url === item.url)) {
+                favorites.push(item);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                showNotification(`Added to favorites: ${item.name}`);
+            }
+        }
+
+        function removeFromFavorites(item) {
+            let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            favorites = favorites.filter(f => f.url !== item.url);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            showNotification(`Removed from favorites: ${item.name}`);
+        }
+
+        function loadFavorites() {
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            displayPlaylist(favorites);
+        }
+
+        function loadPlaylist() {
+            displayPlaylist(playlistItems);
+        }
+
+        function displayPlaylist(items, isHistory = false) {
+            console.log('Displaying playlist:', items);
+            const playlistContainer = document.getElementById('playlist-items');
+            const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            playlistContainer.innerHTML = '';
+
+            let filteredItems = items;
+            if (currentView === 'playlist' && !isHistory) {
+                if (currentFilter === 'online') {
+                    filteredItems = items.filter(item => item.isOnline);
+                } else if (currentFilter === 'offline') {
+                    filteredItems = items.filter(item => !item.isOnline);
+                }
+            }
+
+            filteredItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = `playlist-item ${item.url === currentPlayingUrl ? 'playing' : ''}`;
+                const isFavorite = favorites.some(f => f.url === item.url);
+                div.innerHTML = `
+                    <img src="${item.logo}" alt="${item.name}" onerror="this.src='https://bugsfreecdn.netlify.app/BugsfreeDefault/default-logo.webp'" />
+                    <span>${item.name} (${item.isOnline ? 'Online' : 'Offline'})</span>
+                    <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-url="${item.url}">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                `;
+                div.onclick = (e) => {
+                    if (!e.target.closest('.favorite-btn') && !e.target.closest('.delete-btn')) {
+                        playChannel(item.url);
+                    }
+                };
+                div.querySelector('.favorite-btn').onclick = () => {
+                    if (isFavorite) {
+                        removeFromFavorites(item);
+                    } else {
+                        addToFavorites(item);
+                    }
+                    if (currentView === 'favorites') {
+                        loadFavorites();
+                    } else if (currentView === 'playlist') {
+                        displayPlaylist(items, isHistory);
+                    }
+                };
+                playlistContainer.appendChild(div);
+            });
+        }
+
+        async function playChannel(url) {
+            console.log('Playing channel:', url);
+            toggleSpinner(true);
+            clearNotification();
+            isStreamPlaying = false;
+            const item = playlistItems.find(item => item.url === url);
+            if (item && !item.isOnline) {
+                item.isOnline = await checkLinkStatus(url);
+                if (!item.isOnline) {
+                    showNotification('Channel offline, trying fallback.');
+                    const video = document.getElementById('player');
+                    const source = video.getElementsByTagName('source')[0];
+                    source.src = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+                    video.load();
+                    video.play().then(() => {
+                        isStreamPlaying = true;
+                        clearNotification();
+                        toggleSpinner(false);
+                    }).catch(err => {
+                        console.error('Playback error:', err);
+                        toggleSpinner(false);
+                    });
+                    initializePlayer();
+                    currentPlayingUrl = source.src;
+                    displayPlaylist(playlistItems);
+                    return;
+                }
+                displayPlaylist(playlistItems);
+            }
+
+            currentPlayingUrl = url;
+            try {
+                const video = document.getElementById('player');
+                const source = video.getElementsByTagName('source')[0];
+                source.src = url;
+                video.load();
+                video.play().then(() => {
+                    isStreamPlaying = true;
+                    clearNotification();
+                    toggleSpinner(false);
+                }).catch(err => {
+                    console.error('Playback error:', err);
+                    toggleSpinner(false);
+                });
+                initializePlayer();
+                if (currentView === 'playlist') {
+                    displayPlaylist(playlistItems);
+                } else if (currentView === 'favorites') {
+                    loadFavorites();
+                }
+            } catch (error) {
+                console.error('Play channel error:', error);
+                showNotification('Failed to play channel. Using fallback.');
+                const video = document.getElementById('player');
+                const source = video.getElementsByTagName('source')[0];
+                source.src = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+                video.load();
+                video.play().then(() => {
+                    isStreamPlaying = true;
+                    clearNotification();
+                    toggleSpinner(false);
+                }).catch(err => {
+                    console.error('Playback error:', err);
+                    toggleSpinner(false);
+                });
+                initializePlayer();
+                currentPlayingUrl = source.src;
+                if (currentView === 'playlist') {
+                    displayPlaylist(playlistItems);
+                } else if (currentView === 'favorites') {
+                    loadFavorites();
+                }
+            }
+        }
+
+        function searchChannels() {
+            const query = document.getElementById('channel-search').value.toLowerCase();
+            const items = document.querySelectorAll('.playlist-item');
+            items.forEach(item => {
+                const name = item.querySelector('span').textContent.toLowerCase();
+                item.style.display = name.includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        async function uploadPlaylist() {
+            console.log('Uploading playlist from sidebar');
+            toggleSpinner(true);
+            showNotification('Uploading playlist...');
+            try {
+                const fileInput = document.getElementById('sidebar-file-upload');
+                const urlInput = document.getElementById('sidebar-url-upload').value.trim();
+                let sourceName = '';
+
+                if (fileInput.files.length > 0) {
+                    sourceName = fileInput.files[0].name;
+                } else if (urlInput) {
+                    try {
+                        const url = new URL(urlInput);
+                        sourceName = url.pathname.split('/').pop() || 'unknown.m3u';
+                    } catch {
+                        sourceName = urlInput.split('/').pop() || 'unknown.m3u';
+                    }
+                }
+
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const extension = file.name.split('.').pop().toLowerCase();
+                    if (['m3u', 'json', 'txt'].includes(extension)) {
+                        const text = await file.text();
+                        parsePlaylist(text, extension, urlInput || file.name, true, sourceName);
+                        setTimeout(() => {
+                            videovisible();
+                            initializePlayer();
+                            displayPlaylist(playlistItems);
+                        }, 3000);
+                    } else {
+                        showNotification('Upload failed: Unsupported file format');
+                    }
+                } else if (urlInput) {
+                    await fetchPlaylist(urlInput, true, sourceName);
+                    setTimeout(() => {
+                        videovisible();
+                        initializePlayer();
+                        displayPlaylist(playlistItems);
+                    }, 3000);
+                } else {
+                    showNotification('Please select a file or enter a URL');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showNotification(`Upload failed: ${error.message}`);
+            } finally {
+                toggleSpinner(false);
+            }
+        }
+
+        async function loadDefaultPlaylist() {
+            const url = document.getElementById('sidebar-default-playlist').value;
+            if (url) {
+                const sourceName = new URL(url).pathname.split('/').pop() || 'default.m3u';
+                showNotification('Uploading playlist...');
+                await fetchPlaylist(url, false, sourceName);
+                setTimeout(() => {
+                    videovisible();
+                    initializePlayer();
+                    displayPlaylist(playlistItems);
+                }, 3000);
+            }
+        }
+
+        function initializePlayer() {
+            console.log('Initializing player');
+            const video = document.querySelector('#player');
+            const source = video.getElementsByTagName('source')[0].src;
+            const options = {};
+            video.onerror = () => {
+                video.poster = 'https://bugsfreecdn.netlify.app/BugsfreeDefault/default-poster.png';
+                console.error('Video error: Unable to load the video source');
+            };
+
+            if (Hls.isSupported()) {
+                const config = { maxMaxBufferLength: 100 };
+                const hls = new Hls(config);
+                hls.loadSource(source);
+                hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+                    const levels = hls.levels.map(level => level.height);
+                    options.quality = {
+                        default: levels[0],
+                        options: levels,
+                        forced: true,
+                        onChange: quality => {
+                            hls.levels.forEach((level, index) => {
+                                if (level.height === quality) {
+                                    hls.currentLevel = index;
+                                }
+                            });
+                        }
+                    };
+                    new Plyr(video, options);
+                });
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    console.error('HLS error:', data);
+                    // Silent retry logic or minimal notification
+                });
+                hls.on(Hls.Events.LEVEL_LOADED, () => {
+                    isStreamPlaying = true;
+                    clearNotification();
+                    toggleSpinner(false);
+                });
+                hls.attachMedia(video);
+                window.hls = hls;
+            } else {
+                new Plyr(video, options);
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme') || 'dark';
+            html.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+            document.querySelector('.theme-toggle i').className = currentTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function toggleFullscreen() {
+            const videoContainer = document.getElementById('video-container');
+            if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen().then(() => {
+                    document.querySelector('.fullscreen-toggle i').className = 'fas fa-compress';
+                }).catch(err => console.error('Fullscreen error:', err));
+            } else {
+                document.exitFullscreen().then(() => {
+                    document.querySelector('.fullscreen-toggle i').className = 'fas fa-expand';
+                }).catch(err => console.error('Exit fullscreen error:', err));
+            }
+        }
+
+        function toggleSettings() {
+            const settingsPanel = document.getElementById('settings-panel');
+            settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.addEventListener('click', (event) => {
+            const settingsPanel = document.getElementById('settings-panel');
+            const settingsToggle = document.querySelector('.settings-toggle');
+            const appInfoPanel = document.getElementById('app-info-panel');
+            const appInfoToggle = document.querySelector('.app-info-toggle');
+            if (!settingsPanel.contains(event.target) && !settingsToggle.contains(event.target)) {
+                settingsPanel.style.display = 'none';
+            }
+            if (!appInfoPanel.contains(event.target) && !appInfoToggle.contains(event.target)) {
+                appInfoPanel.style.display = 'none';
+            }
+        });
+
+        function showShortcuts() {
+            showNotification(
+                'Keyboard Shortcuts:\n' +
+                '- Arrow Right: Next channel\n' +
+                '- Arrow Left: Previous channel\n' +
+                '- Arrow Up: Volume up\n' +
+                '- Arrow Down: Volume down\n' +
+                '- F: Toggle full screen',
+                5000
+            );
+        }
+
+        function updateTimeDisplay() {
+            const now = new Date();
+            const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+            const time = now.toLocaleTimeString('en-US', options);
+            const date = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('time-display').textContent = `${time} ${date}`;
+        }
+
+        function showTimeDisplay() {
+            const timeDisplay = document.getElementById('time-display');
+            updateTimeDisplay();
+            timeDisplay.style.display = 'block';
+            setTimeout(() => {
+                timeDisplay.style.display = 'none';
+            }, 5000);
+        }
+
+        document.getElementById('video-container').addEventListener('mousemove', showBottomIcons);
+        document.getElementById('video-container').addEventListener('touchstart', () => {
+            showTimeDisplay();
+            showBottomIcons();
+        });
+
+        document.getElementById('app').addEventListener('mousemove', showBottomIcons);
+        document.getElementById('app').addEventListener('touchstart', showBottomIcons);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded');
+            document.querySelector('.sidebar-toggle').addEventListener('click', toggleSidebar);
+            
+            // Load the last playlist on page load, or a default one if none exists
+            loadLastPlaylist();
+
+            document.getElementById('about-page').innerHTML = `
+                <div class="popup-content">
+                    <button class="close-btn" onclick="closePopup()">×</button>
+                    <h2>About Circle TV</h2>
+                    <p>Circle TV is a cutting-edge IPTV player designed to deliver seamless live TV streaming to users worldwide. Our mission is to provide a free, user-friendly platform that supports a wide range of playlists and streaming protocols, including HLS and DASH. Key features include real-time channel status checks, favorites management, viewing history, and cross-device compatibility. Developed by Bugsfree Studio, Circle TV is committed to enhancing your entertainment experience with modern design and robust functionality.</p>
+                    <p><strong>Version:</strong> 1.0.0<br><strong>Contact:</strong> support@bugsfreestudio.com</p>
+                </div>
+            `;
+            document.getElementById('uses-page').innerHTML = `
+                <div class="popup-content">
+                    <button class="close-btn" onclick="closePopup()">×</button>
+                    <h2>Uses & Disclaimer</h2>
+                    <p>Circle TV is a free IPTV player intended for personal use. Users are responsible for sourcing their own M3U playlists or streaming URLs. Bugsfree Studio does not host, distribute, or endorse any content streamed through Circle TV. We are not liable for the legality, quality, or availability of streamed content. Use of Circle TV is at your own risk, and no warranties, express or implied, are provided. By using Circle TV, you agree to comply with all applicable laws and regulations.</p>
+                    <p><strong>Disclaimer:</strong> Circle TV is provided "as is." Bugsfree Studio is not responsible for any damages or losses resulting from its use. For support, contact support@bugsfreestudio.com.</p>
+                </div>
+            `;
+            document.getElementById('donate-page').innerHTML = `
+                <div class="popup-content">
+                    <button class="close-btn" onclick="closePopup()">×</button>
+                    <h2>Donate to Circle TV</h2>
+                    <p>Your support helps keep Circle TV free and innovative. Donate using cryptocurrency to contribute to our development.</p>
+                    <select id="crypto-select">
+                        ${Object.keys(cryptoData).map(coin => `<option value="${coin}">${coin}</option>`).join('')}
+                    </select>
+                    <div id="qr-code"></div>
+                    <input type="text" id="crypto-address" readonly>
+                </div>
+            `;
+            document.getElementById('crypto-select').addEventListener('change', (e) => {
+                const address = cryptoData[e.target.value];
+                document.getElementById('crypto-address').value = address;
+                generateQRCode(address);
+            });
+
+            const cryptoSelect = document.getElementById('crypto-select');
+            const defaultAddress = cryptoData[cryptoSelect.value];
+            document.getElementById('crypto-address').value = defaultAddress;
+            generateQRCode(defaultAddress);
+        });
+
+        document.addEventListener('keydown', (event) => {
+            const video = document.getElementById('player');
+            const currentIndex = playlistItems.findIndex(item => item.url === currentPlayingUrl);
+
+            switch (event.key) {
+                case 'ArrowRight':
+                    event.preventDefault();
+                    if (currentIndex < playlistItems.length - 1) {
+                        playChannel(playlistItems[currentIndex + 1].url);
+                    }
+                    break;
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    if (currentIndex > 0) {
+                        playChannel(playlistItems[currentIndex - 1].url);
+                    }
+                    break;
+                case 'ArrowUp':
+                    event.preventDefault();
+                    video.volume = Math.min(video.volume + 0.1, 1);
+                    break;
+                case 'ArrowDown':
+                    event.preventDefault();
+                    video.volume = Math.max(video.volume - 0.1, 0);
+                    break;
+                case 'f':
+                case 'F':
+                    event.preventDefault();
+                    toggleFullscreen();
+                    break;
+            }
+        });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+        let lastTap = 0;
+
+        document.getElementById('video-container').addEventListener('touchstart', (event) => {
+            touchStartX = event.changedTouches[0].screenX;
+            touchStartY = event.changedTouches[0].screenY;
+            const currentTime = new Date().getTime();
+            if (currentTime - lastTap < 300) {
+                toggleFullscreen();
+            }
+            lastTap = currentTime;
+        });
+
+        document.getElementById('video-container').addEventListener('touchend', (event) => {
+            touchEndX = event.changedTouches[0].screenX;
+            touchEndY = event.changedTouches[0].screenY;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            const video = document.getElementById('player');
+            const currentIndex = playlistItems.findIndex(item => item.url === currentPlayingUrl);
+
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+                if (deltaX > 0) {
+                    if (currentIndex > 0) {
+                        playChannel(playlistItems[currentIndex - 1].url);
+                    }
+                } else {
+                    if (currentIndex < playlistItems.length - 1) {
+                        playChannel(playlistItems[currentIndex + 1].url);
+                    }
+                }
+            } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
+                if (deltaY > 0) {
+                    video.volume = Math.max(video.volume - 0.1, 0);
+                } else {
+                    video.volume = Math.min(video.volume + 0.1, 1);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
