@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>FanZone Live Sports</title>
+    
+    <script src="./js/playerjs.js"></script>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="./css/styles.css">
+  
+</head>
+<body>
+
+<header class="header">
+    <div class="logo-section">
+        <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </button>
+
+        <div class="brand-logo-text">
+            <div class="brand-name">FANZONE <span>LIVE</span></div>
+            <div class="brand-tagline">LIVE SPORTS • TV • STREAMS</div>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="premium-switch" id="premiumSwitch">
+            <div class="premium-switch-inner">
+                <div class="premium-pill-option free-active" id="switchFree">Free</div>
+                <div class="premium-pill-option" id="switchPremium">Premium</div>
+            </div>
+        </div>
+        <div class="time-display" id="timeDisplay">00:00:00 AM</div>
+    </div>
+</header>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-inner">
+            <img class="logo-img" src="https://raw.githubusercontent.com/MRM3UK/FanzoneLive/refs/heads/main/logo/file_0000000051787209ac49b199a548c78f.png" alt="FanZone Logo">
+            <div class="sidebar-brand-text">
+                <div class="sidebar-brand-name">FANZONE LIVE</div>
+                <div class="sidebar-brand-tagline">LIVE SPORTS • TV • STREAMS</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="premium-status" id="premiumStatus">
+        <span class="premium-dot"></span>
+        <span class="label">Free mode • Standard view</span>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-title">Recent Channels</div>
+        <ul class="sidebar-list" id="recentHistory"></ul>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-title">Categories</div>
+        <ul class="sidebar-list" id="categoryList">
+            <li class="sidebar-item active" data-category="All">All Channels</li>
+        </ul>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-title">View & Layout</div>
+        <ul class="sidebar-list">
+            <li class="sidebar-item view-toggle-label">Channel grid density</li>
+            <li class="sidebar-item view-toggle" id="viewComfort">Comfort layout</li>
+            <li class="sidebar-item view-toggle" id="viewCompact">Compact grid</li>
+        </ul>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-title favorites-title">Favorites</div>
+        <ul class="sidebar-list" id="favoritesList"></ul>
+        <div style="text-align: center; padding: 8px 0;">
+            <button id="seeAllFavoritesBtn" class="sidebar-item" style="width: 100%; background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.4); padding: 6px; cursor: pointer; border-radius: 4px; font-size: 12px;">See All</button>
+        </div>
+    </div>
+
+    <div class="sidebar-section" id="playlistSection">
+        <div class="sidebar-title">Playlists</div>
+        <ul class="sidebar-list">
+            <li class="sidebar-item" id="addPlaylistBtn">Add Custom Playlist</li>
+        </ul>
+        <ul class="sidebar-list" id="customPlaylists"></ul>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-title">Direct Play</div>
+        <ul class="sidebar-list">
+            <li class="sidebar-item" id="directPlayBtn">Play URL Directly</li>
+        </ul>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-title">Settings</div>
+        <ul class="sidebar-list">
+            <li class="sidebar-item" id="autoplayToggle">Autoplay: <b id="autoplayStatus">ON</b></li>
+            <li class="sidebar-item" id="settingsBtn">App Settings</li>
+        </ul>
+    </div>
+
+    
+    <div class="sidebar-section">
+        <div class="sidebar-title">Help & Info</div>
+        <ul class="sidebar-list">
+            <li class="sidebar-item" id="keyboardHelpBtn">Keyboard Shortcuts</li>
+            <li class="sidebar-item" id="aboutBtn">About FanZone</li>
+            <li class="sidebar-item" id="m3uGeneratorBtn">
+  <a href="https://m3-u-playlist-creator.vercel.app/#" target="_blank"
+     style="color: inherit; text-decoration: none; display: block;">
+    M3U Generator
+  </a>
+</li>
+            <li class="sidebar-item" id="clearHistoryBtn">Clear History</li>
+            <li class="sidebar-item" id="clearPlaylistsBtn">Clear All Playlists</li>
+        </ul>
+    </div>
+</aside>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="modal" id="addPlaylistModal">
+    <div class="modal-title">Add Custom Playlist</div>
+    <p class="modal-helper">Paste any public M3U / M3U8 URL. Channels will load into the main list.</p>
+    <input type="text" id="playlistNameInput" placeholder="Playlist Name (e.g., My Sports)">
+    <input type="text" id="playlistUrlInput" placeholder="M3U URL (http://.../playlist.m3u)">
+    <div class="modal-buttons">
+        <button class="modal-cancel" id="cancelPlaylistBtn">Cancel</button>
+        <button class="modal-confirm" id="confirmPlaylistBtn">Add Playlist</button>
+    </div>
+</div>
+
+<div class="modal" id="directPlayModal">
+    <div class="modal-title">Direct URL Play [TEST] </div>
+    <p class="modal-helper">
+        Supports MP4, M3U8, MPD (with DRM clearkey) and Pixeldrain links like<br>
+        <code>https://pixeldrain.com/u/Test</code><br>
+        DRM format: <code>url?|drmScheme=clearkey&drmLicense=kid:key</code>
+    </p>
+    <input type="text" id="directPlayUrlInput" placeholder="Video URL (M3U8, MP4, MPD, Pixeldrain, etc.)">
+    <div class="modal-buttons">
+        <button class="modal-cancel" id="cancelDirectPlayBtn">Cancel</button>
+        <button class="modal-confirm" id="confirmDirectPlayBtn">Play Now</button>
+    </div>
+</div>
+
+<div class="modal" id="helpModal">
+    <div class="modal-title">Keyboard Shortcuts</div>
+    <div class="modal-helper" style="text-align: left; line-height: 1.8;">
+        <b>Navigation:</b><br>
+        SPACE - Play/Pause<br>
+        F - Fullscreen<br>
+        M - Mute/Unmute<br>
+        ← / → - Skip streams<br>
+        1-9 - Jump to Nth category<br><br>
+        <b>Other:</b><br>
+        ? - Show this help<br>
+        Press ESC to close modals
+    </div>
+    <div class="modal-buttons">
+        <button class="modal-confirm" id="closeHelpBtn" style="width: 100%;">Got it!</button>
+    </div>
+</div>
+
+<div class="modal" id="channelInfoModal">
+    <div class="modal-title">Channel Info</div>
+    <div id="channelInfoContent" style="text-align: left; font-size: 12px; line-height: 1.6; color: #e5e7eb; max-height: 200px; overflow-y: auto;">
+        <div><b>Name:</b> <span id="infoChannelName">-</span></div>
+        <div><b>Category:</b> <span id="infoChannelCategory">-</span></div>
+        <div style="margin-top: 10px;"><b>URL:</b><br>
+        <input type="text" id="infoChannelUrl" readonly style="width: 100%; padding: 5px; background: rgba(15,23,42,0.9); border: 1px solid rgba(148,163,184,0.5); border-radius: 4px; color: #9ca3af; font-size: 10px;"></div>
+    </div>
+    <div class="modal-buttons" style="margin-top: 15px;">
+        <button class="modal-confirm" id="shareChannelBtn" style="flex: 1;">Copy Link</button>
+        <button class="modal-cancel" id="closeInfoBtn" style="flex: 1;">Close</button>
+    </div>
+</div>
+
+<div class="modal" id="settingsModal">
+    <div class="modal-title">App Settings</div>
+    <div class="modal-helper" style="text-align: left; line-height: 1.8;">
+        <div><b>Autoplay:</b> <input type="checkbox" id="autoplayCheckbox" checked> Continue playing next channel</div>
+        <div style="margin-top: 10px;"><b>Quality:</b><br>
+        <select id="qualitySelect" style="width: 100%; padding: 5px; border-radius: 4px; background: rgba(15,23,42,0.9); color: #e5e7eb; border: 1px solid rgba(148,163,184,0.5);">
+            <option>Auto</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select></div>
+        <div style="margin-top: 10px;"><b>Default Player:</b><br>
+        <select id="playerSelect" style="width: 100%; padding: 5px; border-radius: 4px; background: rgba(15,23,42,0.9); color: #e5e7eb; border: 1px solid rgba(148,163,184,0.5);">
+            <option>Player 1</option>
+            <option>Player 2</option>
+            <option>Auto-detect</option>
+        </select></div>
+    </div>
+    <div class="modal-buttons">
+        <button class="modal-confirm" id="saveSettingsBtn" style="flex: 1;">Save</button>
+        <button class="modal-cancel" id="closeSettingsBtn" style="flex: 1;">Cancel</button>
+    </div>
+</div>
+
+<div class="modal" id="aboutModal">
+    <div class="modal-title">About FanZone Live</div>
+    <div class="modal-helper" style="text-align: left; line-height: 1.8; font-size: 12px;">
+        <b>FanZone Live Sports v2.0</b><br>
+        Premium IPTV streaming player<br><br>
+        <b>Features:</b><br>
+        • Dual playlist support<br>
+        • DRM clearkey streams<br>
+        • Favorites & history<br>
+        • Keyboard shortcuts<br>
+        • Custom playlists<br>
+        • Multiple player engines<br><br>
+        <b>Built with:</b><br>
+        HTML5, CSS3, JavaScript ES6+<br>
+        PlayerJS & dash.js libraries<br><br>
+        <b>Contact:</b><br>
+        Telegram: <br><br>
+        Made for sport enthusiasts
+    </div>
+    <div class="modal-buttons">
+        <button class="modal-confirm" id="closeAboutBtn" style="width: 100%;">Close</button>
+    </div>
+</div>
+
+<main class="container">
+    <div class="player-wrapper">
+        <div class="player-header-strip">
+            <div class="player-header-left">
+                <span class="match-label">LIVE STREAM</span>
+                <span id="headerMatchText">Select a channel from the list</span>
+            </div>
+            <div class="player-header-right">
+                Dual Player •
+            </div>
+        </div>
+        <div class="video-container">
+            <div id="videoPlayer1"></div>
+            <video id="videoPlayer2" playsinline></video>
+        </div>
+        <div class="player-controls">
+            <button class="player-btn active" id="player1Btn">
+                <span class="icon icon-tv"></span> PLAYER 1
+            </button>
+            <button class="player-btn" id="player2Btn">
+                <span class="icon icon-film"></span> PLAYER 2
+            </button>
+        </div>
+    </div>
+
+    <div class="now-playing" id="nowPlaying">
+        <img class="now-playing-logo" id="nowPlayingLogo" src="" alt="Channel Logo">
+        <div class="now-playing-info">
+            <div class="now-playing-title" id="nowPlayingTitle">No channel playing</div>
+            <div class="now-playing-player" id="nowPlayingPlayer">Choose a channel to start</div>
+        </div>
+    </div>
+
+    <input type="text" class="search-input" id="searchInput" placeholder="Search sports channels by name, or filter by category from the left sidebar...">
+
+    <div class="progress-wrapper" id="progressWrapper">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Loading channels...</div>
+    </div>
+
+    <div class="channel-grid" id="channelGrid">
+        <div class="loading-message">Loading default playlist...</div>
+    </div>
+</main>
+
+<script>
+    const DEFAULT_PLAYLIST = 'https://raw.githubusercontent.com/munim-sah75/Cofs_TV/refs/heads/main/fancode.m3u';
+    const PREMIUM_PLAYLIST = 'https://raw.githubusercontent.com/MRM3UK/New-try/refs/heads/main/fanzone.m3u';
+    const AYNA_PLAYLIST = 'https://raw.githubusercontent.com/MRM3UK/Drama-Movies-Playlist---circleftp/refs/heads/main/AynaOTT.m3u';
+    
+    const HARDCODED_PREMIUM_PLAYLISTS = [
+        { name: "BD MIX", url: "https://raw.githubusercontent.com/Miraz6755/Iptv.m3u/c3b41b3a2de8d653b142425206a6dafbd71d8b20/Miraz%20tv" },
+        { name: "Aynaa OTT ✔️", url: "https://raw.githubusercontent.com/MRM3UK/Drama-Movies-Playlist---circleftp/refs/heads/main/AynaOTT.m3u" },
+        { name: "INDIAN", url: "https://raw.githubusercontent.com/jigu1688/iptv/c42c092315880d1199f233baf01d85fcb4fcc76c/streams/in.m3u" }
+    ];
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const m3uUrl = urlParams.get('link') || DEFAULT_PLAYLIST;
+    
+    let allChannels = [];
+    let displayedChannelElements = []; 
+    let categories = new Set();
+    let sortedCategories = [];
+    let categoryCounts = {};
+    let customPlaylists = [];
+    let player1;
+    let dashPlayer = null;
+    let currentChannel = { url: null, name: null, logo: null, card: null };
+    let activePlayer = 'player1';
+    let currentCategory = 'All';
+    let isPremiumMode = false;
+    let showAllCategories = false;
+    let isCompactView = false;
+    let playlistsLoaded = 0;
+    let totalPlaylistsToLoad = 0;
+
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const recentHistory = document.getElementById('recentHistory');
+    const categoryList = document.getElementById('categoryList');
+    const addPlaylistBtn = document.getElementById('addPlaylistBtn');
+    const customPlaylistsList = document.getElementById('customPlaylists');
+    const directPlayBtn = document.getElementById('directPlayBtn');
+    const nowPlaying = document.getElementById('nowPlaying');
+    const player1Btn = document.getElementById('player1Btn');
+    const player2Btn = document.getElementById('player2Btn');
+    const videoPlayer1Div = document.getElementById('videoPlayer1');
+    const videoPlayer2Video = document.getElementById('videoPlayer2');
+    const searchInput = document.getElementById('searchInput');
+    const headerMatchText = document.getElementById('headerMatchText');
+    const channelGrid = document.getElementById('channelGrid');
+
+    const premiumSwitch = document.getElementById('premiumSwitch');
+    const switchFree = document.getElementById('switchFree');
+    const switchPremium = document.getElementById('switchPremium');
+    const premiumStatus = document.getElementById('premiumStatus');
+
+    const addPlaylistModal = document.getElementById('addPlaylistModal');
+    const playlistNameInput = document.getElementById('playlistNameInput');
+    const playlistUrlInput = document.getElementById('playlistUrlInput');
+    const confirmPlaylistBtn = document.getElementById('confirmPlaylistBtn');
+    const cancelPlaylistBtn = document.getElementById('cancelPlaylistBtn');
+
+    const directPlayModal = document.getElementById('directPlayModal');
+    const directPlayUrlInput = document.getElementById('directPlayUrlInput');
+    const confirmDirectPlayBtn = document.getElementById('confirmDirectPlayBtn');
+    const cancelDirectPlayBtn = document.getElementById('cancelDirectPlayBtn');
+
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    const clearPlaylistsBtn = document.getElementById('clearPlaylistsBtn');
+
+    const viewComfortBtn = document.getElementById('viewComfort');
+    const viewCompactBtn = document.getElementById('viewCompact');
+
+    function normalizePixeldrainUrl(inputUrl) {
+        if (!inputUrl) return inputUrl;
+        const url = inputUrl.trim();
+        try {
+            const u = new URL(url);
+            if (!u.hostname.includes('pixeldrain.com')) return url;
+
+            const parts = u.pathname.split('/').filter(Boolean);
+            if (parts[0] === 'u' && parts[1]) {
+                return `https://pixeldrain.com/api/file/${parts[1]}`;
+            }
+            if (parts[0] === 'api' && parts[1] === 'file' && parts[2]) {
+                return url;
+            }
+            return url;
+        } catch (e) {
+            return url;
+        }
+    }
+
+    function parseDrmUrl(inputUrl) {
+        if (!inputUrl) return { url: inputUrl, drmScheme: null, drmLicense: null };
+        
+        const parts = inputUrl.split('?|');
+        if (parts.length < 2) {
+            return { url: inputUrl, drmScheme: null, drmLicense: null };
+        }
+        
+        const baseUrl = parts[0];
+        const drmParams = parts[1];
+        
+        let drmScheme = null;
+        let drmLicense = null;
+        
+        const params = drmParams.split('&');
+        params.forEach(param => {
+            const [key, value] = param.split('=');
+            if (key === 'drmScheme') {
+                drmScheme = value;
+            } else if (key === 'drmLicense') {
+                drmLicense = value;
+            }
+        });
+        
+        return { url: baseUrl, drmScheme, drmLicense };
+    }
+
+    function saveCurrentState() {
+        const state = {
+            isPremiumMode,
+            isCompactView,
+            activePlayer,
+            currentChannel: currentChannel.url ? {
+                url: currentChannel.url,
+                name: currentChannel.name,
+                logo: currentChannel.logo
+            } : null
+        };
+        localStorage.setItem('fanzoneLiveState', JSON.stringify(state));
+    }
+
+    function loadSavedState() {
+        try {
+            const saved = localStorage.getItem('fanzoneLiveState');
+            if (saved) {
+                return JSON.parse(saved);
+            }
+        } catch (e) {
+            console.error('Error loading saved state:', e);
+        }
+        return null;
+    }
+
+    function toggleMenu() {
+        if (addPlaylistModal.style.display === 'block' || directPlayModal.style.display === 'block') {
+            closeModal();
+            return;
+        }
+        sidebar.classList.toggle('open');
+        menuBtn.classList.toggle('open');
+        overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+    }
+
+    function showModal(modalElement) {
+        modalElement.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    function closeModal() {
+        addPlaylistModal.style.display = 'none';
+        directPlayModal.style.display = 'none';
+        document.getElementById('helpModal').style.display = 'none';
+        document.getElementById('channelInfoModal').style.display = 'none';
+        document.getElementById('settingsModal').style.display = 'none';
+        document.getElementById('aboutModal').style.display = 'none';
+        if (!sidebar.classList.contains('open')) {
+            overlay.style.display = 'none';
+        }
+    }
+
+    menuBtn.addEventListener('click', toggleMenu);
+    
+    overlay.addEventListener('click', () => {
+        if (addPlaylistModal.style.display === 'block' || directPlayModal.style.display === 'block') {
+            closeModal();
+        } else if (sidebar.classList.contains('open')) {
+            toggleMenu();
+        }
+    });
+
+    player1Btn.addEventListener('click', () => {
+        if (activePlayer === 'player1') return;
+        activePlayer = 'player1';
+        player1Btn.classList.add('active');
+        player2Btn.classList.remove('active');
+        updateNowPlaying(currentChannel.name, currentChannel.logo);
+        saveCurrentState();
+        if (currentChannel.url) {
+            playChannel(currentChannel.url, currentChannel.name, currentChannel.logo, currentChannel.card);
+        }
+    });
+
+    player2Btn.addEventListener('click', () => {
+        if (activePlayer === 'player2') return;
+        activePlayer = 'player2';
+        player2Btn.classList.add('active');
+        player1Btn.classList.remove('active');
+        updateNowPlaying(currentChannel.name, currentChannel.logo);
+        saveCurrentState();
+        if (currentChannel.url) {
+            playChannel(currentChannel.url, currentChannel.name, currentChannel.logo, currentChannel.card);
+        }
+    });
+
+    searchInput.addEventListener('input', () => {
+        filterChannels(currentCategory);
+    });
+
+    function updatePremiumUI() {
+        const labelSpan = premiumStatus.querySelector('.label');
+        if (isPremiumMode) {
+            document.body.classList.add('premium-mode');
+            labelSpan.textContent = `Premium mode • ${isCompactView ? 'Compact' : 'Comfort'} view`;
+        } else {
+            document.body.classList.remove('premium-mode');
+            labelSpan.textContent = `Free mode • ${isCompactView ? 'Compact' : 'Comfort'} view`;
+        }
+        switchPremium.classList.toggle('premium-active', isPremiumMode);
+        switchFree.classList.toggle('free-active', !isPremiumMode);
+    }
+
+    premiumSwitch.addEventListener('click', async () => {
+        isPremiumMode = !isPremiumMode;
+        saveCurrentState();
+        
+        allChannels = [];
+        displayedChannelElements = [];
+        categories.clear();
+        categoryCounts = {};
+        currentCategory = 'All';
+
+        channelGrid.innerHTML = `<div class="loading-message">Loading ${isPremiumMode ? 'premium' : 'default'} playlist...</div>`;
+        
+        if (isPremiumMode) {
+            totalPlaylistsToLoad = 1;
+            playlistsLoaded = 0;
+            fetchM3U(PREMIUM_PLAYLIST, false);
+        } else {
+            totalPlaylistsToLoad = 2;
+            playlistsLoaded = 0;
+            await fetchM3U(DEFAULT_PLAYLIST, false);
+            await fetchM3U(AYNA_PLAYLIST, false);
+        }
+        
+        updatePremiumUI();
+        renderCustomPlaylists();
+    });
+
+    addPlaylistBtn.addEventListener('click', () => {
+        playlistNameInput.value = '';
+        playlistUrlInput.value = '';
+        showModal(addPlaylistModal);
+    });
+
+    cancelPlaylistBtn.addEventListener('click', closeModal);
+
+    confirmPlaylistBtn.addEventListener('click', () => {
+        const name = playlistNameInput.value.trim();
+        const url = playlistUrlInput.value.trim();
+        if (name && url) {
+            addCustomPlaylist(name, url);
+            closeModal();
+        } else {
+            alert("Please enter both a name and a valid M3U URL.");
+        }
+    });
+
+    directPlayBtn.addEventListener('click', () => {
+        directPlayUrlInput.value = '';
+        showModal(directPlayModal);
+    });
+
+    cancelDirectPlayBtn.addEventListener('click', closeModal);
+
+    confirmDirectPlayBtn.addEventListener('click', () => {
+        const url = directPlayUrlInput.value.trim();
+        if (url) {
+            playChannel(url, "Direct Play URL", "https://via.placeholder.com/80?text=Play");
+            closeModal();
+        } else {
+            alert("Please enter a video URL.");
+        }
+    });
+    
+    clearHistoryBtn.addEventListener('click', () => {
+        if(confirm("Clear all recent channels?")) {
+            localStorage.removeItem('recentHistory');
+            renderRecentHistory();
+        }
+    });
+
+    clearPlaylistsBtn.addEventListener('click', () => {
+        if(confirm("Delete ALL custom playlists?")) {
+            localStorage.removeItem('customPlaylists');
+            customPlaylists = [];
+            renderCustomPlaylists();
+        }
+    });
+
+    function setViewMode(mode) {
+        isCompactView = mode === 'compact';
+        document.body.classList.toggle('compact-view', isCompactView);
+        viewCompactBtn.classList.toggle('active', isCompactView);
+        viewComfortBtn.classList.toggle('active', !isCompactView);
+        updatePremiumUI();
+        saveCurrentState();
+    }
+    viewComfortBtn.addEventListener('click', () => setViewMode('comfort'));
+    viewCompactBtn.addEventListener('click', () => setViewMode('compact'));
+
+    function getRecentHistory() {
+        return JSON.parse(localStorage.getItem('recentHistory')) || [];
+    }
+
+    function saveRecentHistory(channel) {
+        let history = getRecentHistory();
+        history = history.filter(item => item.url !== channel.url);
+        history.unshift({ url: channel.url, name: channel.name, logo: channel.logo }); 
+        history = history.slice(0, 5);
+        localStorage.setItem('recentHistory', JSON.stringify(history));
+        renderRecentHistory();
+    }
+
+    function renderRecentHistory() {
+        const history = getRecentHistory();
+        recentHistory.innerHTML = '';
+        if (history.length === 0) {
+            recentHistory.innerHTML = '<li class="sidebar-item" style="cursor: default; opacity: 0.7;">No recent channels</li>';
+            return;
+        }
+        history.forEach(channel => {
+            const li = document.createElement('li');
+            li.className = 'sidebar-item';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'recent-item-content';
+
+            const img = document.createElement('img');
+            img.className = 'recent-logo';
+            img.src = channel.logo || 'https://via.placeholder.com/40';
+            img.onerror = () => img.src = 'https://via.placeholder.com/40';
+
+            const span = document.createElement('span');
+            span.textContent = channel.name;
+
+            wrapper.appendChild(img);
+            wrapper.appendChild(span);
+            li.appendChild(wrapper);
+
+            li.onclick = () => {
+                playChannel(channel.url, channel.name, channel.logo);
+                toggleMenu();
+            };
+            recentHistory.appendChild(li);
+        });
+    }
+
+    function getCustomPlaylists() {
+        return JSON.parse(localStorage.getItem('customPlaylists')) || [];
+    }
+
+    function saveCustomPlaylists() {
+        localStorage.setItem('customPlaylists', JSON.stringify(customPlaylists));
+        renderCustomPlaylists();
+    }
+
+    function addCustomPlaylist(name, url) {
+        if (!url || !name) return;
+        try {
+            new URL(url);
+        } catch (_) {
+            alert("Please enter a valid URL.");
+            return;
+        }
+        if (customPlaylists.some(p => p.url === url)) {
+            alert("Playlist already exists.");
+            return;
+        }
+        customPlaylists.push({ name, url });
+        saveCustomPlaylists();
+    }
+
+    function deleteCustomPlaylist(url) {
+        const initialLength = customPlaylists.length;
+        customPlaylists = customPlaylists.filter(p => p.url !== url);
+        if (customPlaylists.length < initialLength) {
+            saveCustomPlaylists();
+        }
+    }
+
+    function renderCustomPlaylists() {
+        customPlaylists = getCustomPlaylists();
+        customPlaylistsList.innerHTML = '';
+
+        let playlistsToDisplay = [];
+        const hardcodedPlaylists = isPremiumMode ? HARDCODED_PREMIUM_PLAYLISTS : [];
+        playlistsToDisplay = hardcodedPlaylists.concat(customPlaylists);
+
+        if (playlistsToDisplay.length === 0) return;
+        
+        playlistsToDisplay.forEach((playlist) => {
+            const li = document.createElement('li');
+            li.className = 'sidebar-item';
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = playlist.name;
+            nameSpan.style.flex = '1';
+            nameSpan.style.cursor = 'pointer';
+            
+            nameSpan.onclick = () => {
+                allChannels = [];
+                displayedChannelElements = [];
+                channelGrid.innerHTML = `<div class="loading-message">Loading **${playlist.name}** playlist...</div>`;
+                totalPlaylistsToLoad = 1;
+                playlistsLoaded = 0;
+                fetchM3U(playlist.url, false);
+                toggleMenu();
+            };
+            
+            const isCustom = !hardcodedPlaylists.some(p => p.url === playlist.url);
+            
+            if (isCustom) {
+                const deleteBtn = document.createElement('span');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = '×';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Delete custom playlist "${playlist.name}"?`)) {
+                        deleteCustomPlaylist(playlist.url);
+                    }
+                };
+                li.appendChild(deleteBtn);
+            }
+
+            li.prepend(nameSpan);
+            customPlaylistsList.appendChild(li);
+        });
+    }
+
+    async function fetchM3U(url, forceReload = false) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.text();
+            
+            await parseM3U(data, false);
+            
+            playlistsLoaded++;
+            
+            if (playlistsLoaded >= totalPlaylistsToLoad) {
+                await initializeChannelDisplay(allChannels);
+                renderVisibleCategories();
+                filterChannels(currentCategory);
+                
+                const savedState = loadSavedState();
+                if (savedState && savedState.currentChannel && savedState.currentChannel.url) {
+                    playChannel(savedState.currentChannel.url, savedState.currentChannel.name, savedState.currentChannel.logo);
+                } else if (allChannels.length > 0) {
+                    const first = allChannels[0];
+                    playChannel(first.url, first.name, first.logo);
+                }
+            }
+            
+        } catch (error) {
+            console.error('Error fetching M3U:', error);
+            playlistsLoaded++;
+            if (playlistsLoaded >= totalPlaylistsToLoad && allChannels.length === 0) {
+                channelGrid.innerHTML = '<div class="loading-message">Failed to load playlist. Please check the URL and CORS settings.</div>';
+            }
+        }
+    }
+
+    async function parseM3U(data, shouldRender = true) {
+        const lines = data.split("\n");
+        const channels = [];
+        let channel = {};
+
+        lines.forEach(line => {
+            line = line.trim();
+            if (line.startsWith("#EXTINF")) {
+                const nameMatch = line.match(/[^,]*$/); 
+                const logoMatch = line.match(/tvg-logo="([^"]*)"/); 
+                const groupMatch = line.match(/group-title="([^"]*)"/); 
+                
+                channel = {
+                    name: nameMatch ? nameMatch[0].trim() : "Unknown Channel",
+                    logo: logoMatch && logoMatch[1] ? logoMatch[1].trim() : "https://via.placeholder.com/80",
+                    category: groupMatch && groupMatch[1] ? groupMatch[1].trim() : "Others",
+                    status: 'offline'
+                };
+                if (channel.category) {
+                    categories.add(channel.category);
+                }
+            } else if (line && !line.startsWith("#")) {
+                channel.url = line;
+                if (channel.name && channel.url) {
+                    const exists = allChannels.some(c => c.url === channel.url);
+                    if (!exists) {
+                        channels.push({...channel});
+                        allChannels.push({...channel});
+                    }
+                }
+                channel = {};
+            }
+        });
+
+        categories.add('All');
+        
+        allChannels.forEach(ch => {
+            const cat = ch.category || 'Others';
+            categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+        });
+        
+        sortedCategories = Array.from(categories).filter(c => c !== 'All').sort();
+    }
+
+    async function initializeChannelDisplay(channels) {
+        const progressFill = document.getElementById("progressFill");
+        const progressText = document.getElementById("progressText");
+        const progressWrapper = document.getElementById("progressWrapper");
+        
+        channelGrid.innerHTML = "";
+        displayedChannelElements = [];
+        
+        if (channels.length === 0) {
+            channelGrid.innerHTML = '<div class="loading-message">No channels found in playlist.</div>';
+            progressWrapper.style.display = "none";
+            return;
+        }
+        
+        progressWrapper.style.display = "block";
+        
+        const total = channels.length;
+        let loaded = 0;
+        const chunkSize = 50;
+        
+        for (let i = 0; i < total; i++) {
+            const channel = channels[i];
+            const card = document.createElement("div");
+            card.className = `channel-card`;
+            card.innerHTML = `
+                <span class="favorite-heart" data-url="${channel.url}">♡</span>
+                <img class="channel-logo" src="${channel.logo}" alt="${channel.name}" onerror="this.src='https://via.placeholder.com/80?text=NO+LOGO'">
+                <div class="channel-name">${channel.name}</div>
+                <span class="channel-category-badge">${channel.category || 'OTHER'}</span>
+            `;
+            const heart = card.querySelector('.favorite-heart');
+            if (isFavorite(channel.url)) {
+                heart.classList.add('favorited');
+                heart.textContent = '♥';
+            }
+            heart.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavorite(channel.url, channel.name, channel.logo);
+                heart.classList.toggle('favorited');
+                heart.textContent = heart.classList.contains('favorited') ? '♥' : '♡';
+                renderFavorites();
+            });
+            card.onclick = () => playChannel(channel.url, channel.name, channel.logo, card); 
+            card.dataset.category = channel.category;
+            card.dataset.channelName = channel.name.toLowerCase();
+            card.dataset.channelUrl = channel.url;
+            
+            channelGrid.appendChild(card);
+            displayedChannelElements.push({
+                element: card,
+                name: card.dataset.channelName,
+                category: card.dataset.category
+            });
+
+            loaded++;
+            const progress = Math.round((loaded / total) * 100);
+            progressFill.style.width = `${progress}%`;
+            progressText.innerText = `Loading ${loaded}/${total} channels (${progress}%)`;
+
+            if (i % chunkSize === 0 || i === total - 1) {
+                await new Promise(resolve => setTimeout(resolve, 10));
+            }
+        }
+        
+        progressWrapper.style.display = "none";
+    }
+
+    function updateChannelCardStatus(url, status) {
+        const card = document.querySelector(`.channel-card[data-channel-url="${url}"]`);
+        if (card) {
+        }
+    }
+
+    function playChannel(url, name = "Unknown Channel", logo = "https://via.placeholder.com/80", cardElement = null) {
+        const drmInfo = parseDrmUrl(url);
+        let playbackUrl = normalizePixeldrainUrl(drmInfo.url);
+        
+        const isPixeldrainFile = playbackUrl.includes('pixeldrain.com/api/file');
+        const isDash = playbackUrl.toLowerCase().includes('.mpd');
+        const hasDrm = drmInfo.drmScheme && drmInfo.drmLicense;
+
+        if ((isDash || hasDrm) && activePlayer !== 'player2') {
+             activePlayer = 'player2';
+             player2Btn.click();
+        } else if (isPixeldrainFile && activePlayer !== 'player2') {
+             activePlayer = 'player2';
+             player2Btn.click();
+        }
+
+        currentChannel = { url, name, logo, card: cardElement };
+        saveCurrentState();
+        
+        try { if (player1) player1.api("destroy"); } catch (e) {}
+        player1 = null;
+        if (dashPlayer) {
+            try { dashPlayer.reset(); } catch (e) {}
+            dashPlayer = null;
+        }
+        
+        videoPlayer1Div.innerHTML = '';
+        videoPlayer2Video.pause();
+        videoPlayer2Video.removeAttribute('src');
+        videoPlayer2Video.load();
+        
+        videoPlayer1Div.classList.remove('active');
+        videoPlayer2Video.classList.remove('active');
+        
+        const handleError = () => {
+            console.error(`Playback failed for ${name} on ${activePlayer} using URL: ${playbackUrl}`);
+            alert(`Error playing ${name}. The stream may be offline, blocked, or the URL is invalid.`);
+            if (cardElement) {
+                updateChannelCardStatus(url, 'error');
+            }
+        };
+
+        if (activePlayer === 'player1') {
+            videoPlayer1Div.classList.add('active');
+            setTimeout(() => {
+                try {
+                    player1 = new Playerjs({ 
+                        id: "videoPlayer1", 
+                        file: playbackUrl, 
+                        autoplay: 1, 
+                        muted: 0,
+                        error: handleError 
+                    });
+                    if (cardElement) {
+                        updateChannelCardStatus(url, 'online');
+                    }
+                } catch (e) {
+                    handleError();
+                }
+            }, 50);
+        } else if (activePlayer === 'player2') {
+            videoPlayer2Video.classList.add('active');
+            videoPlayer2Video.setAttribute('controls', 'controls');
+
+            if (isDash && typeof dashjs !== 'undefined') {
+                dashPlayer = dashjs.MediaPlayer().create();
+                
+                if (hasDrm && drmInfo.drmScheme === 'clearkey') {
+                    const [kid, key] = drmInfo.drmLicense.split(':');
+                    if (kid && key) {
+                        const protectionData = {
+                            'org.w3.clearkey': {
+                                'clearkeys': {
+                                    [kid]: key
+                                }
+                            }
+                        };
+                        dashPlayer.setProtectionData(protectionData);
+                    }
+                }
+                
+                dashPlayer.initialize(videoPlayer2Video, playbackUrl, true);
+                dashPlayer.on(dashjs.MediaPlayer.events.ERROR, handleError);
+            } else {
+                videoPlayer2Video.src = playbackUrl;
+                videoPlayer2Video.removeEventListener('error', handleError); 
+                videoPlayer2Video.addEventListener('error', handleError, { once: true });
+            }
+
+            videoPlayer2Video.addEventListener('playing', () => {
+                if (cardElement) {
+                    updateChannelCardStatus(url, 'online');
+                }
+            }, { once: true });
+
+            videoPlayer2Video.play().catch(e => {
+                if (e.name === "NotAllowedError") {
+                    console.log("Autoplay prevented. Muting and trying again.");
+                    videoPlayer2Video.muted = true;
+                    videoPlayer2Video.play().catch(handleError);
+                } else {
+                     handleError();
+                }
+            });
+        }
+
+        saveRecentHistory(currentChannel);
+        updateNowPlaying(name, logo);
+        document.title = `Now Playing: ${name} - FanZone Live Sports`;
+        headerMatchText.textContent = name;
+    }
+
+    function updateNowPlaying(name, logo) {
+        const nowPlayingLogo = document.getElementById('nowPlayingLogo');
+        const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+        const nowPlayingPlayer = document.getElementById('nowPlayingPlayer');
+        
+        if (name && name !== "Unknown Channel") {
+            nowPlayingLogo.src = logo;
+            nowPlayingLogo.onerror = () => nowPlayingLogo.src = 'https://via.placeholder.com/40';
+            nowPlayingTitle.textContent = name;
+            nowPlayingPlayer.textContent = activePlayer === 'player1' 
+                ? 'Playing via PlayerJS'
+                : 'Playing via HTML5/Dash Player';
+            nowPlaying.classList.add('active');
+        } else {
+            nowPlaying.classList.remove('active');
+        }
+    }
+
+    function filterChannels(category = 'All') {
+        currentCategory = category;
+        const searchTerm = searchInput.value.toLowerCase();
+        
+        displayedChannelElements.forEach(item => {
+            const matchesSearch = item.name.includes(searchTerm);
+            const matchesCategory = (category === 'All' || item.category === category);
+            
+            if (matchesSearch && matchesCategory) {
+                item.element.classList.remove('hidden');
+            } else {
+                item.element.classList.add('hidden');
+            }
+        });
+
+        document.querySelectorAll('#categoryList .sidebar-item').forEach(li => {
+            li.classList.toggle('active', li.dataset.category === category);
+        });
+    }
+
+    function toggleCategoryView() {
+        showAllCategories = !showAllCategories;
+        renderVisibleCategories();
+    }
+
+    function renderVisibleCategories() {
+        categoryList.innerHTML = '';
+        
+        const totalChannels = allChannels.length;
+        
+        const allLi = document.createElement('li');
+        allLi.className = 'sidebar-item';
+        allLi.textContent = `All Channels`;
+        const allCount = document.createElement('small');
+        allCount.textContent = `(${totalChannels})`;
+        allLi.appendChild(allCount);
+        allLi.dataset.category = 'All';
+        allLi.onclick = () => filterChannels('All');
+        categoryList.appendChild(allLi);
+        
+        let categoriesToRender = sortedCategories;
+        const visibleLimit = 7;
+        let shouldShowSeeAll = false;
+
+        if (!showAllCategories && sortedCategories.length > visibleLimit) {
+            categoriesToRender = sortedCategories.slice(0, visibleLimit - 1); 
+            shouldShowSeeAll = true;
+        }
+
+        categoriesToRender.forEach(cat => {
+            const li = document.createElement('li');
+            li.className = 'sidebar-item';
+            const label = document.createElement('span');
+            label.textContent = cat;
+            const count = document.createElement('small');
+            count.textContent = `(${categoryCounts[cat] || 0})`;
+            li.appendChild(label);
+            li.appendChild(count);
+            li.dataset.category = cat;
+            li.onclick = () => filterChannels(cat);
+            categoryList.appendChild(li);
+        });
+
+        if (sortedCategories.length > visibleLimit && !showAllCategories) {
+             const seeAllLi = document.createElement('li');
+             seeAllLi.className = 'sidebar-item see-all-btn';
+             seeAllLi.textContent = `See All (${sortedCategories.length} Categories)`;
+             seeAllLi.onclick = toggleCategoryView;
+             categoryList.appendChild(seeAllLi);
+        } else if (showAllCategories && sortedCategories.length > visibleLimit) {
+             const seeLessLi = document.createElement('li');
+             seeLessLi.className = 'sidebar-item see-all-btn';
+             seeLessLi.textContent = `See Less`;
+             seeLessLi.onclick = toggleCategoryView;
+             categoryList.appendChild(seeLessLi);
+        }
+    }
+
+    function updateClock() {
+        const now = new Date();
+        let hrs = now.getHours();
+        let mins = now.getMinutes();
+        let secs = now.getSeconds();
+        const ampm = hrs >= 12 ? "PM" : "AM";
+        hrs = hrs % 12 || 12;
+        mins = mins < 10 ? "0" + mins : mins;
+        secs = secs < 10 ? "0" + secs : secs;
+        document.getElementById("timeDisplay").textContent = `${hrs}:${mins}:${secs} ${ampm}`;
+    }
+
+    function getFavorites() {
+        return JSON.parse(localStorage.getItem('favoriteChannels')) || [];
+    }
+
+    function saveFavorites(favorites) {
+        localStorage.setItem('favoriteChannels', JSON.stringify(favorites));
+    }
+
+    function isFavorite(url) {
+        return getFavorites().some(fav => fav.url === url);
+    }
+
+    function toggleFavorite(url, name, logo) {
+        let favorites = getFavorites();
+        const exists = favorites.findIndex(fav => fav.url === url);
+        if (exists >= 0) {
+            favorites.splice(exists, 1);
+        } else {
+            favorites.push({ url, name, logo });
+        }
+        saveFavorites(favorites);
+    }
+
+    let showAllFavorites = false;
+
+    function renderFavorites() {
+        const favoritesList = document.getElementById('favoritesList');
+        const seeAllBtn = document.getElementById('seeAllFavoritesBtn');
+        const favorites = getFavorites();
+        const limit = 7;
+        const toShow = showAllFavorites ? favorites : favorites.slice(0, limit);
+        
+        favoritesList.innerHTML = '';
+        
+        if (favorites.length === 0) {
+            favoritesList.innerHTML = '<li class="sidebar-item" style="opacity: 0.6; cursor: default;">No favorites yet</li>';
+            seeAllBtn.style.display = 'none';
+            return;
+        }
+
+        seeAllBtn.style.display = favorites.length > limit ? 'block' : 'none';
+        seeAllBtn.textContent = showAllFavorites ? 'See Less' : 'See All';
+
+        toShow.forEach(fav => {
+            const li = document.createElement('li');
+            li.className = 'sidebar-item';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'recent-item-content';
+            
+            const img = document.createElement('img');
+            img.className = 'recent-logo';
+            img.src = fav.logo;
+            img.onerror = () => img.src = 'https://via.placeholder.com/40';
+            
+            const span = document.createElement('span');
+            span.textContent = fav.name;
+            
+            wrapper.appendChild(img);
+            wrapper.appendChild(span);
+            li.appendChild(wrapper);
+            
+            li.onclick = () => {
+                playChannel(fav.url, fav.name, fav.logo);
+                toggleMenu();
+            };
+            favoritesList.appendChild(li);
+        });
+    }
+
+    function showChannelInfo(url, name, category) {
+        document.getElementById('infoChannelName').textContent = name;
+        document.getElementById('infoChannelCategory').textContent = category;
+        document.getElementById('infoChannelUrl').value = url;
+        showModal(channelInfoModal);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === '?') {
+            showModal(document.getElementById('helpModal'));
+        } else if (e.key === ' ') {
+            e.preventDefault();
+            const video = document.querySelector('video:not([style*="display: none"])') || videoPlayer2Video;
+            if (video && video.style.display !== 'none') {
+                video.paused ? video.play() : video.pause();
+            }
+        } else if (e.key === 'Escape') {
+            closeModal();
+            if (sidebar.classList.contains('open')) toggleMenu();
+        } else if (e.key === 'f' || e.key === 'F') {
+            const video = document.querySelector('video:not([style*="display: none"])');
+            if (video && video.requestFullscreen) {
+                e.preventDefault();
+                video.requestFullscreen().catch(err => {});
+            }
+        } else if (e.key === 'm' || e.key === 'M') {
+            const video = document.querySelector('video:not([style*="display: none"])') || videoPlayer2Video;
+            if (video && video.style.display !== 'none') {
+                video.muted = !video.muted;
+            }
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+            const currentIndex = allChannels.findIndex(ch => ch.url === currentChannel.url);
+            if (currentIndex >= 0) {
+                const nextIndex = (currentIndex + (e.key === 'ArrowRight' ? 1 : -1) + allChannels.length) % allChannels.length;
+                const next = allChannels[nextIndex];
+                playChannel(next.url, next.name, next.logo);
+            }
+        }
+    });
+
+    document.getElementById('closeHelpBtn').addEventListener('click', closeModal);
+    document.getElementById('keyboardHelpBtn').addEventListener('click', () => {
+        showModal(document.getElementById('helpModal'));
+        toggleMenu();
+    });
+    document.getElementById('aboutBtn').addEventListener('click', () => {
+        showModal(document.getElementById('aboutModal'));
+        toggleMenu();
+    });
+    document.getElementById('closeAboutBtn').addEventListener('click', closeModal);
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+        showModal(document.getElementById('settingsModal'));
+        toggleMenu();
+    });
+    document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+        const autoplay = document.getElementById('autoplayCheckbox').checked;
+        const quality = document.getElementById('qualitySelect').value;
+        const player = document.getElementById('playerSelect').value;
+        localStorage.setItem('appSettings', JSON.stringify({ autoplay, quality, player }));
+        alert('Settings saved!');
+        closeModal();
+    });
+    document.getElementById('closeSettingsBtn').addEventListener('click', closeModal);
+    document.getElementById('autoplayToggle').addEventListener('click', () => {
+        const settings = JSON.parse(localStorage.getItem('appSettings')) || { autoplay: true };
+        settings.autoplay = !settings.autoplay;
+        localStorage.setItem('appSettings', JSON.stringify(settings));
+        document.getElementById('autoplayStatus').textContent = settings.autoplay ? 'ON' : 'OFF';
+    });
+    document.getElementById('seeAllFavoritesBtn').addEventListener('click', () => {
+        showAllFavorites = !showAllFavorites;
+        renderFavorites();
+    });
+    document.getElementById('shareChannelBtn').addEventListener('click', () => {
+        const url = document.getElementById('infoChannelUrl').value;
+        if (url) {
+            const shareUrl = `${window.location.href.split('?')[0]}?link=${encodeURIComponent(url)}`;
+            const input = document.getElementById('infoChannelUrl');
+            input.value = shareUrl;
+            input.select();
+            document.execCommand('copy');
+            alert('Channel link copied to clipboard!');
+            input.value = url;
+        }
+    });
+    document.getElementById('closeInfoBtn').addEventListener('click', closeModal);
+
+    window.addEventListener('DOMContentLoaded', async () => {
+        const savedState = loadSavedState();
+        
+        if (savedState) {
+            isPremiumMode = savedState.isPremiumMode || false;
+            isCompactView = savedState.isCompactView || false;
+            activePlayer = savedState.activePlayer || 'player1';
+            
+            if (activePlayer === 'player2') {
+                player2Btn.classList.add('active');
+                player1Btn.classList.remove('active');
+            }
+        }
+        
+        setViewMode(isCompactView ? 'compact' : 'comfort');
+        
+        renderRecentHistory();
+        renderCustomPlaylists();
+        renderFavorites();
+        updatePremiumUI();
+        
+        updateClock();
+        setInterval(updateClock, 1000);
+        
+        channelGrid.innerHTML = '<div class="loading-message">Loading playlists...</div>';
+        
+        if (isPremiumMode) {
+            totalPlaylistsToLoad = 1;
+            playlistsLoaded = 0;
+            fetchM3U(PREMIUM_PLAYLIST, false);
+        } else {
+            totalPlaylistsToLoad = 2;
+            playlistsLoaded = 0;
+            await fetchM3U(DEFAULT_PLAYLIST, false);
+            await fetchM3U(AYNA_PLAYLIST, false);
+        }
+    });
+</script>
+
+</body>
+</html>
