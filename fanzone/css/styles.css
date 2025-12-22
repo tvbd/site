@@ -217,8 +217,8 @@
             transition: left 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
             z-index: 1001;
             padding: 24px 18px;
-            padding-top: 80px;
-            overflow-y: auto; scrollbar-width: thin;
+            padding-top: 0px;
+            overflow-y: auto;
         }
         .sidebar.open { left: 0; }
 
@@ -982,4 +982,5 @@
             }
             .channel-name { font-size: 12px; }
             .player-wrapper { top: 64px; }
+
         }
