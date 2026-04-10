@@ -2,7 +2,7 @@ $(document).ready(function () {
     var player = videojs('video');
 player.playlist([
         
-{ name: 'Ptv',           autoplay: true, sources: [ {src: 'http://11plus.live/live/ptv/index.m3u8', type: 'application/x-mpegURL'},]},
+{ name: 'Ptv',           autoplay: true, sources: [ {src: 'https://pslurdu.bigbaat.app/out/v1/f342445c31dd475bbf30c7304dbad14f/index.m3u8', type: 'application/x-mpegURL'},]},
 { name: 'TSports',       autoplay: true, sources: [ {src: 'http://11plus.live/live/tsports/index.m3u8', type: 'application/x-mpegURL'}, ] },
 { name: 'Star Sports 1', autoplay: true, sources: [ {src: 'http://11plus.live/live/stersports1hd/index.m3u8', type: 'application/x-mpegURL'}, ] },
 { name: 'Star sports 1', autoplay: true, sources: [ {src: 'http://172.17.50.112/live/fifa2022/index.m3u8', type: 'application/x-mpegURL'}, ] },
